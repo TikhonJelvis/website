@@ -1,0 +1,84 @@
+<?php
+$homePath = "."; 
+include "head.php";
+?>
+
+<title>
+  Tikhon Jelvis
+</title>
+
+</head>
+
+<body>
+
+<?php
+include 'header.php'
+?>
+
+<!-- This is the div where the actual contents of the page will go. -->
+<div class="content" id="main">
+<h1 class="header">
+Welcome
+</h1>
+<p>
+This is the public page of Tikhon Jelvis, an EECS student at the
+University of California, Berkeley. This site contains some of the
+projects I have worked on, sometimes by myself and sometimes with
+friends. Some additional information can be found in the "About"
+section.
+</p>
+<h2 class="header">
+EECS
+</h2>
+<p>
+EECS stands for "Electrical Engineering and Computer Sciences", which
+is really a bit of a mouthful, so everybody just calls it "EECS"
+(pronounced "eeks"). This major is a superset of what most schools
+refer to as "computer engineering"&mdash;an EECS major can get a
+"computer engineering"-style education, but can also study either EE
+or CS almost exclusively.
+</p>
+<h2 class="header">
+Projects
+</h2>
+<p>
+I worked on the projects gathered here throughout the last several
+years&mdash;I started on the first one here (the simulation) in the
+second semester of my junior year in high school, and I've worked on
+some of the other projects very recently. The projects do not
+represent the extent of my programming; rather, they represent the
+larger works that I actually finished. I tend to stop working on
+smaller projects, leaving them to stagnate and finally forgetting
+about them.
+</p>
+
+<p>
+The chess game and the simulation were not written alone; I worked with
+Jacob Taylor, a friend who is now studying CS at Stanford. His page can be found
+<a href="http://www.stanford.edu/~jacobt">here</a>. For the simulation, he
+worked on modeling the polygons, doing all of the actual math while I
+worked on the interface and putting the entire project together. For
+the chess game, he ported a chess AI he had written earlier to
+JavaScript. While we both have a very similar JavaScript plotting tool
+on our sites, we actually came up with them completely independently.
+</p>
+<h2 class="header">
+This Site
+</h2>
+<p>
+This site is currently hosted on the EECS instructional Unix server at
+inst.eecs.berkeley.edu. This page is build with xhtml and
+CSS. The typeface used is Verdana, which is my favorite web typeface,
+by far. Most of the text on this page is just padding to make it look
+better; I will add text worth reading in the future. Perhaps I will
+also add some pictures, or something.
+</p>
+</div>
+
+<?php
+include 'footer.php'
+?>
+
+</body>
+
+</html>

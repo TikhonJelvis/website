@@ -1,0 +1,163 @@
+\documentclass[10pt]{article}
+\usepackage{geometry}
+
+% For typesetting urls, like my personal and google code pages.
+\usepackage{url}
+
+% Changes the margin sizes to create more room for the content itself:
+\pagestyle{empty}
+\geometry{letterpaper,tmargin=1in,bmargin=0.6in,lmargin=1.1in,rmargin=1.1in,headheight=0in,headsep=0in,footskip=.3in}
+
+% Using the URW Garamond typeface instead of the default:
+\usepackage[T1]{fontenc}
+% The line spacing needs to be modified a little for the font:
+\linespread{1.05}
+
+% Adds mycrotypography support with pdfLaTeX, resulting in better justification.
+\usepackage{microtype}
+
+% Removes some unneeded space:
+\setlength{\parindent}{0in}
+\setlength{\parskip}{0in}
+\setlength{\itemsep}{0in}
+\setlength{\topsep}{0in}
+\setlength{\tabcolsep}{0in}
+
+% Name and contact information:
+\newcommand{\name}{Tikhon Jelvis}
+\newcommand{\addr}{1100 Pine St., Menlo Park, CA 94025}
+\newcommand{\phone}{(650) 391-3532}
+\newcommand{\email}{tikhon@berkeley.edu}
+\newcommand{\major}{Electrical Engineering and Computer Sciences}
+\newcommand{\university}{University of California, Berkeley}
+\newcommand{\degree}{Bachelor of Science}
+\newcommand{\website}{\url{inst.eecs.berkeley.edu/~tikhon}}
+
+%--------------------------------------------------%
+% New Commands:
+% Creates the header of the resume:
+\newcommand{\rsheader}[1]{
+  \begin{center}
+    \fontfamily{phv}
+    \selectfont\Huge\scshape#1
+  \end{center}
+}
+
+% Resume section commands:
+\newenvironment{ressection}[1]{
+  {\fontfamily{phv}\selectfont\LARGE#1}\vspace{2pt}\\
+}{  
+\vspace{4pt}
+}
+
+\newenvironment{ressubsection}[1]{
+  {\fontfamily{phv}\selectfont\Large#1}
+  \fontfamily{ppl}\selectfont\\
+}
+{
+}
+
+\newenvironment{reslist}{
+  \vspace{-22pt}
+  \begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+}{  
+  \end{itemize}
+  \vspace{-4pt}
+}
+
+\begin{document}
+
+% Name followed by a horizontal line:
+\rsheader{\name} \vspace{-10pt} \rule{\textwidth}{1pt}
+
+% Contact information:
+\vspace{-1pt} {\small\itshape \addr \hfill \phone; \email}
+
+\begin{ressection}{Objective}
+  A summer programming internship, preferably with a focus on web
+  programming, JavaScript and Ajax technologies.
+\end{ressection}
+
+\begin{ressection}{Education}
+  \university \\ 
+  \degree, \major,
+  expected May 2014\\
+  G.P.A. 3.891\\
+  SAT: 2370, Verbal: 800, Math: 770, Writing: 800
+\end{ressection}
+
+\begin{ressection}{Awards}
+  \begin{reslist}
+  \item National Merit Finalist, 2010
+  \item AMC 12 school winner in 2010 with 100.5 points (97.5th
+    percentile in the country).
+  \item Overall math contest school winner, 2010
+  \item Bank of America Certificate for Computer Studies, 2010
+  \item Menlo Atherton Rotary Club Subject Award for Chemistry, 2008
+    and Computer Science, 2009
+  \end{reslist}
+\end{ressection}
+
+\begin{ressection}{Skills}
+  \begin{ressubsection}{Computer Software}
+    \begin{reslist}
+    \item Linux (OpenSUSE, Ubuntu)
+    \item Windows (XP, Vista, 7)
+    \item Emacs and Eclipse
+    \item Command-line Bash
+    \item SVN
+    \end{reslist}
+  \end{ressubsection}
+
+  \begin{ressubsection}{Programming}
+    \begin{reslist}
+    \item Proficient in Java, JavaScript, (x)HTML, CSS and \LaTeX
+    \item Familiar with Scheme, elisp, Perl, regular expressions,
+      Haskell and C++
+    \item Experienced in prototype.js, script.aculo.us, jQuery and
+      Java Swing
+    \end{reslist}
+  \end{ressubsection}
+  \begin{ressubsection}{Other}
+    \begin{reslist}
+    \item Fluent in Russian
+    \item Competitive saber fencer
+    \end{reslist}
+  \end{ressubsection}
+\end{ressection}
+
+\begin{ressection}{Experience}
+  \begin{ressubsection}{Robotics}
+    Worked on programming for FIRST Robotics team 766 (Menlo Atherton
+    High School). Using OOP design and Java, implemented a program to
+    control the robot. Led a small team including several novice
+    programmers. Leveraged a vision-recognition library to find a
+    target with the robot's camera.
+  \end{ressubsection}
+
+  \begin{ressubsection}{Java Physics Simulation}
+    Worked with a group of three other people, including two
+    non-programmers, on a Java Swing application for modeling 2D
+    collisions between polygons. Resulted in a program with about 8500
+    lines of code and over 40 files.
+  \end{ressubsection}
+
+  \begin{ressubsection}{Maptac Chess}    
+    Developed a JavaScript chess game using prototype.js and
+    script.aculo.us. Integrated this with a Chess AI a friend wrote in
+    JavaScript. Released the project under the MIT license on Google
+    Code. It can be found at
+    \url{code.google.com/p/maptac-chess}.
+  \end{ressubsection}
+\end{ressection}
+
+\rule{\textwidth}{1pt}
+
+\begin{center}
+  More details online at: \url{inst.eecs.berkeley.edu/~tikhon}
+\end{center}
+
+\end{document}

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head id="head">
+<title>
+Maptac Chess
+</title>
+
+<!-- Main Stylesheet -->
+<link rel="stylesheet" type="text/css" href="../css/main.css" />
+
+<link rel="stylesheet" type="text/css" href="css/chess.css" />
+<link rel="stylesheet" type="text/css" href="css/board.css" />
+
+<script src="js/prototype-1.6.0.2.js" type="text/javascript"></script>
+<script src="js/scriptaculous.js" type="text/javascript"></script>
+<script src="js/chessUtil.js"></script>
+<script src="js/chess.js"></script>
+<script src="js/chess-ai.js"></script>
+
+</head>
+
+<body id="body" onload="onld()">
+<div id="holder">
+</div>
+<div id="disclaimer">
+  <p>
+    This page does not currently work on certain versions of Chromium
+    and Google Chrome due to this issue:
+    <a href="http://code.google.com/p/chromium/issues/detail?id=62123">Issue
+      62123</a> Only certain builds of version 9 seem to be affected;
+      version 9.0.582.0 (0) of Chromium exhibits the bug, while
+      version 9.0.597.83 of Google Chrome doesn't. There do not seem
+      to be any problems on version 8, which is the stable release.
+  </p>
+  <p>
+    Unfortunately, the AI does not work particularly well on browsers
+    with slower Javascript engines, including older versions of
+    Firefox. While it should still <emph>work</emph>, the response
+    time may be horrible and it may slow down the browser enough to
+    get a pop-up warning.
+  </p>
+</div>
+</body>
+</html>

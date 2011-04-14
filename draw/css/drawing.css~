@@ -1,0 +1,47 @@
+/* CSS Document */
+#container {
+    position : relative;
+    margin-left : auto;
+    margin-right : auto;
+    padding : 2px;
+    padding-left : 4px;
+}
+
+#container textarea {
+    position : relative;
+    width : 98%;
+    height : 300px;
+}
+
+.output {
+    position : relative;
+    top : -400px;
+    border-color : black;
+    border-width : 1px;
+    border-style : solid;
+    margin-top : 5px;
+    margin-left : auto;
+    margin-right : auto;
+    width : 400px;
+    height : 420px;
+    cursor : pointer;
+}
+
+.output canvas {
+    margin-left : auto;
+    margin-right : auto;
+}
+
+pre {
+    color : black;
+}
+
+#help {
+    position : relative;
+}
+
+#help span.hide {
+    position : absolute;
+    top : 10pt;
+    float : left;
+}

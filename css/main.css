@@ -1,0 +1,298 @@
+/* CSS document */
+
+/* GENERAL */
+
+/* This, naturally, applies to the whole page. */
+body {
+    color : #36A; 
+    background-color : #FB8;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+    padding : 0;
+    margin : 0;
+}
+
+a {
+    text-decoration : none;
+}
+
+a > img {
+    border-style : none;
+}
+
+/* TOP */
+
+/* This is needed to make the header not create a horizontal scroll bar. */
+#top {
+    position : relative;
+    width : 100%;
+    overflow : hidden;
+    color : #36A;
+}
+
+#top a {
+    text-decoration : none;
+    color : #36A;
+}
+
+/* HEADER */
+
+/* This is the title on top of every page. */
+#header {
+    font-size : 64pt;
+}
+
+/* This is just to center the header. */
+#header > div {
+    margin-left : auto;
+    margin-right : auto;
+    width : 6.9em;
+}
+
+/* This controls the first letter of each part of the header. */
+#header div span:first-child {
+    position : relative;
+    font-size : 112pt;
+    float : left;
+    color : #039;
+    top : -12pt;
+}
+
+/* The title has two parts, one of which is half a line below the other. This is
+   the first, higher part. */
+#header .first {
+    position : relative;
+    float : left;
+}
+
+/* The title has two parts, one of which is half a line below the other. This is
+   the second, lower part. */
+#header .second {
+    position : relative;
+    color : #36A;
+    top : 20pt;
+    left : -20pt;
+}
+
+/* This moves the first letter of the second part right a bit. */
+#header .second span:first-child {
+    margin-right : -0.05em;
+}
+
+/* We need to adjust the first letter of the second part a bit. */
+#header .second > span:first-child {
+    top : -31pt;
+}
+
+/* This is the rectangle that is behind the header's text. */
+#headerBackground {
+    position : absolute;
+    background-color : #F63;
+    height : 57pt;
+    top : 28pt;
+    width : 100%;
+}
+
+/* NAVIGATION */
+
+/* This div contains the list that serves as the navigation menu. */
+#navigation {
+    position : relative;
+    height : 24pt;
+    margin-top : 30pt;
+    font-size : 16pt;
+}
+
+/* This div makes the background of the navigation menu. */
+#navigation > div {
+    position : relative;
+    height : 100%;
+    margin-left : 0;
+    width : 55%;
+    min-width : 28.5em;
+    background-color : #F63;
+}
+
+/* This list is the actual navigation menu--each item is a link. */
+#navigation ul {
+    position : absolute;
+    right : 1em;
+    margin-top : 4pt;
+    list-style : none;
+}
+
+/* This controls the individual navigation items. It is best to only have one
+   word in each navigation item. */
+#navigation li {
+    position : relative;
+    margin-top : -3pt;
+    display : block;
+    float : left;
+    margin-left : 0.5em;
+}
+
+/* This lets us use a:first-letter. */
+#navigation li a {
+    display : block
+}
+
+/* This controls the first letter of each navigation item. */
+#navigation li a:first-letter {
+    position : relative;
+    color : #039;
+    font-size : 22pt;
+    float : left;
+} 
+
+#navigation li a:hover {
+    color : #039;
+}
+
+#navigation li a:hover:first-letter {
+    color : #006;
+}
+
+#navigation a {
+    text-decoration : none;
+    color : #36A;
+}
+
+/* CONTENT */
+
+/* This div has the actual content of the site in it. */
+.content {
+    position : relative;
+    width : 70%;
+    color : black;
+    background-color : #F63;
+    margin-top : 4pt;
+    margin-left : auto;
+    margin-right : auto;
+    padding-bottom : 4pt;
+    padding-top : 4pt;
+    padding-left : 0.5em;
+}
+
+/* This is the general style for all headers: */
+.content .header {
+    text-align : center;
+}
+ 
+.content .header {
+    color : #36A;
+}
+   
+.content .header:first-letter {
+   color : #039;
+}
+
+.content .header .L {
+    color : #039;
+}
+
+/* All of the large groups of text should be in p tags. */
+.content p {
+    color : black;
+    margin-left : 2%;
+    margin-right : 3%;
+    text-align : justify;
+}
+
+/* Various options for managing tables: */
+.content table {
+    position : relative;
+    width : 80%;
+    margin-left : 10%;
+    background-color : #F63;
+}
+
+.content td {
+    padding-left : 0.5ex;
+    padding-right : 0.5ex;
+    background-color : #F96;
+}
+
+.content table, .content td{
+    border : 2px solid #039;
+}
+
+/* This is the div that holds images and their captions. */
+.content div.caption {
+    position : relative;
+    left : -2px;
+    max-width : 75%;
+    overflow : hidden;
+    background-color : #F96;
+    margin-left : 12.5%;
+    text-align : center;
+    border : 2px solid #039;
+}
+
+.content div.caption a {
+    border : none;
+}
+
+.content div.caption img {
+    position : relative;
+    max-width : 90%;
+    margin-top : 1ex;
+}
+
+.content div.caption p {
+    position : relative;
+}
+
+/* Special kinds of text: code, ui elements...etc */
+.content .uiElement {
+    font-family : lucida console, monospace;
+}
+
+.content .code {
+    font-family : lucida console, monospace;
+    background-color : #F96;
+}
+
+/* This is the div at the very bottom of the page. */
+#footer {
+    color : black;
+    margin-top : 4pt;
+    padding-top : 2pt;
+    padding-bottom : 2pt;
+}
+
+/* This is the styling for typesetting LaTeX properly. */
+.latex {
+    letter-spacing : -0.225em;
+}
+
+.latex .A {
+    position : relative;
+    top : -0.6ex;
+    left : -0.25em;
+    font-size : 75%;
+}
+
+.tex {
+    position : relative;
+    letter-spacing : -0.225em;
+    margin-left : -0.25em;
+}
+
+.tex .E {
+    position : relative;
+    top : 0.6ex;
+    left : -0.3ex;
+}
+
+.tex .X {
+    position : relative;
+    left : -0.3ex;
+}
+
+/* The one in the menu has to be a little special: */
+#navigation .latex span:first-child {
+    color : #039;
+}
+
+#navigation a:hover .latex span:first-child {
+    color : #006;
+}

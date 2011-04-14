@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head id="head">
+
+<title>
+A maze
+</title>
+
+<script language="javascript" src="js/maze.js"></script>
+
+</head>
+
+<body id="body">
+<canvas id="maze" width="401" height="401">
+</canvas>
+
+<script language="javascript">
+var maze = new Maze(80, 80);
+
+window.onload = function () {
+    var context = document.getElementById("maze").getContext('2d');
+    var gradient = context.createLinearGradient(0, 0, 401, 401);
+    gradient.addColorStop(0, "#000044");
+    gradient.addColorStop(0.8, "#3366FF");
+
+    maze.draw("maze", 5, {wall : gradient, background : "#FFBB88"});
+};
+
+document.getElementById("maze").onclick = function () {
+    maze.drawSolution("maze");
+};
+</script>
+
+</body>
+</html>

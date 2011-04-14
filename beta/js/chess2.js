@@ -1,0 +1,337 @@
+/* A simple UI for playing chess. This is dependant on the maptac ChessGameModel
+ * and on the jQuery javascript framework. The game is automatically appended to
+ * the given element; if no element is specified, it is appended to the body.
+ */
+function ChessGame(parent, options) {
+    parent = parent || $("body");
+    options = options || {};
+
+    var model = new ChessGameModel(),
+        turn = "w";
+    
+    var container = $("<div>");
+    container.addClass("container");
+    
+    var orientation = options.orientation || "w";// Which way the board faces.
+
+    // Now we create the game board:
+    var files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+    
+    var board = $("<table>");
+    board.addClass("board");
+
+    var selectedPiece = null;
+
+    /* Sets the given piece as selected. If the given piece is already selected,
+     * then this deslects the piece; if the piece is not selected then this
+     * deselects all of the other pieces and then selects the given piece; it
+     * becomes the selected piece until the next time this is called. A piece
+     * cannot be selected if it is not the turn of that piece's color. Once a
+     * piece is selected, all of that piece's possible moves are highlighted on
+     * the board as long as rules enforcement is on. <Rules enforcement has not
+     * been implemented yet>!
+     */
+    function setSelectedPiece(piece) {
+        if (piece.getPiece().getColor() != model.getTurn()) {
+            return;
+        }
+
+        for (var property in squares) {
+            if (/^[a-h][1-8]$/.test(property)) {
+                squares[property].setSelected(false);
+            }
+        }
+        
+        if (selectedPiece == piece) {
+            selectedPiece = null;
+            piece.setSelected(false);
+        } else {
+            selectedPiece = piece;
+            
+            for (var i = 0; i < pieces.length; i++) {
+                pieces[i].setSelected(false);
+            }
+
+            var moves = model.getMoves(piece.getPiece().getPosition());
+            for (i = 0; i < moves.length; i++) {
+                squares[moves[i]].setSelected(true);
+            }
+            
+            piece.setSelected(true);
+        }
+    }
+
+    var squares = [];
+
+    for (var rank = 0; rank < 8; rank++) {
+        var row = $("<tr>");
+        row.addClass("rank");
+        
+        for (var file = 0; file < 8; file++) {
+            var position, color;
+            
+            if (orientation == "w") {
+                position = files[file] + (8 - rank);
+                
+                if ((rank + file) % 2 == 0) {
+                    color = "white";
+                } else {
+                    color = "black";
+                }
+            } else {
+                position = files[file] + (rank + 1);
+                
+                if ((rank + file) % 2 == 0) {
+                    color = "black";
+                } else {
+                    color = "white";
+                }
+            }
+
+            squares[position] = createSquare(position, color);
+            row.append(squares[position]);
+        }
+        
+        board.append(row);
+    }
+    container.append(board);
+
+    // The pieces get created:
+    var modelPieces = model.getPieces(),
+        pieces = [];
+    modelPieces.each(function (piece) {
+        var element = createPiece(piece);
+        
+        pieces.push(element);
+        squares[piece.getPosition()].append(element);
+    });
+    
+    parent.append(container);
+
+    function createSquare(position, color) {
+        var square = $("<td>");
+
+        square.addClass(color + " square " + position);
+        square.attr("title", position);
+
+        /* Sets whether the square is "selected". A square that is selected
+         * is designated as such visually, becomes clickable and has a nice
+         * effect when it the mouse hovers over it. When a selected square is
+         * clicked, the game attempts to move the selected piece to that
+         * square.
+         */
+        square.setSelected = function (isSelected, move) {
+            move = move || position;
+            if (isSelected) {
+                this.addClass("selected");
+
+                var click = function (event) {
+                    var piecePos = selectedPiece.getPiece().getPosition();
+                    
+                    if (move == position) {
+                        move = piecePos + "-" + move;
+                    }
+                    
+                    model.move(move);
+                };
+                
+                this.click(click);
+            } else {
+                this.removeClass("selected");
+                this.unbind("click", click);
+            }
+        };
+
+        return square;
+    }
+
+    /* Returns a jQuery element that corresponds to the given piece as returned
+     * by the game model.
+     */
+    function createPiece(piece) {
+        var div = $("<div>");
+        div.addClass("piece");
+
+        /* Returns the model piece that this element represents. */
+        div.getPiece = function () {
+            return piece;
+        };
+
+        var click = function (event) {
+            setSelectedPiece(div);
+        };
+
+        /* Sets whether this piece is active. Active pieces can be clicked an
+         * have a nice effect onmouseover. Generally, a piece should only be
+         * active if it is the turn of that piece's side.
+         */
+        div.setActive = function (isActive) {
+            if (isActive) {
+                div.addClass("active");
+                div.click(click);
+            } else {
+                div.removeClass("active");
+                div.unbind("click", click);                    
+            }
+        };
+
+        if (model.getTurn() == div.getPiece().getColor()) {
+            div.setActive(true);
+        }
+
+        var img = $("<img>");
+        img.attr({
+            src : "img/" + piece.getColor() + piece.getType() + ".png",
+            alt : piece.getColor() + piece.getType()
+        });
+
+        div.append(img);
+
+        /* Sets whether the piece is selected. If the piece is selected, then it
+         * has the "selected" class and does not have the "active" class;
+         * otherwise, the piece does not have the "selected" class and may have
+         * the "active" class.
+         */
+        div.setSelected = function (isSelected) {
+            if (isSelected) {
+                div.removeClass("active");
+                div.addClass("selected");
+            } else {
+                div.removeClass("selected");
+                if (model.getTurn() == this.getPiece().getColor()) {
+                    div.addClass("active");                    
+                }
+            }
+        };
+
+        return div;
+    }
+
+    /* Returns the piece element at the given position or null if there is no
+     * piece like that. 
+     */
+    function getPiece (position) {
+        for (var i = 0; i < pieces.length; i++) {
+            if (pieces[i].parent().hasClass(position)) {
+                return pieces[i];
+            }
+        }
+
+        return null;
+    }
+
+    /* Returns the ui piece that corresponds to the given model piece. */
+    function getPhysicalPiece(piece) {
+        for (var i = 0; i < pieces.length; i++) {
+            if (pieces[i].getPiece().equals(piece)) {
+                return pieces[i];
+            }
+        }
+
+        return null;
+    }
+        
+    model.observe(function (event) {
+        if (event.getTurn() != turn) {
+            setTurn(event.getTurn());
+        }
+
+        var parsedMove = [];
+        
+        if (event.getMove()) {
+            var newMove = event.getMove();
+            
+            if (newMove == "0-0") {
+                // TODO: Castling support
+            } else if (newMove == "0-0-0") {
+                // Ditto
+            } else if (/^[a-h][1-8]-[a-h][1-8]$/.test(newMove)) {
+                newMove = newMove.split("-");
+                
+                if (event.getCapturedPiece()) {
+                    parsedMove.push({
+                        piece : getPhysicalPiece(event.getCapturedPiece()),
+                        action : null
+                    });
+                }
+                
+                parsedMove.push({
+                    piece : getPiece(newMove[0]),
+                    action : newMove[1]
+                });
+            }
+
+            move(parsedMove);
+        }
+    });
+
+    /* Changes the turn to the given color. If the given color matches the color
+     * that is currently set as the turn, then nothing happens; otherwise, the
+     * background color changes as do the active pieces. If any pieces or squares
+     * were selected, they become deslected.
+     */
+    function setTurn (newTurn) {
+        if (newTurn != turn) {
+            // Deselect the pieces and switch which ones are active:
+            for (var i = 0; i < pieces.length; i++) {
+                pieces[i].setSelected(false);
+                if (pieces[i].getPiece().getColor() == newTurn) {
+                    pieces[i].setActive(true);
+                } else {
+                    pieces[i].setActive(false);
+                }
+            }
+            
+            //Deselect all of the squares:
+            for (var property in squares) {
+                if (/^[a-h][1-8]$/.test(property)) {
+                    squares[property].setSelected(false);
+                }
+            }
+
+            var background = (newTurn == "w") ? "#FFFFFF" : "#000000";
+            //container.animate({"background" : background});
+            // TODO: Get jQuery UI to use this feature...
+        }
+
+        turn = newTurn;
+    }
+
+    /* Performs the specified move. The move should be an array of objects with
+     * a piece and action property each. Each piece property is the piece to be
+     * moved; the action specified how to move the piece. If the action is a
+     * square, the piece will be moved to that square. If the action is a new
+     * type of piece delimited from the new position by a "*", then the piece
+     * will also undergo a change of type. In ever other case, the piece will be
+     * removed from the game.
+     */
+    function move (move) {
+        for (var i = 0; i < move.length; i++) {
+            var piece = move[i].piece;
+            var action = move[i].action;
+
+            if (piece) {
+                if (/[a-h][1-8]\*[pRNBQK]/.test(action)) {
+                    action = action.split("*");
+                
+                    var newType = action[1];
+                    action = action[0];
+                    
+                    piece.setType(newType);
+                }
+                
+                if (/[a-h][1-8]/.test(action)) {
+                    piece.remove();
+                    squares[action].append(piece);
+                } else {
+                    piece.remove();
+                }
+            }
+        }
+    }
+}
+
+// Starts the game once everything is loaded:
+$(document).ready(function () {
+    var game = new ChessGame($("#holder"));
+});

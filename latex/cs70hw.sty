@@ -1,0 +1,53 @@
+% Formatting for CS70 homework.
+% By: Tikhon Jelvis
+
+% To use, prepend \hwheader before each new problem. The rest is done
+% automagically. There are also two other commands: \N for natural
+% numbers and \Z for integers.
+
+\ProvidesPackage{cs70hw}
+
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+
+% Using the URW Garamond typeface instead of the default:
+\RequirePackage[T1]{fontenc}
+\RequirePackage[sc]{mathpazo}
+\linespread{1.05}
+
+% Microtypography makes everything prettier:
+\RequirePackage{microtype}
+
+% Renew these commands to change the corresponding part of the header:
+\newcommand{\hwnum}{5}
+\newcommand{\secnum}{Section 101}
+\newcommand{\taname}{TA: Filiba}
+\newcommand{\name}{Tikhon Jelvis}
+\newcommand{\collab}{\null}
+
+\newcounter{problemCounter}
+
+\newcommand{\hwheader}{
+  \newpage
+  \stepcounter{problemCounter}
+  \ignorespaces
+  \begin{center}
+    \selectfont\Large
+    CS70---Spring 2011\\
+    \selectfont\huge
+    HW \#\hwnum\ Problem \arabic{problemCounter}
+    \rule{\textwidth}{1pt}
+    \small\itshape \vspace{-10pt} \secnum, \taname \hfill \name\\
+    \vspace{6pt}    
+    \hfill \collab
+  \end{center}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\pagestyle{empty}
+
+\setlength{\voffset}{0pt}

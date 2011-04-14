@@ -1,0 +1,28 @@
+/*CSS Document*/
+/*This is just the general stylesheet, to be updated whenever I see fit.*/
+
+body {
+    color : black;
+}
+
+#holder {
+    position : relative;
+    top : 25px;
+    overflow : hidden;
+    max-height : 100%;
+    height : 500px;
+}
+
+.white {
+    background-color : #C82;
+    color : #520;
+}
+
+.black {
+    background-color : #951;
+    color : #EA4;
+}
+
+.average {
+    background-color : #B26E19;
+}

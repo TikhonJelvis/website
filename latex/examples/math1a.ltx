@@ -1,0 +1,2446 @@
+\documentclass[12pt]{article}
+
+%Much better math support:
+\usepackage{amsmath}
+
+%Using the URW Garamond typeface instead of the default:
+\usepackage[T1]{fontenc}
+\usepackage[sc]{mathpazo}
+\linespread{1.05}
+
+\usepackage{microtype}
+
+\title{Math 1A Notes}
+\author{Tikhon Jelvis}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Functions}
+
+In the first section, we are going to cover the idea of a
+\emph{function}. A function is an idea that we have seen in previous
+courses and other contexts; however, it is going to be
+disproportionately important in this course. 
+
+A function in math is a rule that maps the elements of one set, called
+the \emph{domain}, to one element apiece of another set, called the
+\emph{range}. Note that here we are not necessarily talking about
+\emph{numbers}; rather, we used the word \emph{element}. This is
+important because functions can map things which are not numbers. In
+fact, nothing stops a function from mapping a set of functions to a
+different set of function! That said, in this course, we will be
+primarily talking about normal functions that just map sets of numbers.
+
+\subsection{The Exponential Function ($a^x$)}
+
+The first function we will talk about is called the \emph{exponential
+  function}. This is a function like any other and can be expressed in
+the same notation (as $f(x)$, for example). That said, it is usually
+expressed as $f(x) = a^x$ where $a$ is some number.
+
+If $a$ is a positive real number and $x$ is any real number, then what
+$a^x$ is depends on what $x$ is:
+\begin{itemize}
+\item If $x$ is an integer, then $a^x$ is a product of $x$ factors of $a$.
+\item If $x$ is 0, then $a^x = a^0 = 1$.
+\item If $x$ is a rational number $\frac{p}{q}$ then $a^x = \sqrt[q]{a^p}$
+\item If $x$ is negative, then $a^x = \frac{1}{a^{-x}}$.
+\item If $x$ is a real number, then $a^x$ is the number $b$ so that
+  for all $n < x$ $a^n < b$ and for all $n > x$ $a^n > b$.
+\end{itemize}
+
+\subsubsection*{Laws of Exponents}
+
+There are several laws that make working with exponents much easier;
+these are called the ``Laws of Exponents''. They make arithmetic with
+exponents much easier.
+
+\begin{itemize}
+\item $a^{x+y} = a^x \cdot a^y$
+\item $(ab)^x = a^x \cdot b^x$
+\item $a^{xy} = (a^x)^y$
+\item $a^0 = 1$
+\item $a^1 = a$
+\item $a^{-1} = \frac{1}{a}$
+\end{itemize}
+
+\subsubsection*{Special Numbers ($a$)}
+
+In the exponential function $f(x) = a^x$, the number $a$ is called the
+\emph{base}. Here are some special bases to be aware of:
+\begin{itemize}
+\item $a = 2$ Computers and doubling. This is binary (base 2).
+
+\item $a = 10$ Base ten is traditional and a convenient number to work
+  with.
+
+\item $e$ Euler's number. One of the five important numbers $(0, 1, e,
+  \pi, i)$. $e \approx 2.71828\ldots$. It's definition is subtle;
+  we'll cover it later on.
+\end{itemize}
+Out of these bases, $e$ is probably the most important for
+mathematics; the rest are important in the ``real world'', wherever
+that may be.
+
+\subsection{Functions Defined by Cases}
+
+So far, we have seen that a function can be defined as follows:
+\begin{equation*}
+  f(x) = x^3 + x^2 + x 1
+\end{equation*}
+This function maps $x$ to the result of an expression, like so: $x \to
+x^3 + x^2 + x + 1$. However, a function does not have to be the result
+of an \emph{equation}; it just has to map one set to another.
+
+Another way to define a function is to define it \emph{by cases}. This
+means that you define what happens to $x$ over various intervals. The
+classic example of a function defined by cases is the absolute value
+function $|x|$. It is defined as follows:
+\begin{equation*}
+  |x| =
+  \left\{
+    \begin{array}{rl}
+      -x & \text{if } x < 0\\
+      x & \text{if } x \ge 0
+    \end{array}
+  \right.
+\end{equation*}
+What this means is that when $x$ is negative, the function returns
+$-x$ and when $x$ is non-negative, it returns $x$. In practice, this
+means that the returned value is never negative---the range of this
+function is the set $[0,\infty)$. Coincidentally, this function can
+also be defined as $f(x) = \sqrt{x^2}$ thanks to the way the square
+root function works. 
+
+\subsection{New Functions}
+\label{sec:newfuncs}
+
+Mathematics builds on previous discoveries and developments; this is
+both based on history and the organization of various concepts. This
+can be extended to \emph{functions}; new functions can be created
+simply by combining old ones.
+
+Here are some ways to combine functions:
+
+\begin{itemize}
+\item If $f$ is a function and $c$ a real number, you can multiply:
+  $g(x) = c \cdot f(x)$.
+
+\item You can add functions: $h(x) = f(x) + g(x)$. The domain of the
+  new function is all numbers in the domains of \emph{both} $f$ and
+  $g$. This is the intersection of the two domains.
+
+\item You can also multiply functions; this works much like addition.
+
+\item You can also divide functions ($h(x) = \frac{f(x)}{g(x)}$); here
+  the domain is the intersection between the two functions' domains
+  \emph{except} for the set of numbers $x$ where $g(x) = 0$.
+
+\item You can also modify the independent variable ($g(x) = f(x+c),
+  h(x) = f(c \cdot x) \ldots$)
+
+\item Another option: composition. You can take a function of a
+  function. E.g.: $f \circ g(x) = f(g(x))$. The domain is the domain
+  of $x$ where $x$ is in the domain of $g$ and $g(x)$ is also in the
+  domain of $f$.
+\end{itemize}
+
+\subsection{Square Root ($\surd$)}
+
+\begin{itemize}
+\item Nonnegative = $\ge 0$.
+
+\item All nonnegative numbers have a nonnegative square root.
+
+\item $\sqrt{x} = x^{\frac{1}{2}}$
+
+\item If $x < 0$, there is no real root.
+
+\item The domain is $[0,\infty)$.
+\end{itemize}
+
+\subsection{One-to-one Functions}
+
+\textbf{Definition} : A function $f$ is a \emph{one-to-one} function
+where all outputs ($f(x)$) are unique.
+
+Examples:
+\begin{itemize}
+\item $f(x) = \frac{1}{y}$ If $\frac{1}{x} = \frac{1}{y}$ then $x =
+  y$.
+
+\item $f(x) = x^2$ is not; $f(3) = f(-3) = 9$.
+
+\item For different domains, it can be different: $g(x) = x^2$ with
+  the domain $[0, \infty)$ \emph{is} one-to-one.
+
+\item The function $\sin{x}$ with the domain of $\Re$, is \emph{not}
+  one-to-one; however, for the domain $[\frac{-\pi}{2},
+  \frac{\pi}{2}]$ it \emph{is} one-to-one.
+
+\item All \emph{strictly} increasing functions are one-to-one.
+\end{itemize}
+
+\subsubsection*{Horizontal Line Test}
+
+If a horizontal line crosses the graph more than once, it is
+\emph{not} one-to-one. If no horizontal lines cross the graph more
+than once, it is one-to-one. A function can be a one-to-one function
+even if some horizontal lines do not cross the graph \emph{at all}.
+
+This is like the vertical line test that tests for functions.
+
+\subsection{Inverse Functions}
+
+The function $g$ is the \textbf{inverse} of $f$ if $(g \circ f)(x) =
+x$ for all of $x$. The domain of $g$ has to be equal to the range of
+$f$ and vice versa.
+
+The inverse of $f(x)$ is written as $f^{-1}(x)$. Do not confuse this
+with a function raised to negative one! $f^{-1}(x) \ne f(x)^{-1}$.
+
+\subsubsection*{Which Functions Have Inverses?}
+
+The function $f$ can only have an inverse if it is a one-to-one
+function. The function $f$ will only have an inverse if it passes the
+horizontal line test.
+
+\textit{Note:} Any function with an interval domain that is either
+increasing or decreasing is one-to-one and, naturally, has and
+inverse. This is the main way we will identify functions with inverses
+in this course.
+
+This is yet another way to make new functions: any one-to-one function
+can yield an inverse.
+
+Some examples of inverse functions:
+\begin{itemize}
+\item $f(x) = x^2$ with the domain $[0,\infty)$ has the inverse
+  $f^{-1}(x) = \sqrt{x}$.
+
+\item $f(x)=\sqrt{x-2}$ has the domain $[2,\infty)$. Find the inverse
+  by solving $y = \sqrt{x-2}$ for $x$. This gives you $f^{-1}(y) = y^2
+  + 2$. In practice, we change the $y$s back to $x$s ($f^{-1}(x) = x^2
+  + 2$). This has the same meaning. The domain of this function is the
+  range of $f(x)$, which is \emph{not} $[2,\infty)$; it is $[0,
+  \infty)$.
+
+\item Some functions are their own inverses ($f(x) =
+  f^{-1}(x)$). Examples include:
+
+  \begin{enumerate}
+  \item $f(x) = \frac{1}{x}$
+
+  \item $f(x) = x$
+
+  \item $f(x) = -x$
+  \end{enumerate}
+  You can produce more of these using the various methods for creating
+  new functions outlined in section \ref{sec:newfuncs} on page
+  \pageref{sec:newfuncs}.
+
+\end{itemize}
+
+\subsubsection*{A Subtlety}
+
+There are sometimes functions that \emph{have} inverses, and it is
+easy to find this out, but calculating the inverse is difficult.
+
+A good example is $f(x) = 2^x + x^3$ with the domain $\Re$. This
+function is increasing, but using algebra to find the actual inverse
+function is nontrivial.
+
+Thus, you can find out that there \emph{is} an inverse without finding
+out what the inverse actually is. Even if you can't find the inverse
+as a formula, it still exists!
+
+\subsubsection*{General Properties}
+
+Here are some general properties of \emph{all} inverse functions:
+
+\begin{itemize}
+
+\item $f(x) = y$ is the same as $f^{-1}(y) = x$.
+
+\item The ordered pair $(x,y)$ is in the graph of $f$ iff $(y, x)$ is
+  in the graph of $f^{-1}$.
+
+\item The graph of $f$ is the reflection of $f^{-1}$ about the line
+  $y=x$.
+
+\item The functions cancel out: $f(f^{-1}(y)) = y$ in the domain of
+  $f^{-1}$.
+
+\end{itemize}
+
+Think of the inverse as a function that undoes what the actual
+function does---they are opposites.
+
+\subsubsection*{Logarithms}
+
+The inverse of the exponential function ($f(x) = a^x$) is called the
+logarithm. Logarithms can have any base that an exponential function
+can have. The most common bases are $2, e$ and $10$.
+
+Notation: $\log_a{y} = x$ means $a^x = y$. By default, in math
+classes, a log function without a specified base has base 10.
+
+\subsection{The Magic Number $e$}
+
+Take the graph of $y=a^x$ and the graph of $y=b^x$ where $b > a$. The
+latter graph would be more steep. At $x = 0$, $y=1$ for all
+exponential functions as $a^0 = 1$ in every case.
+
+At this point, there is a tangent line. This is a line that intersects
+the curve at only \emph{one} point. The tangent line has a different
+slope for different graphs. The slope for the graph of base $b$ is
+greater than the slope for the graph of base $a$ if $b > a$.
+
+There is \emph{one} special number $a$ such that the slope of the
+tangent line at $(0, 1)$ for $y = x^x$ is $1$. That number is $e$.
+
+$e$ is an irrational number ($e \approx 2.71828\ldots$). This is a
+brand-new number, mostly: there is no easy relationship between $e$
+and $\pi$, at least nothing obvious and algebraic like $\frac{\pi}{2}$
+or something.
+
+\subsubsection*{The Natural Logarithm}
+
+The function $f(x) = e^x$ has an inverse. This inverse, like the
+inverse of any exponential function, is a logarithm. However, this is
+a very special logarithm, so it has a special name: It is called the
+``natural logarithm''. So $\log_e{x} = \ln(x)$.
+
+The graph of the natural logarithm is the mirror image of the graph of
+$y = e^x$ over the line $y = x$, just like any other inverse function!
+This can be used to draw the graph of $y = \ln{x}$ very easily.
+
+\subsection{Logarithms}
+
+The graph of any logarithm has several properties. There is a vertical
+asymptote along the line $x = 0$. There are no points at all in the
+interval $(-\infty,0]$. The graph approaches $\infty$ as $x$
+approaches $\infty$, but increasingly slowly.
+
+Thus, the domain of any logarithm is $(0, \infty)$ and the range is
+$(-\infty, \infty)$.
+
+\subsubsection*{Laws of Logarithms}
+
+When we work with the exponential function, we usually use the laws of
+exponentiation rather than relying on the definition of the
+function. The same is true for logarithms.
+
+Here are some laws of logarithms:
+\begin{itemize}
+\item $\log_a{x^a} = x$
+
+\item $\log_a{xy} = \log_a{x} + \log_a{y}$
+
+\item $\log_a{\frac{x}{y}} = \log_a{x} - \log_a{y}$
+
+\item $\log_a{b^x} = x \cdot \log_a{b}$
+
+\item $\log_b{c} = \frac{\log_a{c}}{\log_a{b}}$
+\end{itemize}
+
+Here $a$ can be any positive number except for 1. This is impossible
+because 1 to any power is still 1. $1^y = x$ is only valid if $x =
+1$. Additionally, the graph of $f(x) = 1^x$ fails the horizontal line
+test and cannot have an inverse.
+
+\section{Limits}
+
+\subsection{Intro to Limits}
+
+\subsubsection*{Secant Lines}
+
+A \emph{secant line} is a line that passes through a curve at exactly
+two points. Take the function $f(x) = 100-5x^2$. A line passing
+through the points $(1, f(1))$ and $(c, f(c))$ would be a secant
+line. We can get the slope of this line, which is $-5$ for a
+particular value of $c$.
+
+We can draw a secant line for any value of $c$. As $c$ comes closer
+and closer to 1, the closer and closer the slope of the secant line is
+to that of the \emph{tangent line}, which crosses the curve at only
+one point. Using this, we can guess the slope of the tangent line at
+$(1, f(1))$. We get $-10$ by plugging in a $c$ that is very close to
+1.
+
+This means that the slope of a tangent line is the \emph{limit} of
+slopes of secant lines.
+
+\subsubsection*{Informal Definition}
+
+Basically (informally), a (finite) limit can be thought of as:
+\begin{equation*}
+  \lim_{x \to a}{f(x)} = L
+\end{equation*}
+Here $L$ is finite. This effectively means that one can make $f(x)$ as
+close to $L$ as desired by taking $f(x)$ where $x$ is very close to
+$a$; however; $x$ \emph{cannot} actually be $a$.
+
+Of course, this is a very vague definition that is not actually
+practical for use in mathematics. This is just supposed to convey the
+essence of limits, not actually define them in any practical terms.
+
+\subsubsection*{Some Examples}
+
+Take this as an example:
+\begin{equation*}
+  \lim_{x \to 3}{x^2} = 9
+\end{equation*}
+This means that as $x$ gets closer and closer to 3, $x^2$ gets closer
+and closer to 9. Not much of a revelation, but still useful.
+
+Another example:
+
+\begin{equation*}
+  f(x) = 
+  \begin{cases}
+    -1 & \text{if } x < 0\\
+    \text{undefined} & \text{if } x = 0\\
+    1 & \text{if } x > 0
+  \end{cases}
+\end{equation*}
+
+Take $\lim_{x \to 0}{f(x)}$ This limit is impossible to find; it does
+not exist.
+
+A similar example:
+
+\begin{equation*}
+  f(x) = \frac{1}{|x|}  
+\end{equation*}
+
+Take $\lim_{x \to 0}{f(x)}x$. In this case, it also does not exist;
+however, this is a special condition. Here, as $x$ approaches 0,
+$f(x)$ gets bigger and bigger. Thus
+
+\begin{equation*}
+  \lim_{x \to 0}{\frac{1}{|x|}} = \infty
+\end{equation*}
+
+However, this limit still \emph{does not exist}. Here you can also
+have negative infinity ($-\infty$), which just means that $f(x)$ would
+get more and more negative as you approach the limit.
+
+\emph{Note:} The notation $\infty$ and $-\infty$ does not mean the
+infinity is a number; it is not. It cannot be used as a number, even
+though it is sometimes written where a number would otherwise be.
+
+Another common example: $f(x) = \frac{1}{x}$. Here, from one side, the
+limit $lim_{x \to 0}{f(x)}$ does not exist and is \emph{neither}
+$\infty$ nor $-\infty$.
+
+Take a weird function like $f(x) = \sin{\frac{1}{x}}$ which goes
+between 1 and $-1$ more and more quickly as it approaches 0. Depending
+on which $x$s one looks at, the limit $\lim_{x \to 0}{f(x)}$ could be
+take as 0, 1 or $-1$. In this case, the limit \emph{does not exist}.
+
+A last weird example: take a function like the previous except that
+instead of going from 1 to $-1$, the amplitude decreases as $x$ gets
+close to 0 ($f(x) = x - \sin{\frac{1}{x}}$). Thus, the two values it
+jumps between get closer and closer to zero as $x$ does. In this case,
+the limit as x approaches 0 \emph{does} exist; the limit here is
+0. Note that $f(0)$ can be anything, or even undefined; it is not
+pertinent to finding the limit.
+
+\subsubsection*{One-Sided Limits}
+
+Limits can be taken from just one side, either the right (positive) or
+the left (negative). If $a$ and $L$ are real numbers, $\lim_{x \to
+  a^+}{f(x)} = L$ means the limit of $f(x)$ as $x$ approaches $a$ from
+the right.
+
+This can be very useful in certain cases. Take the function $f(x) =
+\ln{x}$. This function has nothing left of the y-axis. Thus, $lim_{x
+  \to 0}{f(x)}$ cannot be found \emph{at all}; however, $lim_{x \to
+  a^+}{f(x)}$ \emph{can} be found (it is $-\infty$).
+
+\subsubsection*{Vertical Asymptotes}
+
+A vertical asymptote of $f(x)$ at $a$ means that \smash{$lim_{x \to
+    a^+}{f(x)} = \infty$} or $-\infty$ or \smash{$\lim_{x \to
+    a^-}{f(x)} = \infty$} or $-\infty$.
+
+\subsection{Working with Limits}
+
+When working with limits, it is often necessary to find the limit of a
+function created from one or more simpler functions. The methods for
+creating functions this way are described in section
+\ref{sec:newfuncs} on page \pageref{sec:newfuncs}.
+
+It is possible to find the limit of a complex function knowing the
+limits of the functions that make it up. This requires using a set of
+rules called the ``Limit Laws'' which describe how limits of complex
+functions made up of other functions behave.
+
+\subsubsection*{Limit Laws}
+\label{sec:limitlaws}
+
+Assume that $f(x)$ and $g(x)$ both have a real limit as $x$ approaches
+$a$. Here are the various rules for combining limits:
+\begin{itemize}
+\item Sums of limits:
+  \begin{equation*}
+    \lim_{x \to a}{f(x) + g(x)} = \lim_{x \to a}{f(x)} + \lim_{x \to a}{g(x)}
+  \end{equation*}
+
+\item Differences of limits:
+  \begin{equation*}
+    \lim_{x \to a}{f(x) - g(x)} = \lim_{x \to a}{f(x)} - \lim_{x \to a}{g(x)}
+  \end{equation*}
+
+\item A limit of a function times a constant:
+  \begin{equation*}
+    \lim_{x \to a}{c \cdot f(x)} = c\,\lim_{x \to a}{f(x)}
+  \end{equation*}
+
+\item Products of limits:
+  \begin{equation*}
+    \lim_{x \to a}{f(x) \cdot g(x)} = \lim_{x \to a}{f(x)} \cdot \lim_{x \to a}{g(x)}
+  \end{equation*}
+
+\item Ratios of limits:
+  \begin{equation*}
+    \lim_{x \to a}{\frac{f(x)}{g(x)} = \frac{\lim_{x \to
+          a}{f(x)}}{\lim_{x \to a}{g(x)}}} \quad  \text{if} \lim_{x \to
+      a}{g(x)} \ne 0 
+  \end{equation*}
+
+\item Powers:
+  \begin{equation*}
+    \lim_{x \to a}{f(x)^n} = (\lim_{x \to a}{f(x)})^n \text{ if $n$ is
+      a positive integer.}
+  \end{equation*}
+
+\item Constant function (identity):
+  \begin{equation*}
+    \lim_{x \to a}{c} = c
+  \end{equation*}
+
+  % Rules for one-sided limits
+
+\end{itemize}
+
+\subsection{Direct Substitution Property}
+
+The Limit Laws (section \ref{sec:limitlaws}) help find the limits of
+functions based on the limits of simpler functions; however, they
+aren't much help for finding the limit of a function if we do not know
+any limits at all.
+
+In order to find $\lim_{x \to a}{f(x)}$, it is often enough to simply
+plug $a$ into the function $f$. This is called the \emph{direct
+  substitution property}. This property is limited however---it can
+only be used if the function $f$ is a polynomial or rational function
+and $a$ is in the domain of $f$. Functions that fit this criteria are
+called \emph{continuous} at $a$.
+
+While direct substitution is limited to functions continuous at $a$,
+there are ways of finding limits of functions \emph{not} continuous at
+$a$. If you have two functions $f$ and $g$ where $f(x) = g(x)$ except
+when $x = a$, then the limit of the two functions at $a$ is the
+same. This is very convenient if one function is continuous at $a$ and
+the other isn't.
+
+An example: take a function $f$ that is defined as:
+\begin{equation*}
+  f(x) =
+  \begin{cases}
+    x & \text{if } x \ne 3 \\
+    42 & \text{if } x = 3
+  \end{cases}
+\end{equation*}
+We cannot use the substitution property to find $\lim_{x \to 3}{f(x)}$
+as $f$ is not continuous at 3---$f(x) = 42$, which is blatantly
+wrong. However, lets take the function $g$ such that $g(x) = x$. We
+know that $g(x) = f(x)$ everywhere except 3, and that's where we're
+trying to find the limit. Now we know that $lim_{x \to 3}{f(x)} =
+lim_{x \to a}{g(x)}$. Using the fact that $g$ is continuous at 3, we
+can employ the substitution property to find that $lim_{x \to 3}{f(x)}
+= 3$. Now we know that $\lim_{x \to 3}{f(x)} = 3$.
+
+\subsection{Limits with Inequalities}
+
+Take two functions $f$ and $g$ such that $f(x) \le g(x)$ for some
+interval. Take a number $a$ such that $a$ is within and not on the
+edge of this interval. If this is true, then:
+\begin{equation*}
+  \lim_{x \to a}{f(x)} \le \lim_{x \to a}{g(x)}
+\end{equation*}
+If the limit of $g$ here is finite, the same is true for $g$.
+
+A special case to note is when $g(x) = C$ for all $x$ in the
+interval. Here, this holds:
+\begin{equation*}
+  \lim_{x \to a}{f(x)} \le C
+\end{equation*}
+Of course, this is only true if $\lim_{x \to a}{f(x)}$ exists.
+
+These two properties can, naturally, be used in reverse. You can
+conclude about both $\le$ and $\ge$ relationships.
+
+\subsubsection*{Squeeze Theorem}
+\label{sec:squeeze}
+
+The \emph{Squeeze Theorem} is a way of getting an equality from
+multiple inequalities. Take three functions such that $f(x) \le g(x)
+\le h(x)$ in some open interval containing $a$. This basically means
+that the graph of $g$ is between $f$ and $h$. If $\lim_{x \to a}{f(x)}
+= \lim_{x \to a}{h(x)}$, then $\lim_{x \to a}{g(x)} = \lim_{x \to
+  a}{f(x)} = \lim_{x \to a}{h(x)}$. Note that this also applies to
+one-sided limits. This works with both finite and infinte limits.
+
+\subsubsection*{Examples}
+
+Take the function $g$ such that
+\begin{equation*}
+  g(x) = x\sin{\frac{1}{x}} \quad \text{for } x > 0.
+\end{equation*}
+This graph ``bounces'' up and down less and less as it approaches
+0. Our goal is to find $\lim_{x \to a}{g(x)}$. To do this, we will use
+the Squeeze Theorem. We define two functions $h$ and $f$ where $h(x) =
+x$ and $f(x) = -x$; both of these funcitons have the same domain as
+the original function. Here $f(x) \le g(x) \le h(x)$; we have a
+sandwich! The latter two functions are polynomial; we can use the
+substitution property to find that $\lim_{x \to a}{f(x)} = \lim_{x \to
+  a}{h(x)} = 0$. As both of these functions have the same limit, the
+Squeeze Theorem tells us that $\lim_{x \to a}{g(x)} = 0$. This is a
+great example of how inequalities can lead to equalities.
+
+\subsection{Definition of Limits}
+
+Quick primer: mathematicians like to use Greek letters. $\epsilon$ is
+epsilon; $\delta$ is delta.
+
+Another reminder: $|y - b| < \delta$. All this means is that $b -
+\delta < y < b + \delta$. Another one: $0 < |x - a| < \delta$. This
+means that $a - \delta < x < a + \delta \text{ and } x + a$. Knowing
+this, we can continue.
+
+\subsubsection*{Definition}
+
+$\lim_{x \to a}{f(x)} = L$ where $L$ and $a$ are real numbers and $f$
+is a function defined in some open interval about $a$ (note that
+$f(a)$ need not be defined). For any $\epsilon > 0$ there is some
+$\delta > 0$ such that whenever $0 < |x - a| < \delta, |f(x) - L| <
+\epsilon$.
+
+\subsubsection*{Examples}
+
+We know that
+\begin{equation*}
+  \lim_{x \to 2}{5x + 3} = 13
+\end{equation*}
+Now we are going to prove this using the definition of a limit. Here
+$L = 13$, $a = 2$ and $f(x) = 5x + 3$. First, we find $|f(x) -
+L|$. This is a measure of how close $f(x)$ is to $L$, the limit. We
+substitute: $|5x + 3 - 13|$ and then $5|x - 2|$. Note that $a = 2$, so
+we now have $5|x - a|$. Now we let $\epsilon > 0$ and let $\delta$ be
+defined later. Now we assume $0 < |x - 2| < \delta$. Now we substitute
+and simplify: $|5x + 3 - 13| = 5|x - 2| < 5\delta = \epsilon$. Now we
+know that if $\delta = \frac{\epsilon}{5}$ then $|5x + 3 - 13| <
+\epsilon$. Now we just define $delta$ as $\frac{\epsilon}{5}$ and we
+have the solution!
+
+Another example:
+\begin{equation*}
+  \lim_{x \to 3}{x^2} = 9
+\end{equation*}
+Our job is to show that this is true. Here $a = 3$, $L = 9$ and $f(x)
+= x^2$. In this problem, we cannot use the Limit Laws; we have to use
+the definition of a limit. We start by trying to find $|x - a|$:
+\begin{equation*}
+  f(x) - L = x^2 - 9 = (x + 3) (x - 3)
+\end{equation*}
+Here $x - a$ is $x - 3$; the $x + 3$ term is extra. Now we let
+$\epsilon > 0$ , as we do in all such proofs. We now need to define
+$\delta$. We know that if $0 < |x - 3| < \delta$ then $|(x - 3)(x +
+3)| = |x - 3|\cdot|x + 3| \le \delta|x + 3|$. Here people are tempted
+to set $\delta$ to $\frac{\epsilon}{|x + 3|}$. This is invalid,
+because we do not know what $x$ is; $\delta$ is a number while $x$ is
+a variable. You cannot have an $x$ in the value of $\delta$. Instead,
+you should try to make $|x + 3|$ disappear.
+
+\subsubsection*{Infinite Limits}
+
+The definition of infinite limits is different from that of normal
+limits. They are written as follows:
+\begin{equation*}
+  \lim_{x \to a}{f(x)} = \infty
+\end{equation*}
+This means that for any finite $N < \infty$ thee is some $\delta > 0$
+such that $f(x) > N$ whenever $0 < |x - a| < \delta$. Basically, for
+any number, $f(x)$ can be larger. As always, $f$ has to be defined
+over some open interval containing $a$, although it doesn't have to be
+defined at $a$.
+
+\subsection{One-Sided Limits}
+
+A one-sided limit is written as follows:
+\begin{equation*}
+  \lim_{x \to a^+}{f(x)} = L
+\end{equation*}
+This means that there is some number $c > a$ such that $f(x)$ is
+defined from all $x \in (a, c)$ and for all $\epsilon > 0$ there is a
+$\delta > 0$ such that %...
+
+Basically, this means that as $x$ approaches $a$ from the right,
+$f(x)$ gets closer and closer to $L$.
+
+\subsubsection*{Comparison to Two-Sided Limits}
+
+It is useful to compare one-sided limits to two-sided limits. One
+thing that is interesting is that you can have different limits for
+$a^+$ and $a^-$. This means that the two sided limit as $x \to a$ does
+not exist. Thus, we can say that if $lim_{x \to a}{f(x)} = L$ then
+both $\lim_{x \to a^+}{f(x)} = L$ and $\lim_{x \to a^-}{f(x)} =
+L$. The opposite is also true: If the limit as $x \to a^+$ is them
+same as the limit as $x \to a^-$, then the limit as $x \to a$ exists
+and is the same as the two one-sided limits.
+
+Example:
+\begin{equation*}
+  f(x) =
+  \begin{cases}
+    x + 1 & \text{ if} x > 0\\
+    x - 1 & \text{ if} x < 0
+  \end{cases}
+\end{equation*}
+Here $\lim_{x \to 0^+}{f(x)} = 1$ and $\lim_{x \to 0^-}{f(x)} = -1$
+but $\lim_{x \to 0}{f(x)}$ \emph{does not exist}.
+
+\subsubsection*{Infinite Limits}
+
+You can also get the limit of $x \to \pm \infty$. The following:
+\begin{equation*}
+  \lim_{x \to \infty}{f(x)} = L
+\end{equation*}
+means that for any $\epsilon > 0$, there is some $M$ so that whenever
+$x > M$, $|f(x) - L| < \epsilon$. In less mathematical terms, this
+means that the difference between $f(x)$ and $L$ decreases as $x$ gets
+bigger and bigger. For any arbitrarily small number ($\epsilon$),
+there exists a number such that for all $x$ greater than that number,
+the difference between $f(x)$ and $L$ is smaller than the arbitrarily
+small number.
+
+You can use this definition to prove limits, much like for normal
+limits. Let's take
+\begin{equation*}
+  \lim_{x \to \infty}{3 + \frac{1}{x^2 + 1}} = 3
+\end{equation*}
+We begin by getting $f(x) - L$, which is:
+\begin{equation*}
+  3 + \frac{1}{x^2 + 1} - 3
+\end{equation*}
+or just
+\begin{equation*}
+  \frac{1}{x^2 + 1}
+\end{equation*}
+Now we let $\epsilon > 0$ and let $M >
+\frac{1}{\sqrt{\epsilon}}$. Note how $M$ increases whenever $\epsilon$
+decreases, which makes sense.
+
+You can also define limits as $x$ approaches $-\infty$. Additionally,
+you can always define limits where $L = \pm \infty$. However, you can
+also have hybrid limits as so:
+\begin{equation*}
+  \lim_{x \to \infty}{f(x)} = \infty
+\end{equation*}
+Lines, polynomials, logarithms, exponential functions and others all
+have limits like this. The simplest case is that $\lim_{x \to
+  \infty}{x} = \infty$. All functions larger than this also have this
+limit.
+
+It is convenient to note that:
+\begin{equation*}
+  \lim_{x \to \infty}{f(x)} = \lim_{x \to 0^+}{f(\frac{1}{x})}p
+\end{equation*}
+
+\subsubsection*{Horizontal Asymptotes}
+
+There is a connection between limits of $x \to \infty$ and horizontal
+asymptotes. Take the graph of $f(x)$ that has the line $y = L$ as a
+horizontal asymptote. What this means in terms of limits is simple:
+\begin{equation*}
+  \lim_{x \to \infty}{f(x)} = L
+\end{equation*}
+This is very similar to vertical asymptotes, which are defined as
+limits where $L$ is infinite and $a$ is finite.
+
+\subsection{Why Limits?}
+
+Why do we spend all this time on limits? Learning the formal
+definition, playing around with $\epsilon-\delta$ proofs..etc?
+
+Well, the fundamental concept of this course is the
+\emph{derivative}. We will learn about derivatives from multiple
+points of view. We will look at them through graphs, methods of
+calculation, application and what it actually means. We cannot get the
+latter without referring to limits. We will learn about derivatives
+starting from the simpler concept of a limit.
+
+\subsection{Continuity}
+
+This helps us find limits using the substitution property. It will
+also be useful in the future. Here is the formal definition of
+continuity:
+
+$f$ is continuous at $a$ if the domain is an open interval about $a$
+and $\lim_{x \to a}{f(x)}$ exists and $\lim_{x \to a}{f(x)} = f(a)$.
+
+Intuitively, this means that $f(x)$ has to go through and include $a$
+with no breaks.
+
+A broader definition concerns open intervals. We can say that $f(x)$
+is continuous on the open interval $(b, c)$ if $f(x)$ is continuous at
+every point in the interval.
+
+If the limit is not open, like $[b, c)$, then it is continuous on the
+interval if it is continuous on $(b, c)$ and $\lim_{x \to b^+}{f(x)} =
+f(b)$. Basically, we do not care about anything out of the interval,
+like all $x < b$.
+
+\subsubsection*{Basic Functions}
+
+Life is convenient: all of the basic functions we know (polynomials,
+rational functions, exponential functions $f(x) = a^x$ with $a > 0$,
+\textit{n$^{th}$} roots, logarithms, trig functions, inverse trig
+functions, absolute value function...) are continuous on their
+domains.
+
+\subsubsection*{Building Up Functions}
+
+Here are some basic ideas about continuous functions:
+
+If $f, g$ are continuous functions on the same interval and $c$ is a
+real number, then:
+\begin{itemize}
+\item $f + g$
+\item $f \cdot g$
+\item $cf$
+\end{itemize}
+are all continuous functions.
+
+% Composing functions...
+
+Basically we can build up more complex functions and still know that
+they are continuous.
+
+\subsubsection*{Intermediate Value Theorem}
+Assume that:
+\begin{itemize}
+\item $f$ is a continuous function on a finite, closed interval $[a,
+  b]$.
+\item $f(a) \ne f(b)$.
+\end{itemize}
+Given this, if $z$ is between $f(a)$ and $f(b)$ there is at least one
+value of $x$ satisfying $a < x < b$ which is a solution of the
+equation $f(x) = z$. Basically, a continuous function must cross all
+of the horizontal lines between the two ends of the interval. The
+function could also cross any given line \emph{multiple} times; all
+you know is that there is \emph{at least} one solution.
+
+Of course, if the function is not continuous, this will not
+hold. Additionally, this theorem does not say anything about lines
+where $z$ is not between $f(a)$ and $f(b)$.
+
+\subsubsection*{Multiple Answers}
+
+The glaring weakness of the intermediate value theorem is that it only
+tells you \emph{whether} a solution exists; it does not give you the
+actual solution, or even if more than one solution exists. The theorem
+only tells us that there is an arbitrary positive number of solutions.
+
+We can use certain facts about the function we're looking at to figure
+out how many answers there are. Take $\frac{1}{x} = \ln{x}$. When
+changed to $\frac{1}{x} - \ln{x}$, this is a strictly decreasing
+function, so it cannot, by definition, cross the same horizontal line
+twice.
+
+\section{Derivatives}
+
+This is the main part of the course! This is a very useful idea based
+on the concept of a limit. In very general terms, the derivative of a
+function $f$ at $a$ is the slope of the tangent line to $f$ at
+$a$. Derivatives do not always exist.
+
+\subsection{Definition of a Derivative}
+\label{sec:defderiv}
+
+For reference, $f`(a) = $ ``the derivative of $f$ at $a$''. If $a \in
+$ domain of $f$, then:
+\begin{equation*}
+  f'(a) = \lim_{x \to a}{\frac{f(x) - f(a)}{x - a}}
+\end{equation*}
+As long as the limit exists and is \emph{finite}. In other words, the
+derivative is the limit of the slopes of secant lines formed from both
+$a$ and points successively closer to $a$.
+
+Another way to think of it is as a limit of differences. Take $\Delta
+x$ to be the change in $x$ and $\Delta f$ as the corresponding change
+in $f(x)$. This lets us restate the formula as:
+\begin{equation*}
+  \lim_{\Delta x \to 0}{\frac{\Delta f}{\Delta x}}
+\end{equation*}
+This means the exact same thing as the previous definition; it is
+merely stated in a different way.
+
+This also leads us to another way of writing derivatives. Instead of
+writing $f'(x)$, we can write $\frac{df}{dx}$. Note that here $df$
+\emph{does not have a meaning}, at least for us at this point in the
+course. This notation reminds us that derivatives are limits of ratios.
+
+\subsubsection*{Tangent Lines}
+
+Previously, derivatives were referenced as the slopes of ``tangent
+lines''. Tangent lines are hard to define without derivatives, but not
+that the derivative \emph{is} definable without tangent lines, so we
+can define the latter in terms of the former.
+
+A tangent line is the line that goes through the point $(a, f(a))$ and
+has the slope equal to $f`(a)$.
+
+\subsubsection*{Calculating Derivatives Using the Definition}
+
+We can calculate derivatives using the definition found in
+\ref{sec:defderiv}. Let's take a simple example:
+\begin{equation*}
+  f(x) = \frac{1}{x}
+\end{equation*}
+We will get the derivative of this function for all values $a$ where
+$a \ne 0$. That is, we are solving:
+\begin{equation*}
+  \lim_{x \to a}{\frac{\frac{1}{x} - \frac{1}{a}}{x - a}} 
+\end{equation*}
+Now all we need to do is simplify:
+\begin{equation*}
+  \lim_{x
+    \to a}{\frac{\frac{a - x}{ax}}{x - a}} = \lim_{x \to a}{\frac{-1}{ax}} = \frac{-1}{a \cdot a}
+\end{equation*}
+What we have here is the answer: $f'(a) = \frac{-1}{a^2}$ for all $a
+\ne 0$. This makes sense given the graph of $f(x)$.
+
+Let's take another example:
+\begin{equation*}
+  f(x) = |x|
+\end{equation*}
+We want $f`(0)$. The limit we need to solve is:
+\begin{equation*}
+  \lim_{x \to 0}{\frac{|x| - |0|}{x - 0}} = \lim_{x \to 0}{\frac{|x|}{x}}
+\end{equation*}
+We cannot use the rules here, but we can look at one sided limits. We
+now need to evaluate:
+\begin{equation*}
+  \lim_{x \to 0^+}{\frac{|x|}{x}} \text{and } \lim_{x \to 0^-}{\frac{|x|}{x}}
+\end{equation*}
+Here one side is 1 and the other is -1. When one-sided limits to the
+same value are not equal, that means that the limit at the value does
+not exists. If the limit does not exists, the derivative does not
+exist either.
+
+This is an important point to note: not all derivatives exist. A
+function can easily have a derivative on all points save one, for
+example.
+
+\subsubsection*{Limit $h \to 0$}
+
+Sometimes, we can greatly simplify the algebra of finding the
+derivative using the definition. We do this by defining a new variable
+$h$ which is equal to $x - a$. This then turns $\lim_{x \to a}{f(x)}$ into:
+\begin{equation*}
+  \lim_{h \to 0}{f(a + h)}
+\end{equation*}
+And we finally get the formula that:
+\begin{equation*}
+  f'(a) = \lim_{h \to 0}{\frac{f(a + h) - f(a)}{h}}
+\end{equation*}
+This is only valid as long as $a$ is in some open interval in the
+domain of $f$.
+
+Basically, this approach is never \emph{necessary}; it is merely
+sometimes much easier to solve problems like this rather than just
+using the normal definition of a derivative. 
+
+\subsubsection*{Real-World Example : Position, Velocity, Acceleration}
+
+The canonical example of derivatives in the real world comes from
+physics: velocity and position. Let's take a function $s(t)$ that
+represents the position of a particle at a given time. We can
+interpret
+\begin{equation*}
+  \frac{s(t) - s(a)}{t - a}
+\end{equation*}
+as being the net distance over the net time, which gives us the
+average velocity. If we take $\lim_{x \to a}{\frac{s(t) - s(a)}{t -
+    a}}$, we will get the \emph{instantaneous} velocity of the
+particle at time $t$.
+
+This basically means that the derivative of position at a time $t$ is
+the velocity at that time. In other words, $s'(t) = v(t)$. Note that
+the velocity of a particle is the change in position over time.
+
+We are also generally interested in the change of velocity over time:
+this is called acceleration. Knowing the acceleration is very useful
+for understanding the behavior of a moving particle. The nice thing is
+that we can approach getting the acceleration from the velocity the
+exact same way we approached getting velocity from position:
+ultimately, we would find that acceleration is simply the derivative
+of velocity.
+
+To summerize, we now know that acceleration is the derivative of
+velocity which, in turn, is the derivative of position. We can also
+say that the acceleration is the double derivative of position. So, we
+now have: $a(x) = v'(x) = s''(x)$.
+
+\subsection{Continuity}
+
+Derivatives also have other applications to functions. One important
+application is in finding continuity. In short, if $f(x)$ is
+differentiable at $a$, then we know that it is continuous at $a$. This
+also works backwards: if the function is not continuous at $a$, then
+the derivative of $f$ at $a$ does not exist.
+
+It is very important to note that this theorem only states what it
+states; more pertinently, it does \emph{not} say that if a function is
+continuous at $a$ it is differentiable at $a$---this statement is, in
+fact, trivially disprovable. Let's take the absolute value
+function. This function does not have a derivative at $0$; this was
+shown in section \ref{sec:defderiv} on page
+\pageref{sec:defderiv}. However, as $\lim_{x \to 0}{|x|}$ is 0, we
+know that the function is continuous at 0. Basically, make sure to
+never take this theorem to mean that all continuous functions are
+differentiable.
+
+\subsection{Derivatives as Functions}
+
+In a large amount of cases, it is convenient to know the derivative of
+a function at all of its points rather than just knowing it from
+\emph{one} point. To do this, we need to get the derivative at $x$ of
+the function $f(x)$ as a function of $x$. That is, we are finding
+$f'(x)$ as a function.
+
+Doing this basically involves taking the appropriate limit of the
+function at all of the points along it. Of course, this is not as
+difficult as it seems.
+
+We can also take derivatives repeatedly. Taking a derivative twice,
+for example, results in a ``second derivative'' which is usually
+rendered as $f''(x)$. 
+
+\subsubsection*{Notation}
+
+When you take the derivative of a function, it may not exist at all of
+the elements of that function's domain. There are many ways to say
+this:
+\begin{itemize}
+\item $f$ is differentiable at $a$
+\item $f'(a)$ exists
+\item $\lim_{x \to a}{\frac{f(x) - f(a)}{x - a}}$
+\item $\lim_{h \to 0}{\frac{f(a + h) - f(a)}{h}}$
+\item $\lim_{\Delta x \to 0}{\frac{\Delta f}{\Delta x}}$ where $\Delta
+  f = f(x) - f(a)$ and $\Delta x = x - a$, exists.
+\end{itemize}
+All of these statements mean the same thing, namely that the
+derivative of $f$ at $a$ can be found. This is a very good example of
+all of the different notations.
+
+All of the different things exist for a reason: in certain cases, one
+particular notation is preferable over the other. Additionally, some
+things just have two names.
+
+\subsection{Calculating Derivatives}
+\label{sec:calcderiv}
+
+Derivatives are very useful; using limits to calculate them is
+cumbersome. In order to make life much easier, we will go over some
+rules for more quickly finding derivatives. There will be, broadly
+speaking, two types of rules: basic rules that let you get the
+derivative of basic functions and other rules that let you get the
+derivatives of complex functions made up of simpler ones.
+
+The following sections contain a summary of all of the various rules
+we have for quickly calculating the derivative of various functions
+ranging in complexity from the simple to the extremely complex.
+
+\subsection{Simple Functions}
+
+Here are some rules for very simple functions which will serve as the
+building blocks for calculating more complex derivatives:
+\begin{itemize}
+\item If $f(x) = C$, then $f'(x) = 0$ for all $x$.
+\item If $n$ is an integer $\ne 0$ and $f(x) = x^n$ then $f'(x) =
+  nx^{n - 1}$ for all $x$, unless $n < 0$ in which case the derivative
+  does not exist at 0.
+\item If $f(x) = r^x$ and $r > 0$, then $f(x) = f'(0) * f(x)$ for all
+  $x$. Note that if $r = e$ then $f'(x) = f(x) = e^x$.
+\end{itemize}
+
+\subsection*{Combinations of Functions}
+
+This is the second type of rule, where we will find the derivative of
+combinations of known functions. This is very useful for
+differentiating more complex expressions.
+\begin{itemize}
+\item \textbf{Constants:} If $g(x) = C\cdot f(x)$ then $g'(x) = C\cdot
+  f'(x)$ for all $x$ if $f'(x)$ exists.
+\item \textbf{Sums:} If $h(x) = f(x) + g(x)$ and both $g'(x)$ and
+  $f'(x)$ exist, then $h'(x) = f'(x) + g'(x)$.
+\item \textbf{Products:} If $f'(x)$ and $g'(x)$ exist, and $h(x) =
+  (f\cdot g)(x)$, then $h'(x) = f'(x)\cdot g(x) + f(x)\cdot g'(x)$ for
+  all $x$.
+\item \textbf{Quotients:} Given the same conditions as for the product
+  rule, as well as $g(x) \ne 0$
+  \begin{equation*}
+    \bigg(\frac{f}{g}\bigg)'(a) = \frac{f'(a) \cdot g(a) + f(a) \cdot g'(a)}{g(a)^2}
+  \end{equation*}
+\end{itemize}
+
+\subsection*{Trig Functions}
+
+Apart from simple funcitons, it is also useful to be able to
+differentiate trigonometric functions. The two simplest ones are
+$\sim{x}$ and $\cos{x}$, which are all differentiable on all $x$ in
+their domains. Basically, $\frac{d}{dx} \sin{x} = \cos{x}$ and
+$\frac{d}{dx} \cos{x} = -\sin{x}$. This now all that is needed to
+figure out the more complex functions like, say, $\tan{x}$.
+
+We know from trigonometry that $tan{x} =
+\frac{\sin{x}}{\cos{x}}$. This is a very simple application of the
+quotient rule:
+\begin{equation*}
+  \frac{d}{dx} \tan{x} = \frac{\cos{x}\cdot\cos{x} - \sin{x}(-\sin{x})}{\cos^2{x}}
+\end{equation*}
+This then simplifies to:
+\begin{equation*}
+  \frac{\cos^2{x} - \sin^2{x}}{\cos^2{x}} = \frac{1}{\cos^2{x}} = \sec{x}
+\end{equation*}
+This is true as long as $\cos{x} \ne 0$. If $\cos{x} = 0$ then the
+derivative is undefined since we can't divide by 0.
+
+In summary, the derivatives of various trig functions are:
+\begin{center}
+  \begin{tabular}[l]{|l|l|l|}
+    \hline
+    Function & Derivative & Conditions \\
+    \hline
+    $\sin{x}$ & $\cos{x}$ & All $x \in \Re$\\ 
+    \hline
+    $\cos{x}$ & -$\sin{x}$ & All $x \in \Re$ \\
+    \hline
+    $\tan{x}$ & $\sec^2{x}$ & All $x \in \Re$ such that $\cos{x} \ne 0$
+    \\
+    \hline
+  \end{tabular}
+\end{center}
+
+% Chain rule notes will go here.
+
+\subsection{Implicit Derivation}
+
+Function are usually defined explicitly, like so:
+\begin{equation*}
+  f(x) = x^2 + x + 2
+\end{equation*}
+Here the function is on one side; the expression for calculating the
+function in terms of $x$ is on the other side. In general, this means
+that the function is defined in the form of:
+\begin{equation*}
+  f(x) = \text{somthing } x
+\end{equation*}
+This is a very convenient form for working with functions; however,
+sometimes functions are not written this way.
+
+Another way to define a function is implicitly. That is, the function
+is defined on the same side of the equation as some other things. The
+general form of this is:
+\begin{equation*}
+  f(x, y) = 0 \text{or } f(x, y) = h(x, y)
+\end{equation*}
+A more realistic example of implicit definition is the equation of a
+circle:
+\begin{equation*}
+  y^2 + x^2 = 1
+\end{equation*}
+Note that there is no immediately obvious $f(x)$ here. Also not that,
+in this case, $y$ is not a function of $x$; rather, it is two
+functions.
+
+\subsubsection*{Calculating Implicit Derivatives}
+
+Let's take an example to show how to calculate the derivative of
+implicitly defined functions. Here is the equation:
+\begin{equation*}
+  4x^2+xy+y^2 = 24
+\end{equation*}
+This is the equation of an ellipse. We can get the derivative of this
+function even though it is not actually a function and it is defined
+implicitly. To do so, we would take the derivative in terms of $x$ of
+both sides:
+\begin{equation*}
+  \frac{d}{dx}(4x^2+xy+y^2) = \frac{d}{dx}(24)
+\end{equation*}
+Now, given this somewhat complicated equation, it is time to
+simplify. We can turn this equation into:
+\begin{equation*}
+  8x + (x\frac{dy}{dx} + 1*y) + 2y\frac{dy}{dx} = 0
+\end{equation*}
+Now we have a formula with three interesting bits: $x$, $y$ and
+$\frac{dy}{dx}$, which is what we are looking for.
+
+Now all we have to do is simplify this and get the answer. We do this
+by solving for $\frac{dy}{dx}$.
+\begin{equation*}
+  (x + 2y)\frac{dy}{dx} + (8x + y) = 0
+\end{equation*}
+And then:
+\begin{equation*}
+  \frac{dy}{dx} = - \frac{8x + y}{x + 2y}
+\end{equation*}
+Now we have the solution. Note that both $x$ and $y$ are present in
+the solution; this is fine. Now, to find the slope of a tangent line
+at a particular point, you just have to plug the point into the newly
+solved equation.
+
+\subsubsection*{A More Complicated Example}
+
+The previous example was not very complicated; it might have even been
+easier to simply solve the equation to get $y$ as a set of functions
+of $x$ and then just differentiate normally. However, there are plenty
+of implicit equations out there that are too difficult to plausibly
+solve this way. This is an example:
+\begin{equation*}
+  y^2(y^2 - 4) = x^2(x^2 - 5)
+\end{equation*}
+Solving this equation for $y$ would be very difficult; it is much
+easier to just differentiate implicitly. We start by getting
+$\frac{d}{dx}$ of each side:
+\begin{equation*}
+  \frac{d}{dx}(y^2(y^2 - 4)) = \frac{d}{dx}(x^2(x^2 - 5))
+\end{equation*}
+Next we derive all the parts:
+\begin{equation*}
+  2y\frac{dy}{dx} \cdot (y^2 - 4) + y^2 \cdot 2y\frac{dy}{dx} =
+  2x(x^2-5) + 2x^3
+\end{equation*}
+Next we simplify:
+\begin{equation*}
+  \frac{dy}{dx}(2y(y^2 - 4) + 2y^3) = 2x^3 + 2x(x^2 - 5)
+\end{equation*}
+And we finally get:
+\begin{equation*}
+  \frac{dy}{dx} = \frac{2x^3 + 2x(x^2 - 5)}{2y(y^2-4) + 2y^3}
+\end{equation*}
+Now that we have the slope as a function, we can once again plug in
+any point to get the slope of the tangent at that point. However, note
+that this will make us sometimes divide by 0. When we get an undefined
+answer like that, we are most likely dealing with a vertical tangent
+line which has no slope.
+
+A final note: we will not talk about when it is valid to use this
+method; we will just assume any time it works it is valid.
+
+\subsection{Inverse Trig Functions}
+
+We will now cover how to differentiate inverse trigonometric
+functions. These are functions like arcsin and arctan---given a degree
+measure, they return the length of a side of a triangle.
+
+\subsubsection*{Arcsin}
+
+Lets take the $\arcsin$ function for example. The
+$\arcsin(x)$ function is also sometimes called $\text{Arcsine}(x)$ or
+$\sin^-1{x}$.
+
+We can get the derivative of $\arcsin{x}$ using implicit
+differentiation. We do this by taking the function:
+\begin{equation*}
+  \sin{\arcsin{x}} = x
+\end{equation*}
+and getting its derivative with respect to $x$. That is, we take:
+\begin{equation*}
+  \frac{d}{dx}(\sin{\arcsin{x}}) = \frac{d}{dx}(x)
+\end{equation*}
+Then we get:
+\begin{equation*}
+  \cos{\arcsin{x}} \cdot \frac{d}{dx}\arcsin{x} = 1
+\end{equation*}
+Which means that:
+\begin{equation*}
+  \frac{d}{dx}\arcsin{x} = \frac{1}{\cos{\arcsin{x}}}
+\end{equation*}
+We can further simplify this by getting the value of
+$\cos{\arcsin{x}}$. This is relatively simple; it can be done
+geometrically. First, imagine a right triangle...
+%Picture here...
+
+\subsubsection*{Arctan}
+
+Arctan is the opposite of tangent much the same way arcsin is the
+opposite of sin. We can take the same approach to getting its
+derivative as we did for arcsin:
+\begin{equation*}
+  \frac{d}{dx}(x) = \frac{d}{dx}(\arctan{tan{x}})
+\end{equation*}
+We can now use the chain rule to get this derivative:
+\begin{equation*}
+  1 = \sec^2{x} \cdot \arctan{x}
+\end{equation*}
+We can solve this for arctan:
+\begin{equation*}
+  \frac{d}{dx} \arctan{x} = \frac{1}{\sec^2{\arctan{x}}}
+\end{equation*}
+Now we just need to solve $\frac{1}{\sec^2{\arctan{x}}}$. First we use
+the identity that $\sec^2{x} = 1 + \tan^2{x}$:
+\begin{equation*}
+  \frac{1}{1 + \tan^2{\arctan{x}}}
+\end{equation*}
+This simplifies into our final answer:
+\begin{equation*}
+  \frac{d}{dx} \arctan{x} = \frac{1}{1 + x^2}
+\end{equation*}
+We can also approach simplifying $\sec^2{\arctan{x}}$ using
+geometry. For this, we start with a right triangle where one side is
+$x$ and the other leg is 1. This gives us the length of the %hyp...
+which is $\sqrt{1 + x^2}$. Given the angle $\theta$, we can solve for
+$\cos{\theta}$:
+\begin{equation*}
+  \cos{\theta} = \frac{1}{\sqrt{1 + x^2}}
+\end{equation*}
+This naturally leads us to $\sec{x}$:
+\begin{equation*}
+  \sec{\theta} = \sqrt{1 + x^2}
+\end{equation*}
+
+\subsection{An Important Function}
+
+Here is a function that is going to be very important in the future:
+$f(x) = \ln(|x|)$. This may seem like an odd function, but it will be
+really important in the next course.
+
+How would we go about finding the derivative of this odd function?
+Unsurprisingly, the absolute value makes life less fun; the absolute
+value function, defined by cases, is always tricky to deal with. 
+
+We can solve this problem using a trick: $\ln{|x|^2} = \ln{x^2}$. This
+is also the same as $2\ln{|x|}$. This then means that
+$\frac{1}{2}\ln{x^2} = \ln{|x|}$. We can now solve this problem using
+the chain rule.
+
+% More equation blocks...
+
+We now get:
+\begin{equation*}
+  \frac{d}{dx} \ln{|x|} = \frac{1}{2} \frac{d}{dx}\ln{x^2}
+\end{equation*}
+We can now proceed with the chain rule:
+\begin{equation*}
+  \frac{1}{2} \cdot \frac{1}{x^2} \cdot \frac{d}{dx} (x^2)
+\end{equation*}
+We can now simplify this a bit, giving us the answer:
+\begin{equation*}
+  \frac{d}{dx} \ln{|x|} = \frac{1}{x}
+\end{equation*}
+This is a nice result as we took a rather complex, ugly fraction and
+got a very simple, fundamental function as the derivative.
+
+
+\subsection{Differential Equations}
+
+Differential equations are, unsurprisingly, equations that involve
+derivatives. For example, take this equation:
+\begin{equation*}
+  \frac{dy}{dt} = 3y(t)
+\end{equation*}
+Here we have a derivative ($\frac{d}{dx}$) a variable $t$ and an
+unknown $y$. One of the important notes here is that the unknown, $y$,
+is \emph{not} a variable---it is a \emph{function}. This means that
+this equation is not solvable through mere algebra.
+
+More generally, these equations can come in the form:
+\begin{equation*}
+  \frac{dy}{dy} (\text{or } y'(t)) = k \cdot y(t)
+\end{equation*}
+Where $k$ is some constant. Here $\frac{dy}{dt}$ should be read as the
+change in $y$ with regards to $t$.
+
+These equations are useful in many different fields, like biology. A
+population reproduces proportionally to its size; radioactive elements
+decay at a rate proportional to the amount of the element. This
+particular equation is the most common differential equation and is
+seen in many different fields particularly because it is a very simple
+differential equation.
+
+\subsubsection*{Solving Simple Differential Equations}
+
+A solution to this equation would be a function $y$ that makes both
+sides equal. For example, given the equation
+\begin{equation*}
+  \frac{dy}{dt} = 3y
+\end{equation*}
+We can get the solution
+\begin{equation*}
+  y(t) = e^{3t}
+\end{equation*}
+because
+\begin{equation*}
+  \frac{d}{dt}(e^{3t}) = 3e^{3t} = 3y 
+\end{equation*}
+However, this equation is not as simple as other equations; there are,
+in fact, very many answers to this equation. In fact, there is an
+infinite amount of possible solutions to this problem. This is because
+we can make $y$ a different function like:
+\begin{equation*}
+  y(t) = 10 \cdot e^{3t}
+\end{equation*}
+and it would still be a valid solution! Having infinitely many
+solutions is not a good place to be; for this reason, the solution to
+equations in the form $y' = ky$ is $y(t) = Ce^{kt}$ where $C$ is any
+constant. This lets us describe all of the possible solutions as one.
+
+The sort of problem we may encounter in terms of differential
+equations is along the lines of:
+\begin{equation*}
+  y' = ky \text{ and } k = 3 \text{ and } y(2) = 100
+\end{equation*}
+To solve this, we first need to use the general solution of the
+equation in the form of $y' = ky$, which is $Ce^{kt}$. Now we just
+need to solve for $C$, so $Ce^{kt} = 100$ when $t = 2$.
+
+\subsubsection*{Unknown $k$}
+
+Now let's look at a different example, where the constant is not
+known. The following problem is an example of this:
+\begin{equation*}
+  \frac{dy}{dt} = ky
+\end{equation*}
+Where $y(0) = 10$ and $y(2) = 100$. We need to find $y(t)$. The
+special bit here is that $k$ is not given. However, we have two pieces
+of additional information to use, namely the value of $y(t)$ at two
+separate values of $t$. We can plug one of these know values into the
+equation:
+\begin{equation*}
+  y(0) = 10 = C\cdot e^{kt}
+\end{equation*}
+As $e^0 = 1$, we can easily solve this for $C$, getting $C = 10$. Next
+we take the other value we have and plug it into the equation, now
+knowing $C$:
+\begin{equation*}
+  y(2) = 100 = 10e^{2k}
+\end{equation*}
+This is easily solvable with logarithms:
+\begin{equation*}
+  e^{2k} = \frac{100}{C} = 10\text{, so } e^{2k} = 10.
+\end{equation*}
+This naturally means that:
+\begin{equation*}
+  k = \frac{\ln{10}}{2}
+\end{equation*}
+Now we have all the information we need for the solution!
+
+\subsubsection*{Another Example}
+
+Here is another sort of problem we may encounter. The difference here
+is that while we are given two values of $y(t)$, we are \emph{not}
+given $y(0)$. This sort of problem is very common in applications such
+as carbon dating. Let's say that we are given:
+\begin{equation*}
+  \frac{dy}{dt} = ky
+\end{equation*}
+as well as:
+\begin{equation*}
+  y(t_1) = \frac{1}{2} y(t_2)\text{ where } t_2 \ne 0
+\end{equation*}
+We can proceed by substituting the function in for $y(t)$:
+\begin{equation*}
+  \frac{1}{2} = \frac{y(t_1)}{y(t_0)} = \frac{Ce^{kt_1}}{Ce^{kt_0}}
+\end{equation*}
+This can be easily simplified to:
+\begin{equation*}
+  \frac{1}{2} = e^{k(t_1 - t_0)}
+\end{equation*}
+We can now use logarithms to solve this, ultimately getting:
+\begin{equation*}
+  k = \frac{\ln{\frac{1}{2}}}{t_1 - t_0} = \frac{-\ln{2}}{t_1 - t_0}
+\end{equation*}
+Can we tell whether this is positive or negative? Well, no. However,
+we can say that it is positive if $t_1 > t_0$. This equation explains
+two situations: if $k < 0$, then this is exponential decay; if $k >
+0$, then this is called exponential growth.
+
+\subsubsection*{Carbon Dating}
+
+As mentioned before, an important application of this sort of equation
+is in carbon dating. Carbon dating is a method for establishing the
+age of something by comparing the amount of carbon 14 it contains to
+the amount of carbon 14 in the atmosphere. Carbon 14 decays
+exponentially over time, so the difference between the ambient carbon
+14 content and the content in a particular thing is enough information
+to give us how long the carbon has been decaying. 
+
+Let's have a function $y$ that represents the amount of carbon 14 at a
+time $t$. Given all we know about carbon 14, we know that the
+following relation is true:
+\begin{equation*}
+  \frac{dy}{dt} = ky(t)
+\end{equation*}
+This is, happily, exactly the differential equation we have been
+studying just now! What an unexpected coincidence. What we would like
+to know is the value of $k$ in this equation. We can do this
+experimentally; it has been established that carbon 14 has a half-life
+of about 6000 years. This is enough information to get $k$. 
+
+A half-life is how long it takes half of the carbon 14 to decay. In
+this case, a given sample will be halved in 5730 years. This is useful
+information as this is just like the last example; here $t_1 - t_0 =
+5730$. Now, using what we found in the previous example, we know that:
+\begin{equation*}
+  k = \frac{-\ln{2}}{5730}
+\end{equation*}
+This is all good, but we cannot measure the amount of carbon 14 the
+creature had originally. However, this is not really a problem, since
+we know the ratio between carbon-12 and carbon-14 in the atmosphere.
+
+Here is a more concrete example of this sort of problem: let's say
+that $t_1$ is now, the elapsed time and that $t_0 = 0$, which was the
+time of the organism's death. We want to find $t_1$. We know that:
+\begin{equation*}
+  \frac{y(t_1)}{y(t_0)} = e^{k(t_1 - t_0)} = e^{kt_1}
+\end{equation*}
+Now all we have to do is solve. We get by knowing that the organism
+only has 1\% of the carbon-14 we expect:
+\begin{equation*}
+  kt_1 = \ln{10^{-2}}
+\end{equation*}
+Followed by:
+\begin{equation*}
+  t_1 = \frac{\ln{10^{-2}}}{k} = \frac{\ln{10^{-2}}\cdot 5730}{-\ln{2}}
+\end{equation*}
+Just doing the arithmetic gives us the ultimate solution.
+
+\subsubsection*{Newton's Law of Cooling}
+
+Another use of this sort of differential equation is Newton's law of
+cooling. This law governs change of temperature between two bodies as
+their temperatures approach each other. The law states that the change
+in the temperature is proportional to the difference in
+temperatures. This can be restated as:
+\begin{equation*}
+  \frac{d}{dt} T(t) = k(T(t) - T_s)
+\end{equation*}
+Where $T(t)$ is a function of temperature over time and $T_s$ is the
+temperature of the environment. Note that this is \emph{not} the same
+equation as we have been looking at lately; what we did earlier does
+not apply directly.
+
+We can overcome this problem by defining a new function $y$ such that
+$y(t) = T(t) - T_s$. Given this, we also know that:
+\begin{equation*}
+  \frac{dy}{dt} = \frac{dT}{dt} - \frac{dT_s}{dt} = k(T(t) - T_s) = ky
+\end{equation*}
+This means that we \emph{can} get a simple differential equation for
+$y$:
+\begin{equation*}
+  \frac{dy}{dt} = ky
+\end{equation*}
+This naturally leads to:
+\begin{equation*}
+  y(t) = Ce^{kt}
+\end{equation*}
+And, substituting back, we get:
+\begin{equation*}
+  T(t) = T_s + Ce^{kt}
+\end{equation*}
+Now that we have this equation, the rest can be solved using the same
+methods we used above.
+
+\subsection{Related Rates}
+
+Now we are going to look at a different application of derivatives to
+real life. Math wouldn't be particularly useful without applications,
+would it?
+
+We are now going to be applying the derivative. The derivative can be
+generally thought of as the \emph{instantaneous} change in one
+quantity with respect to something else. The latter part can be
+clearly seen when the derivative is written out as
+$\frac{dy}{dx}$---this means ``the change in $y$ with respect to
+$x$''. The other notations do not always make this very clear, but it
+always holds.
+
+Now to go on about related rates problems. These problems are going to
+be looking at the derivative as the rate of change in something; they
+generally have more than one dependant variable, with all of the
+variables being related in some way.
+
+\subsubsection*{Example: Ladder Problem}
+
+Here is the canonical example of a related rates problem. Imagine a
+ladder leaning against a wall that is perpendicular to the floor. The
+ladder is not anchored very well, so the bottom is sliding out and the
+top of the ladder is sliding down the wall. Here is a diagram:
+
+\begin{picture}(30,250)
+  \put(0,0){\line(1,0){350}}
+  \put(0,0){\line(0,1){250}}
+  \put(200,0){\line(-4,5){200}}
+  \put(100, 130){$L$}
+  \put(15,0){\line(0,1){15}}
+  \put(0, 15){\line(1,0){15}}
+  \put(195, 10){\vector(1,0){35}}
+  \put(10, 235){\vector(0,-1){35}}
+  \put(-12, 130){$y$}
+  \put(100, 1){$x$}
+\end{picture}
+
+We are given the length of the ladder as well as the distance from the
+bottom of the latter to the wall and the top of the ladder to the
+floor. Naturally, we may be given only two of the three previous
+values but completing that set is trivial. We are also generally given
+the rate of change of the position of one of the ends.
+
+We have the following quantities in the problem:
+\begin{itemize}
+\item Time $t$
+\item Position of foot: $x(t)$
+\item Position of top: $y(t)$
+\item The speed of the ladder going down at a time $t_0$,
+  $\frac{dy}{dt} = -4$
+\end{itemize}
+This is all the information we get. The question is to find the speed
+of the bottom of the ladder at time $t_0$ (we do not have enough
+information to find the speed at other times).
+
+The first part is to find how the quantities in the problem are
+related. Here, this is easy: the ladder and wall make a right
+triangle; we can simply use the Pythagorean theorem. Thus we know
+that:
+\begin{equation*}
+  x^2(t) + y^2(t) = 13^2
+\end{equation*}
+Now, we could solve this by solving for the unknown ($x(t)$); however,
+we can use a better approach: implicit differentiation. We do this by
+taking the derivative of both sides:
+\begin{equation*}
+  (\frac{d}{dt})(x^2(t) + y^2(t)) = (\frac{d}{dt})(13^2)
+\end{equation*}
+This is equal to:
+\begin{equation*}
+  2x\frac{dx}{dt} + 2y\frac{dy}{dt} = 0
+\end{equation*}
+Now we have the relation between the two rates of change; this is
+better written solved for $\frac{dx}{dt}$:
+\begin{equation*}
+  \frac{dx}{dt} = \frac{-y}{x} \frac{dy}{dx}
+\end{equation*}
+Knowing this, we can simply plug in known values and solve:
+\begin{equation*}
+  \frac{dx}{dt} = \frac{-y(t_0)}{5} (-4)
+\end{equation*}
+Note how we do not know $y(t_0)$. This is easy to find as we have
+$x(t_0)$; we just plug it into the equation we got with the
+Pythagorean theorem, getting $y(t_0) = 12$. This gives us the final
+equation:
+\begin{equation*}
+  \frac{dx}{dt} = \frac{-12}{5} \cdot (-4) = \frac{48}{5}
+\end{equation*}
+This is the solution to the problem!
+
+\subsection{Linear Approximations}
+
+We are now going to cover a more heuristic way of solving problems. We
+are not going to get the \emph{correct} answer; rather, we will get
+one that is more or less correct. 
+
+We are doing this because there are a lot of function which are very
+complicated; these are always difficult to work with. On the other
+hand, we have the linear equation $y = mx + b$ which is basically the
+easiest function there is to use. The basic idea behind linear
+approximations is modeling more complex functions using lines.
+
+We will be using the tangent line of a curve to approximate it. The
+tangent line of the function $f$ at the point $a$ is 
+\begin{equation*}
+  y = f'(a)\cdot(x - a) + f(a)
+\end{equation*}
+This can sometimes be a very good approximation of a function; at
+other times it can be very bad.
+
+Basically, given the equation of a tangent line, it is a sufficiently
+close approximation of the function if $x$ is sufficiently close to
+$a$. Of course, as ever, all of the nebulous terms are all relative;
+they depend on context and the problem at hand.
+
+\subsubsection*{An Example: $x^{\frac{1}{3}}$}
+
+Here is a simple problem: find a good approximation for
+$x^{\frac{1}{3}}$ where $x$ is close to $1$. The natural answer here
+is $x^{\frac{1}{3}} \approx 1$; however, we can do much better than
+that. We know that if $f(x) = x^{\frac{1}{3}}$ then $f(1) = 1$ and
+$f'(a) = \frac{1}{3}x^{frac{-2}{3}}$; this leads to $f'(1) =
+\frac{1}{3}$. Now we plug all of this into the formula for a tangent
+line we got above, getting:
+\begin{equation*}
+  x^{\frac{1}{3}} \approx 1 + \frac{1}{3}(x - 1)
+\end{equation*}
+Note how this approximation has a term, 1, and an additional term that
+helps correct for $x$ when $x$ is far away from 1. This second term
+approaches 0 as $x$ approaches 1.
+
+This approximation is actually pretty accurate; if $x = 1$, then it is
+exact. However, if $x$ is far away from $1$, the approximation is very
+bad: for $x = 1000$, the actual value is 10 while the approximation
+gives us 334. But let's take a look at values of $x$ close to 1. If
+$x$ is 1.1, the approximation is close to three decimal places; if $x$
+is 1.001, you can get the answer close to seven decimal places.
+
+\subsubsection*{Another Example: }
+
+Now we are going to look at the natural log function. To make this
+more interesting, we are going to take two numbers that are relatively
+far from each other: 1000 and 1010. We want to know how close
+$\ln{1010}$ is to $\ln{1000}$.
+
+We will use a linear approximation here, with $a = 1000$ and $x =
+1010$. We don't know what $\ln{1000}$ is, but that is fine because we
+just need to know how close that is to $\ln{1010}$. We also know that
+the derivative of the natural log function is $\frac{1}{x}$. Plugging
+this in, we get:
+\begin{equation*}
+  \ln{1010} \approx \frac{1}{1000}(10) + \ln{1000}
+\end{equation*}
+We can simplify this to get:
+\begin{equation*}
+  \ln{1010} - \ln{1000} \approx 0.01
+\end{equation*}
+The actual difference is 0.00995, so we were \emph{very} close. This
+really illustrates how ``close'' is a very relative idea: for logs, a
+difference of 10 between $x$ and $a$ for a different function could
+make the approximation really off, but for logarithms it is nothing.
+
+\subsection{Maxima and Minima}
+
+Now we are going to cover how to find the largest and the smallest
+values of a function over an interval. In such a problem, we are
+generally given a function $f$ and a closed, bounded interval
+$[a,b]$. Given this, our goal is to find either the maximum (the
+largest $f(x)$ if $x \in [a,b]$) or the minimum (the smallest $f(x)$
+if $x \in [a,b]$.
+
+This sort of problem has a ton of applications; they are very useful
+in the real world. For example, many laws of physics tell us that
+something behaves in a way as to minimize another quantity. An example
+here is thinking of various problems involving forces as problems that
+try to minimize work. This is also the sort of problems that are often
+approached using genetic algorithms; however, that is a very different
+method of solving these. We are only going to approach these problems
+using the magic of calculus. 
+
+Given the function $f$ with domain $D$, the \emph{absolute maximum} of
+the function is the number $c \in D$ such that $c$ is greater than or
+equal to all other values $f(x)$ where $x \in D$. The \emph{absolute
+  minimum} is the same except that instead of being greater than or
+equal to it is \emph{less} than or equal to all other values of $f$ in
+$D$. Functions can have \emph{multiple} absolute minima and maxima;
+for example, the function $f(x) = \cos{x}$ has \emph{infinite}
+absolute maxima. Additionally, a function need not have either; for
+example, $f(x) = x$ has no absolute maxima or minima.
+
+\subsection{Rolle's and the Mean Value Theorem}
+
+Now we are going to cover two related theorems. The first was
+discovered first; the second is very similar but more broad. Both
+concern the behaviour of the derivative of functions.
+
+\subsubsection*{Rolle's Theorem}
+
+Rolle's theorem concerns functions that have a domain that is a closed
+interval $[a,b]$, are continuous on that interval and are
+diffrentiable on the interval $(a,b)$. Given such a function, Rolle's
+Theorem states that if $f(a) = f(b)$ then there exists some number $c$
+such that $f'(c) = 0$.
+
+% Diagram?
+
+Of course, a function that does not fulfill the criteria for Rolle's
+Theorem will not necessarily have a derivative that equals 0
+anywhere. Take the function $f(x) = |x|$ on the domain $[-1, 1]$:
+there is no number $c$ so that $f'(c) = 0$, but since the function is
+not differentiable at $x = 0$, it does not fulfill the requirements of
+Rolle's Theorem, so the theorem does not apply.
+
+\subsubsection*{An Example}
+
+Here is a simple example of Rolle's theorem in use. Let's take the
+function:
+\begin{equation*}
+  f(x) = x^3 + 6x - 20
+\end{equation*}
+We want to show that this equation has at most one solution.  Note
+that this function is differentiable on all real numbers. Now we need
+to take two numbers $x_1$ and $x_2$, assuming that $f(x_1) = f(x_2) =
+0$. We can now use Rolle's theorem on the interval $[x_1, x_2]$. This
+tells us that, if both $x_1$ and $x_2$ exist, $f'(x)$ where $x \in
+[x_1, x_2]$ must equal 0 at some point. However, we know that:
+\begin{equation*}
+  f'(x) = 3x^2 + 6
+\end{equation*}
+This means that the derivative of the function is \emph{never} 0! This
+means that there cannot be two numbers where $f(x) = 0$.
+
+This seems to be a solution particular to this function; however, this
+can be easily generalized to all functions: if a function is
+differentiable on $(a, b)$ and if $f'$ is never 0, the function is
+one-to-one on $[a, b]$ and has an inverse on $[a, b]$.
+
+\subsubsection*{Mean Value Theorem}
+
+Rolle's theorem is, evidently, a somewhat narrow theorem: it only
+deals with intervals $[a, b]$ where $f(a) = f(b)$; this is a rather rare
+situation. This can be abstracted to situations where $a \ne b$; this
+leads to the Mean Value Theorem. 
+
+The mean value theorem states that, given a function differentiable on
+the interval $(a, b)$ and continuous on $[a, b]$ (just like Rolle's
+theorem), then there is some number $c \in (a, b)$ such that the
+following holds:
+\begin{equation*}
+  f'(c) = \frac{f(b) - f(a)}{b - a}
+\end{equation*}
+In other words, the theorem stats that, given two points, there will
+be a point where the slope of the tangent line is that same as the
+slope of the secant line containing both of those points, as long as
+the function fulfills all of the requirements for the theorem.
+
+To put this in more grounded terms, we turn to physics. Let's take the
+function $s(t)$ that represents the position of a particle. We know
+that the average velocity of the particle from $t_1$ to $t_2$ is equal
+to:
+\begin{equation*}
+  v_{avg} = \frac{\Delta s}{\Delta t} = \frac{s(t_2) - s(t_1)}{t_2 - t_1}
+\end{equation*}
+Additionally, we know that $s'(t) = v(t)$ and represents the
+\emph{instantaneous} velocity of the particle at time $t$. What the
+Mean Value Theorem says in this case is that over some interval of
+time, there is a time $t$ such that the instantaneous velocity at time
+$t$ is equal to the average velocity over the given interval.
+
+\subsubsection*{Consequences}
+
+Now let's look at some of the immediate ramifications of this
+theorem. Let's say that for a function $f$, $f'(x) = 0$ for ever $x \in
+(a, b)$. This tells us that our function is a constant on the given
+interval. This can be easily shows using the Mean Value Theorem. We
+get the following equation:
+\begin{equation*}
+  \frac{f(x_2) - f(x_1)}{x_2 - x_1} = 0
+\end{equation*}
+This can only be true if $f(x_1) = f(x_2)$. Here $x_1$ and $x_2$ can
+be any two numbers in the given interval.
+
+Additionally, we get that if $f'(x) > 0$ for all $x \in (a, b)$ and $a
+< x_1 < x_2 < b$, then $f(x_1) < f(x_2)$. In short, this means that if
+all of the tangent lines slope upwards, the function is always
+increasing.
+
+Yet another interesting fact is that if you have $f'(x) = g'(x)$ for
+all $x$ in $(a, b)$, then the two functions are the same over $(a, b)$
+as long as $f(a) = g(a)$. All of these finding are really rather
+obvious, but they are important.
+
+\subsubsection*{Example}
+
+Now let's look at how this theorem can be applied. We want to show
+that $\ln{1 + x} < x$ for all $x > 0$. Now, if $x$ is very large, it
+is patently obvious that $\ln{1 + x}$ is smaller; however, this is
+much less obvious for small values of $x$.
+
+Both Rolle's theorem and the Mean Value Theorem concer single
+functions, so it is expedient to combine both of these functions in
+some way. We can do this by subtracting, getting:
+\begin{equation*}
+  f(x) = x - \ln{1 + x}
+\end{equation*}
+Now we need to get the derivative of this function. We get:
+\begin{equation*}
+  f'(x) = 1 - \frac{1}{1 + x} = \frac{1 + x - 1}{1 + x} = \frac{x}{1 +
+    x} > 0
+\end{equation*}
+Given this, we know that $f'(x) > 0$ for all $x > 0$, which means that
+$f$ is increasing on all $x > 0$. This means that $f(x_2) > f(x_1)$ if
+$x_2 > x_1 \ge 0$. Now we can take $x_1 = 0$. We get that $f(x) > f(0)
+= 0 - \ln{x + 1} = 0$ for all $x > 0$. This means that $\frac{f(x) -
+  f(0)}{x - 0} > 0$. This is the same as $\frac{f(x)}{x} > 0$. We can
+multiply by $x$ since $x > 0$ and we get $f(x) > 0$. %...
+
+\subsection{Graphing}
+
+We are now going to look at how to quickly draw a graph of a function
+using the first and second derivatives of the function. This is a very
+useful trick; it lets us graph functions with relatively little
+information rather quickly.
+
+\subsubsection*{Increasing/Decreasing Test (I/D)}
+
+The basis of graphing functions quickly is called the
+``Increasing/Decreasing Test''. Given an interval $(a, b)$, if a
+function $f$ is differentiable on $(a, b)$ and $f'(x) > 0$ for all $x
+\in (a, b)$ then $f(x_z) < f(x_2)$ if $a < x_1 < x_2 < b$. This
+basically means that the function is increasing along an interval if
+its derivative on that interval is always positive. 
+
+This theorem is actually more broad than this; it can be generalized
+to negative derivatives. If $f'(x) < 0$ when $x \in (a, b)$, then the
+function is decreasing. 
+
+Additionally, this also means that if the derivative is non-negative
+then the function is not decreasing and if the derivative is not
+positive the function is not increasing. Finally, if $f$ is continuous
+on a closed interval $[a, b]$, then all of this applies to the closed
+interval; here $x_1$ can be equal to $a$ and $x_2$ can be equal to $b$.
+
+This can also be taken to another level: if $f'(x) \ge 0$ for all $x$,
+and $f(x) = 0$ for only \textbf{one} $x$, the function is still
+increasing.
+
+\subsubsection*{First Derivative Test}
+
+Lets assume that a function $f$ is differentiable on $(a, b)$. Let $c$
+be a number such that $c \in (a, b)$. If $f'(x)$ changes sign at $c$
+(that is, left of $c$ the function is negative and right of $c$ it is
+positive, or vice-versa), then the function must have a local maximum
+or minimum at $c$. If you go from - to +, then the function will have
+a local minimum; if it goes from + to -, then the function will have a
+local maximum. A natural corollary to this is that if the derivative
+does not change sign, the function has neither a local maximum nor a
+local minimum---this is also evident intuitively.
+
+Now lets look at a nice example. We need to find the local maxima and
+minima for the function $f$ where $f$ is:
+\begin{equation*}
+  f(x) = 3x^4 - 8x^3 + 6x^2
+\end{equation*}
+The first step here is to find the derivative of the function, which
+is easy:
+\begin{equation*}
+  f'(x) = 12x^3 - 24x^2 + 12x
+\end{equation*}
+Now we need to find where the derivative is negative. The natural next
+step is to factor the derivative, getting:
+\begin{equation*}
+  f'(x) = 12x(x - 1)^2
+\end{equation*}
+The next step is to draw a number line:
+%Draw number line here!
+
+%Second derivate, concave up and concave down; also: second derivative
+%test. The notes need to catch up...
+
+\subsubsection*{Slant Asymptotes}
+
+To graph various curves, we need to know about asymptotes. We have
+already covered horizontal and vertical asymptotes; now we need to
+look at \emph{slant} asymptotes. A slant asymptotes is defined as a
+line in the form:
+\begin{equation*}
+  y = mx + b
+\end{equation*}
+A given function $f$ has a slant asymptote along the line $y = mx + b$
+if the following is true:
+\begin{equation*}
+  \lim_{x \to \infty}{f(x) - (mx + b)} = 0
+\end{equation*}
+This means that as increases, $f(x)$ gets closer and closer to the
+given line. This also naturally holds for limits as $x \to
+-\infty$. In practice, slant asymptotes are actually just a more
+general form of horizontal asymptotes; the main difference is that the
+line the function approaches is not horizontal. 
+
+\subsubsection*{Putting Everything Together}
+
+We can use L'H\^opital's rule to help use quickly graph
+functions. Let's take the function
+\begin{equation*}
+  f(x) = \frac{x^3}{x^2 - 3}
+\end{equation*}
+We want to find all of the interesting points of this function. 
+
+The first thing we should do is find the domain of the function. Here,
+we need to make sure we are not dividing by 0. We get interesting
+points at $x = \pm\sqrt{3}$. At these points, the function will do
+something interesting.
+
+Now we want to get the first and second derivatives of the
+function---we know we will need them at some point in the future. The
+first derivative is
+\begin{equation*}
+  f'(x) = \frac{x^4 - 9x^2}{(x^2 - 3)^2}
+\end{equation*}
+and the second derivative is:
+\begin{equation*}
+  f''(x) = \frac{x(6x^2 + 54)}{x^2 - 3)^3}
+\end{equation*}
+Now we want to know if the function is even or odd. This function is
+odd because it is in the form $\frac{\text{odd}}{\text{even}}$, which
+means it is odd. This means that $f(-x) = -f(x)$.
+
+The next step is to look for asymptotes. We know three types of
+asymptotes, so we need to check for all of them. We know that there
+are vertical asymptotes when we divide by 0. We already have the $x$
+values: $\pm\sqrt{3}$. Now we need to look for horizontal and slant
+asymptotes. We know that
+\begin{equation*}
+  \lim_{x \to \infty}{f(x)} = \infty
+\end{equation*}
+This means that there is no horizontal asymptote. Since we know that
+our function is odd, we do not need to worry about $x \to -\infty$ as
+the function is just a mirror image of itself in the negative
+direction. 
+
+Now we have to look for slant asymptotes. These are harder to find as
+there are two variables we need to keep track of: slope \emph{and}
+y-intercept. We want to rewrite this function, so we do the following:
+\begin{equation*}
+  f(x) = \frac{(x^3 - 3x) + 3x}{x^2 - 3} = x + \frac{3x}{x^2 - 3}
+\end{equation*}
+This helps us find the slant asymptote. Using the rewritten formula,
+we find that there is a slant asymptote along the line $y = x$ as $x$
+approaches $\infty$. Since this function is odd, we also know that it
+has the same slant asymptote as $x$ goes to $-\infty$.
+
+Now we need to find the intervals where the function is increasing or
+decreasing. To do this, we will use the first derivative to find
+this. To do so, we need to solve:
+\begin{equation*}
+  f'(x) = \frac{x^4 - 9x^2}{(x^2 - 3)^2} = 0
+\end{equation*}
+To make life easier, we should factor:
+\begin{equation*}
+  f'(x) = x^2(x^2 - 9)(x^2 - 3)^{-2}
+\end{equation*}
+The only term that can change the sign is $(x^2 - 9)$. This term is
+negative on two intervals: $(-3, 0)$ and $(0, 3)$. Therefore, this
+function is increasing on $(-\infty, -3)$ and $(3,
+\infty)$. Additionally, since $x = 0$ at only one point on $(-3, 3)$,
+we know that the function is increasing throughout the \emph{whole}
+interval $(-3, 3)$. However, this does not take into account that the
+derivative is not defined at $\pm\sqrt{3}$. Taking this into account,
+we actually get that the function increases on \emph{three} separate
+intervals: $(-3, -\sqrt{3})$, $(-\sqrt{3}, \sqrt{3})$, $(\sqrt{3},
+3)$.
+
+Now that we have the intervals where the function is increasing and
+decreasing, we can find the local maxima and minima. We know that
+wherever $f'(x) = 0$ or doesn't exist there \emph{can} be a maxima or
+minima. Thus, we have five points to check: -3, $-\sqrt{3}$, 0,
+$\sqrt{3}$, 3. We now need to look at which points the derivative
+changes signs. %Draw a number line?
+The points where this happens are $-3$ and $3$. We know that
+$\pm\sqrt{3}$ are vertical asymptotes, so they can't be maxima or
+minima. Thus, in the end, we find that there is a local maximum at -3
+and a local minimum at 3.
+
+And, finally, for the last step, we look at concavity. We do this by
+looking at $f''(x)$. We factor this:
+\begin{equation*}
+  f''(x) = x(6x^2 - 54)(x^2 - 3)^{-3}
+\end{equation*}%Draw number line: - r3 + 0 - r3 +
+We know that the second derivative changes signs at $\pm\sqrt{3}$ and
+0. The concavity changes at $\pm\sqrt{3}$ and 0. Since $f(x)$ is
+undefined at $\pm\sqrt{3}$, the sole inflection point is at $x =
+0$. Thus the function is concave down on $(-\infty, -\sqrt{3})$ and
+$(0, \sqrt{3})$ and it is concave up on $(-\sqrt{3}, 0)$ and
+$(\sqrt{3}, \infty)$.
+
+Now we just need to draw all of the interesting features we have
+found, which will give us a very good approximation of the graph.
+%Maybe draw graph here?
+
+\subsection{Limits of Ratios: L'H\^opital's Rule}
+
+We are now going to cover a method of finding the limit of a ratio,
+called L'H\^opital's rule. This can be stated as follows: if $\lim_{x
+  \to a}{\frac{f'(x)}{g'(x)}}$ exists then $\lim_{x \to
+  a}{\frac{f(x)}{g(x)}}$ exists and:
+\begin{equation*}
+  \lim_{x \to a}{\frac{f(x)}{g(x)}} = \lim_{x \to a}{\frac{f'(x)}{g'(x)}}
+\end{equation*}
+This is only true as long as $\lim_{x \to a}{f(x)} = \lim_{x \to
+  a}{g(x)} = 0$ or $\lim_{x \to a}{f(x)} = \pm \infty$ and $\lim_{x
+  \to a} = \pm \infty$. In the latter case, the two infinities need
+not match up: one can be negative and one can be positive. Also note
+that you cannot use this rule when one limit is 0 and the other is
+$\pm \infty$.
+
+\subsubsection*{Example}
+
+Let's find the following limit:
+\begin{equation*}
+  \lim_{x \to 0}{\frac{1 + 2x}{1 + 3x}} = \lim_{x \to 0}{\frac{2}{3}}
+  = \frac{2}{3}
+\end{equation*}
+But wait! This is not right. The reason this did not work is that
+L'H\^opital's rule does not work on limits like this; it only works on
+``indeterminate'' limits---in practice, it only works on limits that
+you could not get otherwise and fails on limits that are easy to get.
+
+Now let's take a more useful example:
+\begin{equation*}
+  \lim_{x \to 0}{\frac{\cos{x} - 1}{x^2}}
+\end{equation*}
+This is a valid limit for the rule since the limit of the top is 0 and
+so is the limit of the bottom. Now we get the derivative of the top
+and the bottom:
+\begin{equation*}
+  \lim_{x \to 0}{-\sin{x}}{2x} = -\frac{1}{2}\lim_{x \to
+    0}{\frac{\sin{x}}{x}} = -\frac{1}{2}
+\end{equation*}
+Note that the resulting limit from applying the rule was also
+indeterminate; we merely knew its value. However, if we did not, we
+could simply apply the rule again. Sometimes you'll need to apply the
+rule more than once to get the value of a limit.
+
+\subsubsection*{Variants}
+
+This rule can be applied in several more cases:
+\begin{itemize}
+\item it works for one-sided limits (e.g. $x \to a^{\pm}$)
+\item it works for infinite limits (e.g. $x \to \pm \infty$)
+\item it also works if $\lim_{x to a}{f'(x)}{g'(x)} = \pm \infty$;
+  even though that limit doesn't exist, we still know that the limit
+  $\lim_{x \to a}{\frac{f(x)}{g(x)}} = \pm \infty$, the same as the
+  limit of the derivatives.
+\item it also works on products as long as they can be rewritten as a
+  ratio. That is, we could find the value of $\lim_{x \to 0^+}{x \cdot
+    \ln{x}}$ by using the rule on $\lim_{x \to
+    0^+}{\frac{\ln{x}}{\frac{1}{x}}}$.
+\end{itemize}
+
+\subsubsection*{More Examples}
+
+Here is another example: let's find
+\begin{equation*}
+  \lim_{x \to \infty}{\frac{\ln{x}}{x}}
+\end{equation*}
+We know that this is equal to
+\begin{equation*}
+  \lim_{x \to \infty}{\frac{\frac{1}{x}}{1}} = 0
+\end{equation*}
+This limit shows that $\ln{x}$ goes to $\infty$ \emph{really} slowly:
+it is the opposite of the exponential function.
+
+And yet another: let's find
+\begin{equation*}
+  \lim_{x \to 0}{\frac{1}{\sin{x}} - \frac{1}{x}}
+\end{equation*}
+This is a limit of the type ``$\frac{\infty}{\infty}$''. Now we
+naturally take the limit of the top and bottom:
+\begin{equation*}
+  \lim_{x \to 0}{\frac{x - \sin{x}}{x \cdot \sin{x}}}
+\end{equation*}
+This is also an indeterminate limit! It is of the type
+``$\frac{0}{0}$''. Now we take the derivatives again:
+\begin{equation*}
+  \lim_{x \to 0}{\frac{1 - \cos{x}}{\sin{x} + x\cdot\cos{x}}}
+\end{equation*}
+This is again of the type ``$\frac{0}{0}$''. We use the rule again:
+\begin{equation*}
+  \lim_{x \to 0}{\frac{\sin{x}}{\cos{x} + \cos{x} - x\cdot\sin{x}}}
+\end{equation*}
+This limit is determinate! We can find that it equals 0. Now, using 
+L'H\^opital's rule, we can find that the first limit is also 0. This is
+interesting because it was a limit of the form $\frac{\infty}{\infty}$
+but in the end was equal to 0!
+
+\subsection{Newton's Method}
+
+Newton's Method is used when there is an equation of the form $f(x) =
+0$. You can use them method to find a solution to this equation in
+cases when it is not possible to find the solution
+algebraically. Newton' Method is a heuristic: it will not give you an
+\emph{exact} solution; rather, it will get you an arbitrarily accurate
+approximation of the solution. 
+
+Let's start by finding the value of $\sqrt{10}$. We can do this by
+writing a nice function like:
+\begin{equation*}
+  f(x) = x^3 - 10
+\end{equation*}
+This equation, of course, is solvable using basic arithmetic and a
+calculator; Newton's method is actually a viable method for the
+calculator to solve problems like this.
+
+The basic idea of Newton's Method is iterated improvement---you find
+an approximation and you make it better by applying the method
+repeatedly. It uses tangent line approximations. 
+
+To use the method, get a tangent line of the curve at some point; find
+that tangent line's x-intercept, repeat using the x-intercept as the
+seed value.
+
+To make life simpler, instead of doing the algebra each time, here is
+the equation solved for $x$:
+\begin{equation*}
+  x = a - \frac{f(x)}{f'(x)}
+\end{equation*}
+This formula should make life easier.
+
+\subsubsection*{Summary}
+
+Here is a quick executive summary of how to use Newton's Method:
+\begin{enumerate}
+\item Make an initial guess ($x_1$)---make a reasonable one if possible.
+\item Define $x_2$ to be
+  \begin{equation*}
+    x_1 - \frac{f(x_1)}{f'(x_1)}
+  \end{equation*}
+\item Now that we have $x_2$, we can get the next guess ($x_3$) by
+  plugging in $x_2$ into the equation.
+\item We can repeat this process as many times as we want, get a
+  better approximation each time.
+\end{enumerate}
+
+\subsubsection*{Example}
+
+Now let's go back to finding an approximation for $\sqrt{10}$. We
+start out by choosing an initial guess, let's say 2 since $2^3 =
+8$. Next, we get the derivative $f'(x) = 3x^2$. Now we get the next
+value of $x$:
+\begin{equation*}
+  x_2 = 2 - \frac{f(2)}{f'(2)} = 2 - \frac{-2}{12} = 2\frac{1}{6}
+\end{equation*}
+After cubing, we are now off the answer only be about
+$\frac{1}{6}$. To make this error smaller, we can keep going. This
+would be exactly the same as it was before.
+
+\section{Integrals}
+
+The last fundamental concept that we will cover is the
+integral. However, before we can work with integrals, we need to cover
+a couple of related concepts. 
+
+\subsection{Area}
+
+One of the main concepts we need to understand in detail is
+\emph{area}. We know what the area of a figure with straight sides is
+and how to find it; however, we need to understand the area of shapes
+with \emph{curved} sides.
+
+The area of a region needs to have several basic properties:
+\begin{itemize}
+\item The area should be $\ge 0$.
+\item Area $R_1 \le $ area $R_2$ if $R_1 \subset R_2$.
+\item Area $(R_1 \cup R_2)$ = area $R_1$ + area $R_2$ if $R_1$ and
+  $R_2$ do not intersect.
+\item The area of a rectangle is its base times its width. Using this
+  property, we can find the areas of very complicated shapes with
+  straight sides, but it is useless for shapes with \emph{curved} sides.
+\end{itemize}
+
+To address the area of curved shapes, we will start by looking at the
+special case of the area under a curve. If we know how to find the
+area under a curve, we can find the area of a circle by doubling the
+
+\begin{equation*}
+  f(x) = \sqrt{1 - x^2}
+\end{equation*}
+This is the top half of the unit circle. Ultimately, this just
+illustrates the utility of finding the area under a curve.
+
+We can start by doing this using a bunch of rectangles. To do this, we
+need to divide the x-axis into equal parts and then draw rectangles
+that have equal widths and a height corresponding to the graph.  Now,
+to get a good estimate of the area under the curve, we just sum up the
+area of the drawn rectangles.
+
+Lets say that the starting x-coordinate is $a$ and the ending
+x-coordinate is $b$. The location of each of the divisions of the
+x-axis is:
+\begin{equation*}
+  x_i = a + i \frac{b - a}{n}
+\end{equation*}
+The width is simply equal to:
+\begin{equation*}
+  \frac{b - a}{n}
+\end{equation*}
+The height of each of the rectangles is naturally equal to
+$f(x)$. This gives us the following to be the area under the curve:
+\begin{equation*}
+  f(x_o)\frac{b - a}{n} + f(x_1)\frac{b - a}{n} + \dots +
+  f(x_{n-1})\frac{b - a}{n}
+\end{equation*}
+This is the left-hand approximation for the area under $f(x)$; we can
+get the right-hand version by starting with $x_1$ and ending with
+$x_n$.
+
+Both of these methods are imperfect: they are just approximations of a
+curve using straight lines, so they generally miss the mark, sometimes
+significantly. 
+
+Both of these methods have a simple property: the larger the $n$, the
+more accurate the area. Naturally, the best result would be found
+using $n = \infty$. However, we cannot work with $\infty$ as a number,
+so we really have to find the limit of the sum as $n \to \infty$.
+
+\subsubsection*{Example}
+
+Let's find the area under $y = x^2$ from 0 to 1 using this method. We start by
+saying that:
+\begin{equation*}
+  R_n = \frac{1 - 0}{n}(x_1^2 + x_2^2 + \dots + x_n^2)
+\end{equation*}
+Then we let
+\begin{equation*}
+  x_i = a + \frac{b - a}{n} \cdot i = 0 + \frac{i}{n} = \frac{i}{n}
+\end{equation*}
+This lets us get a nice expression for the area under $y = x^2$:
+\begin{equation*}
+  \lim_{n \to \infty}{\frac{1 + 2^2 + 3^2 + \dots + n^2}{n^3}}
+\end{equation*}
+However, we are not equipped to solve this limit. Happily, there is a
+formula for the sum of the first $n$ squares:
+\begin{equation*}
+  \frac{n(n+1)(2n+1)}{6}
+\end{equation*}
+This formula lets us restate the limit:
+\begin{equation*}
+  \lim_{n \to \infty}{\frac{n(n + 1)(2n + 1)}{6n^3}}
+\end{equation*}
+This is a relatively easy limit to solve; we don't even have to use
+L'H\^opital's rules. We ultimately get the answer: $\frac{1}{3}$.
+
+\subsubsection*{Sums}
+
+So, we managed to find the area under $x^2$ using a neat forumla for
+adding up squares; however, we have no such formula for other
+functions. This makes it more difficult to find sums like that for
+other functions.
+
+We know that there exists some sum in the form:
+\begin{equation}
+  L_n = \frac{b - a}{n}(f(x_0) + f(x_1) + \dots + f(x_{n - 1}))
+\end{equation}
+This is the aforementioned ``left-hand'' approximation. We can also
+get the right-hand approximation:
+\begin{equation}
+  R_n = \frac{b - a}{n}(f(x_1) + f(x_2) + \dots + f(x_{n}))
+\end{equation}
+Both of these approximations get more accurate as $n$ increases. There
+is a theorem that states that for all differentiable functions, the
+following is true:
+\begin{equation}
+  \lim_{n \to \infty}{R_n} = \lim_{n \to \infty}{L_n}
+\end{equation}
+Basically, both approximations' limits exist and are equal, and they
+are the \emph{exact} area under the curve!
+
+Now lets look over some notation: writing out sums using ``$\dots$''
+is not ver elegant; instead, we have special ``Sigma'' notation for
+this. With this notation, we can write out $R_n$ as:
+\begin{equation}
+  R_n = \frac{b - a}{n}\Bigg(\sum_{i = 0}^{n - 1}{f(x_i)}\Bigg)
+\end{equation}
+
+\subsubsection*{Riemann Sums}
+
+Riemann Sums are the more general form of the sums we have been
+working with. To understand how they work, we first need to understand
+what a sample point is. In short, the point $x_n^*$ is any point in
+the interval from $x_{n - 1}$ to $x_n$. These points can be the
+endpoints of their interval, or they can be any point between the
+endpoints.
+
+The Riemann Sum can then be written out as:
+\begin{equation}
+  R_n = \frac{b - a}{n} \Bigg(\sum_{i = 0}^{n}{f(x_i^*)}\Bigg)
+\end{equation}
+This is for any sample point $x_i^*$ in the interval $[x_{i - 1},
+x_i]$. Basically, a Riemann Sum is an approximation of the area under
+a curve using a bunch of rectangles calculated using different points
+in the interval.
+
+\subsection{Informal Definition}
+
+Now that we know what a Riemann Sum is, we can get a good
+\emph{informal} definition of a definite integral. The following
+integral:
+\begin{equation}
+  \int_a^b{f(x) dx} = \lim_{n \to \infty}{R_n}
+\end{equation}
+where $R_n$ is the Riemann sum with $n$ terms. This is not a normal
+limit: $R_n$ does not only depend on $n$; it also depends on the
+choice of sample points. This changes the definition of this limit
+from the normal definition: it means that for any $\epsilon > 0$ there
+is a number $N$ so $|R_n - I| < \epsilon$ for \emph{all} choices of
+sample points, for every $n > N$.
+
+Now that we know what a definite integral is, we can get a more
+general version of the previous theorem involving $R_n$ and $L_n$. We
+can now say that if a function $f$ is continuous except for a finite
+(possibly 0) number of \emph{jump discontinuities}, then $\lim_{n \to
+  \infty}{R_n}$ exists.
+
+To understand this, we of course have to define \emph{jump
+  discontinuities}. A function $f$ has a jump discontinuity at $c$ as
+long as $f(c)$ exists, $\lim_{x \to c^-}{f(x)}$ exists and $\lim_{x
+  \to c^+}{f(x)}$ exists but two of the three aren't equal.
+
+Functions with jump discontinuities are integrable; however, functions
+with more complex discontinuities are not.
+
+\subsubsection*{Notation'}
+
+Here are some quick notes about notation. The following means
+``definite integral of $f(x)$ on the interval $[a, b]$ for $x$'':
+\begin{equation}
+  \int_a^b{f(x) dx}
+\end{equation}
+The values $a$ and $b$ are the endpoints of the interval that we care
+about; $x$ is just a dummy variable that we use to show exactly what
+we are summing up. The $x$ could be any other undefined variable
+without changing the meaning of the integral.
+
+\subsubsection*{An Example}
+
+Let's calculate a simple integral using the method we have just
+described. Our goal is to find:
+\begin{equation}
+  \int_0^1{e^x dx}
+\end{equation}
+To do this, we need to rewrite the integral as a limit:
+\begin{equation}
+  \int_0^1{e^x dx} = \lim_{n \to \infty}{\frac{1 - 0}{n}\Bigg(\sum_{i
+      = 1}^n{e^{a + i\frac{b - a}{n}}}\Bigg)}
+\end{equation}
+Now all we have to do is solve this limit! We can start by
+simplifying:
+\begin{equation}
+  R_n = n^{-1}\Bigg(\sum_{i = 1}^n{e^{\frac{i}{n}}}\Bigg)
+\end{equation}
+This is a nice geometric sequence; we know how to get the sum of
+geometric sequences. The formula is:
+\begin{equation}
+  1 + r + r^2 + \dots + r^n = \frac{r^{n + 1} - 1}{r - 1} \text{ if } r
+  \ne 1
+\end{equation}
+We can use this formula in the limit:
+\begin{equation}
+  \lim_{n \to \infty}{\frac{1}{n}\Bigg(\frac{e^{\frac{n + 1}{n}} - 1}{e^{\frac{1}{n}} - 1}\Bigg)}
+\end{equation}
+
+% Bit of a gap here...
+
+\subsection{Fundamental Theorem of Calculus}
+
+Differentiation and integration are, ultimately, opposite actions; one
+undoes the other. That is the gist of the fundamental theorem of
+calculus. 
+
+\end{document}
