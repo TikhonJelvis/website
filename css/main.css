@@ -4,8 +4,8 @@
 
 /* This, naturally, applies to the whole page. */
 body {
-    color : #36A; 
-    background-color : #FB8;
+    color : black; 
+    background-color : white;
     font-family : Verdana, Arial, Helvetica, sans-serif;
     padding : 0;
     margin : 0;
@@ -26,12 +26,6 @@ a > img {
     position : relative;
     width : 100%;
     overflow : hidden;
-    color : #36A;
-}
-
-#top a {
-    text-decoration : none;
-    color : #36A;
 }
 
 /* HEADER */
@@ -39,6 +33,7 @@ a > img {
 /* This is the title on top of every page. */
 #header {
     font-size : 64pt;
+    height : 100px;
 }
 
 /* This is just to center the header. */
@@ -48,48 +43,19 @@ a > img {
     width : 6.9em;
 }
 
-/* This controls the first letter of each part of the header. */
-#header div span:first-child {
-    position : relative;
-    font-size : 112pt;
-    float : left;
-    color : #039;
-    top : -12pt;
-}
-
-/* The title has two parts, one of which is half a line below the other. This is
-   the first, higher part. */
-#header .first {
-    position : relative;
-    float : left;
-}
-
-/* The title has two parts, one of which is half a line below the other. This is
-   the second, lower part. */
-#header .second {
-    position : relative;
-    color : #36A;
-    top : 20pt;
-    left : -20pt;
-}
-
-/* This moves the first letter of the second part right a bit. */
-#header .second span:first-child {
-    margin-right : -0.05em;
-}
-
-/* We need to adjust the first letter of the second part a bit. */
-#header .second > span:first-child {
-    top : -31pt;
-}
-
-/* This is the rectangle that is behind the header's text. */
+/* This is the rectangle that is behind the header's banner. */
 #headerBackground {
     position : absolute;
-    background-color : #F63;
+    background-color : #90A9CB;
     height : 57pt;
     top : 28pt;
     width : 100%;
+    z-index : -1;
+}
+
+#headerBackground > img {
+    position : absolute;
+    top : -19px;
 }
 
 /* NAVIGATION */
@@ -109,7 +75,7 @@ a > img {
     margin-left : 0;
     width : 55%;
     min-width : 28.5em;
-    background-color : #F63;
+    background-color : #90A9CB;
 }
 
 /* This list is the actual navigation menu--each item is a link. */
@@ -138,13 +104,13 @@ a > img {
 /* This controls the first letter of each navigation item. */
 #navigation li a:first-letter {
     position : relative;
-    color : #039;
+    color : #053d89;
     font-size : 22pt;
     float : left;
 } 
 
 #navigation li a:hover {
-    color : #039;
+    color : #053d89;
 }
 
 #navigation li a:hover:first-letter {
@@ -153,7 +119,7 @@ a > img {
 
 #navigation a {
     text-decoration : none;
-    color : #36A;
+    color : #0b4faa;
 }
 
 /* CONTENT */
@@ -163,7 +129,7 @@ a > img {
     position : relative;
     width : 70%;
     color : black;
-    background-color : #F63;
+    background-color : #90A9CB;
     margin-top : 4pt;
     margin-left : auto;
     margin-right : auto;
@@ -178,15 +144,15 @@ a > img {
 }
  
 .content .header {
-    color : #36A;
+    color : #0b4faa;
 }
    
 .content .header:first-letter {
-   color : #039;
+   color : #053d89;
 }
 
 .content .header .L {
-    color : #039;
+    color : #053d89;
 }
 
 /* All of the large groups of text should be in p tags. */
@@ -202,13 +168,13 @@ a > img {
     position : relative;
     width : 80%;
     margin-left : 10%;
-    background-color : #F63;
+    background-color : #90A9CB;
 }
 
 .content td {
     padding-left : 0.5ex;
     padding-right : 0.5ex;
-    background-color : #F96;
+    background-color : #7089CB;
 }
 
 .content table, .content td{
@@ -221,7 +187,7 @@ a > img {
     left : -2px;
     max-width : 75%;
     overflow : hidden;
-    background-color : #F96;
+    background-color : #7089CB;
     margin-left : 12.5%;
     text-align : center;
     border : 2px solid #039;
@@ -248,7 +214,7 @@ a > img {
 
 .content .code {
     font-family : lucida console, monospace;
-    background-color : #F96;
+    background-color : #7089CB;
 }
 
 /* This is the div at the very bottom of the page. */

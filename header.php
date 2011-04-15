@@ -33,12 +33,7 @@ EOD;
 <div id="header">
 <div>
 <div id="headerBackground">
-</div>
-<div class="first">
-  <span>T</span>ikhon
-</div>
-<div class="second">
-  <span>J</span>elvis
+<img src="<?php echo "$homePath/"?>img/blueHeader.png" alt="Tikhon Jelvis" />
 </div>
 </div>
 </div>
