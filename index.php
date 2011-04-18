@@ -47,6 +47,7 @@ suited for people who, like me, are primarily interested in
 CS&mdash;electrical engineering may be boring, but some is necessary,
 and I will probably get a more thorough grounding in it than I would
 in a pure CS major.
+</p>
 <h2 class="header">
 Projects
 </h2>
