@@ -97,6 +97,7 @@ have disappeared irretrievably.
 As time went on, my technical grasp of programming improved, as did my
 practices. This means that I have a couple relatively large, coherent and
 somewhat well-written projects from the latter half of high school.
+</p>
 <h3 class="header">
   Simulation
 </h3>
@@ -145,6 +146,7 @@ This Site
 This site is currently hosted on the EECS instructional Unix server at
 inst.eecs.berkeley.edu. Both the xhtml and css should be standards compliant;
 feel free to complain to me if it isn't! 
+</p>
 </div>
 
 <?php
