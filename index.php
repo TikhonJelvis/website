@@ -28,6 +28,7 @@ the
 event <a href="http://www.huffingtonpost.com/marissa-louie/for-the-win-at-the-berkel_b_844749.html"
 title="An article about the hackathon.">here</a>. Apart from glory, we also all
 got Amazon Kindles!
+</p>
 </div>
 <div class="content" id="main">
 <h1 class="header">
