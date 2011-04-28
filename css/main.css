@@ -5,8 +5,6 @@
 /* This, naturally, applies to the whole page. */
 body {
     color : black; 
-    background-color : white;
-    font-family : Verdana, Arial, Helvetica, sans-serif;
     padding : 0;
     margin : 0;
 }
@@ -47,7 +45,7 @@ a > img {
 #headerBackground {
     position : absolute;
     background-color : #90A9CB;
-    height : 57pt;
+    height : 75px;
     top : 28pt;
     width : 100%;
     z-index : -1;
@@ -66,6 +64,7 @@ a > img {
     height : 24pt;
     margin-top : 30pt;
     font-size : 16pt;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
 }
 
 /* This div makes the background of the navigation menu. */
@@ -128,11 +127,16 @@ a > img {
 .content {
     position : relative;
     width : 70%;
+
     color : black;
     background-color : #90A9CB;
+
+    font-family : "Palatino Linotype", "Book Antiqua", Palatino, serif;
+
     margin-top : 4pt;
     margin-left : auto;
     margin-right : auto;
+
     padding-bottom : 4pt;
     padding-top : 4pt;
     padding-left : 0.5em;
@@ -141,12 +145,10 @@ a > img {
 /* This is the general style for all headers: */
 .content .header {
     text-align : center;
-}
- 
-.content .header {
     color : #0b4faa;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
 }
-   
+
 .content .header:first-letter {
    color : #053d89;
 }
@@ -158,9 +160,11 @@ a > img {
 /* All of the large groups of text should be in p tags. */
 .content p {
     color : black;
-    margin-left : 2%;
-    margin-right : 3%;
+    margin-left : 12%;
+    margin-right : 12%;
     text-align : justify;
+    font-size : 14pt;
+    line-height : 1.3em;
 }
 
 /* Various options for managing tables: */
@@ -205,6 +209,8 @@ a > img {
 
 .content div.caption p {
     position : relative;
+    margin-left : 10%;
+    margin-right : 10%;
 }
 
 /* Special kinds of text: code, ui elements...etc */
