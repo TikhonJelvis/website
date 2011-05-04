@@ -1,6 +1,6 @@
 <?php
 $homePath = ".."; 
-include "head.php";
+include "../head.php";
 ?>
 
 <meta http-equiv="Refresh" content="8;URL=http://169.229.100.61:3000">
