@@ -1,5 +1,5 @@
 <?php
-$homePath = "."; 
+$homePath = ".."; 
 include "head.php";
 ?>
 
