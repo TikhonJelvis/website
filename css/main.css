@@ -158,7 +158,7 @@ a > img {
 }
 
 /* All of the large groups of text should be in p tags. */
-.content p {
+.content p, .content ul, .content ol {
     color : black;
     margin-left : 12%;
     margin-right : 12%;
