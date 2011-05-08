@@ -19,6 +19,10 @@ include "$homePath/header.php";
 <h1 class="header">
   2D Physics Collision Simulation
 </h1>
+<p>
+  You can now get the code off 
+  <a href="http://www.github.com/TikhonJelvis/simulation">Github</a>!
+</p>
 <h2 class="header">
   Intro
 </h2>
