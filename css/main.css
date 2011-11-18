@@ -1,5 +1,7 @@
 /* CSS document */
 
+@import url(http://fonts.googleapis.com/css?family=Maven+Pro:400,500,700&v2);
+
 /* GENERAL */
 
 /* This, naturally, applies to the whole page. */
@@ -64,7 +66,7 @@ a > img {
     height : 24pt;
     margin-top : 30pt;
     font-size : 16pt;
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
 }
 
 /* This div makes the background of the navigation menu. */
@@ -146,7 +148,8 @@ a > img {
 .content .header {
     text-align : center;
     color : #0b4faa;
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-weight : normal;
+    font-family : "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
 }
 
 .content .header:first-letter {
