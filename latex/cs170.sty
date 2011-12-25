@@ -1,0 +1,62 @@
+% Formatting for CS170 homework.
+% By: Tikhon Jelvis
+
+% To use, prepend \hwheader before each new problem. The rest is done
+% automagically. There are also two other commands: \N for natural
+% numbers and \Z for integers.
+
+\ProvidesPackage{cs70hw}
+
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+
+\RequirePackage{algorithmic}
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[sc]{mathpazo}
+\linespread{1.05}
+
+% Microtypography makes everything prettier:
+\RequirePackage{microtype}
+
+% A package for pretty fractions:
+\RequirePackage{nicefrac}
+
+% Graphics support:
+\RequirePackage[pdftex]{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+% Renew these commands to change the corresponding part of the header:
+\newcommand{\hwnum}{1}
+\newcommand{\secnum}{Section: [Section Number]}
+\newcommand{\taname}{TA: [TA NAME]}
+\newcommand{\id}{[Id Number]}
+\newcommand{\name}{[Name] (\id)}
+\newcommand{\collab}{\null}% Put all collaborators' names here.
+
+\newcounter{problemCounter}
+
+\newcommand{\hwheader}{
+  \cleardoublepage
+  \stepcounter{problemCounter}
+  \ignorespaces
+  \begin{center}
+    \selectfont\Large
+    CS170---Fall 2011\\
+    \selectfont\huge
+    HW \#\hwnum\ Problem \arabic{problemCounter}
+    \rule{\textwidth}{1pt}
+    \small\itshape \vspace{-10pt} \secnum, \taname \hfill \name\\
+    \vspace{6pt}    
+    \hfill \collab
+  \end{center}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\pagestyle{empty}
+
+\setlength{\voffset}{0pt}
