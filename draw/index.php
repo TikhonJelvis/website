@@ -1,35 +1,37 @@
 <?php
-$homePath = "..";
+$homePath = '..';
 
-include "../head.php";
+include '../head.php';
 ?>
-    <title>
-      Color Grapher
-    </title>
+<title>
+  Color Grapher
+</title>
 
-    <script src="js/jquery.js" type="text/javascript"></script>
-    <script src="js/drawing.js" type="text/javascript"></script>
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/drawing.js" type="text/javascript"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/drawing.css" />
+<link rel="stylesheet" type="text/css" href="css/drawing.css" />
 
-  </head>
+</head>
 
-  <body>
-    <?php
-       include "../header.php";
-    ?>
+<body>
+<?php
 
-    <div id="container" class="content">
-      <h1 class="header">
-	Color Grapher
-      </h1>
-      <div id="help">
-	<p>
-	  <span class="hide">[<a href="#" class="hidehelp"> hide </a>]</span>
-	</p>
-	<h2 class="header">
-	  Instructions
-	</h2>
+include '../header.php';
+       
+?>
+
+<div id="container" class="content">
+  <h1 class="header">
+    Color Grapher
+  </h1>
+<div id="help">
+  <p>
+    <span class="hide">[<a href="#" class="hidehelp"> hide </a>]</span>
+  </p>
+    <h2 class="header">
+      Instructions
+    </h2>
 	<p>
 	  To draw a picture, write a javascript function in the text
 	  box below. This function will be called for every pixel and
@@ -103,7 +105,7 @@ function (x, y, d, a) {
     </div>
 
       <?php
-	 include "../footer.php";
+	 include '../footer.php';
       ?>
   </body>
 </html>

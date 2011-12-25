@@ -17,16 +17,19 @@
 
 .output {
     position : relative;
-    top : -400px;
+    top : -525px;
     border-color : black;
     border-width : 1px;
     border-style : solid;
-    margin-top : 5px;
     margin-left : auto;
     margin-right : auto;
     width : 400px;
     height : 420px;
     cursor : pointer;
+    background-color : #90A9CB;
+    text-align : center;
+    font-weight : bold;
+    box-shadow: 5px 5px 5px #40597B;
 }
 
 .output canvas {
