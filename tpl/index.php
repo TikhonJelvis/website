@@ -234,8 +234,6 @@ print (+);
 
 <p>This should work on <em>all</em> values including functions.</p></div>
 
-</div>
-
 <?php
 include "$homePath/footer.php";
 ?>
