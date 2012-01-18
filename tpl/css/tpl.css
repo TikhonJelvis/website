@@ -1,0 +1,25 @@
+/* CSS Document */
+
+@import url(http://fonts.googleapis.com/css?family=Megrim);
+
+.content .tpl.header {
+    font-size : 64pt;
+    margin : 0px;
+    margin-bottom : -20px;
+    font-family : Megrim, "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.tpl.content pre {
+    background : #8099BB;
+    margin : 0 14%;
+    padding : 10px 4px;
+    border-radius : 6px;
+    font-size : 1.17em;
+}
+
+.tpl.content code {
+    background : #8099BB;
+    font-size : 0.9em;
+    padding : 1px 6px;
+    border-radius : 6px;
+}
