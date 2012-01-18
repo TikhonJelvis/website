@@ -48,6 +48,13 @@ echo "<a href=\"$homePath\">"
 Home
 </a>
 </li>
+<li class="tpl">
+<?php
+echo "<a href=\"$homePath/tpl\">"
+?>
+tpl
+</a>
+</li>
 <li>
 <?php
 echo "<a href=\"$homePath/chess\" title=\"Maptac Chess\">"

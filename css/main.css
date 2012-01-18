@@ -1,6 +1,8 @@
 /* CSS document */
 
 @import url(http://fonts.googleapis.com/css?family=Maven+Pro:400,500,700&v2);
+@import url(http://fonts.googleapis.com/css?family=Ovo);
+@import url(http://fonts.googleapis.com/css?family=Megrim);
 
 /* GENERAL */
 
@@ -123,6 +125,18 @@ a > img {
     color : #0b4faa;
 }
 
+#navigation li.tpl a {
+    position : relative;
+    top : -2px;
+    font-weight : 900;
+    font-family : megrim, "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
+    font-size : 21pt;
+}
+
+#navigation li.tpl a:first-letter {
+    font-size : 21pt;
+}
+
 /* CONTENT */
 
 /* This div has the actual content of the site in it. */
@@ -133,7 +147,7 @@ a > img {
     color : black;
     background-color : #90A9CB;
 
-    font-family : "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family : Ovo, "Palatino Linotype", "Book Antiqua", Palatino, serif;
 
     margin-top : 4pt;
     margin-left : auto;
