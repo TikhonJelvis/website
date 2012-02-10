@@ -86,7 +86,7 @@ latex();
 </li>
 <li>
 <?php
-echo "<a href=\"$homePath/resume.pdf\" title=\"My current r&eacute;sum&eacute;.\">\n";
+echo "<a href=\"$homePath/resume\" title=\"My current r&eacute;sum&eacute;.\">\n";
 ?>
 R&eacute;sum&eacute;
 </a>
