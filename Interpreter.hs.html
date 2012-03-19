@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Interpreter.hs</title>
+<meta name="generator" content="emacs 23.3.1; htmlfontify 0.21" />
+<style type="text/css"><!-- 
+body { font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #f8f8f8;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.default   { font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #f8f8f8;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.default a { font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #f8f8f8;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.string   { color: #61ce3c;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.string a { color: #61ce3c;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.function-name   { color: #ff6400;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.function-name a { color: #ff6400;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.comment   { color: #aeaeae;  font-style: italic;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.comment a { color: #aeaeae;  font-style: italic;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.comment-delimiter   { color: #aeaeae;  font-style: italic;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.comment-delimiter a { color: #aeaeae;  font-style: italic;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.variable-name   { color: #ff6400;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.variable-name a { color: #ff6400;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.type   { color: #8da6ce;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.type a { color: #8da6ce;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.keyword   { color: #fbde2d;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.keyword a { color: #fbde2d;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+ --></style>
+
+    <script type="text/javascript"><!--
+  // this function is needed to work around
+  // a bug in IE related to element attributes
+  function hasClass(obj)
+  {
+      var result = false;
+      if (obj.getAttributeNode("class") != null)
+      {
+          result = obj.getAttributeNode("class").value;
+      }
+      return result;
+  }
+
+  function stripe(id)
+  {
+      // the flag we'll use to keep track of
+      // whether the current row is odd or even
+      var even = false;
+
+      // if arguments are provided to specify the colors
+      // of the even & odd rows, then use the them;
+      // otherwise use the following defaults:
+      var evenColor = arguments[1] ? arguments[1] : "#fff";
+      var oddColor  = arguments[2] ? arguments[2] : "#ddd";
+
+      // obtain a reference to the desired table
+      // if no such table exists, abort
+      var table = document.getElementById(id);
+      if (! table) { return; }
+
+      // by definition, tables can have more than one tbody
+      // element, so we'll have to get the list of child
+      // &lt;tbody&gt;s
+      var tbodies = table.getElementsByTagName("tbody");
+
+      // and iterate through them...
+      for (var h = 0; h < tbodies.length; h++)
+      {
+          // find all the &lt;tr&gt; elements...
+          var trs = tbodies[h].getElementsByTagName("tr");
+
+          // ... and iterate through them
+          for (var i = 0; i < trs.length; i++)
+          {
+              // avoid rows that have a class attribute
+              // or backgroundColor style
+              if (! hasClass(trs[i]) &&
+                  ! trs[i].style.backgroundColor)
+              {
+                  // get all the cells in this row...
+                  var tds = trs[i].getElementsByTagName("td");
+
+                  // and iterate through them...
+                  for (var j = 0; j < tds.length; j++)
+                  {
+                      var mytd = tds[j];
+
+                      // avoid cells that have a class attribute
+                      // or backgroundColor style
+                      if (! hasClass(mytd) &&
+                          ! mytd.style.backgroundColor)
+                      {
+                          mytd.style.backgroundColor =
+                            even ? evenColor : oddColor;
+                      }
+                  }
+              }
+              // flip from odd to even, or vice-versa
+              even =  ! even;
+          }
+      }
+  }
+
+  function toggle_invis( name )
+  {
+      var filter =
+        { acceptNode:
+          function( node )
+          { var classname = node.id;
+            if( classname )
+            { var classbase = classname.substr( 0, name.length );
+              if( classbase == name ) { return NodeFilter.FILTER_ACCEPT; } }
+            return NodeFilter.FILTER_SKIP; } };
+      var walker = document.createTreeWalker( document.body           ,
+                                              NodeFilter.SHOW_ELEMENT ,
+                                              filter                  ,
+                                              false                   );
+      while( walker.nextNode() )
+      {
+          var e = walker.currentNode;
+          if( e.style.display == "none" ) { e.style.display = "inline"; }
+          else                            { e.style.display = "none";   }
+      }
+  }
+--> </script>
+  </head>
+  <body onload="stripe('index'); return true;">
+
+<pre><span class="keyword">module</span> <span class="type">Prolog.Interpreter</span> (simplify, disjoin, subst, contains, resolve,
+                           <span class="type">Term</span>(<span class="variable-name">..</span>), <span class="type">Name</span>(<span class="variable-name">..</span>), <span class="type">Rule</span>(<span class="variable-name">..</span>), <span class="type">Predicate</span>(<span class="variable-name">..</span>), <span class="type">MGU</span>)  <span class="keyword">where</span>
+
+<span class="keyword">import</span> <span class="type">Control.Applicative</span> ((<span class="variable-name">&lt;$&gt;</span>), (<span class="variable-name">&lt;*&gt;</span>))
+<span class="keyword">import</span> <span class="type">Control.Arrow</span>       (second)
+<span class="keyword">import</span> <span class="type">Data.List</span>           (find, nub)
+<span class="keyword">import</span> <span class="type">Control.Monad</span>
+<span class="keyword">import</span> <span class="type">Data.Maybe</span>
+
+<span class="keyword">data</span> <span class="type">Term</span> <span class="variable-name">=</span> <span class="type">Atom</span> <span class="type">String</span>
+          <span class="variable-name">|</span> <span class="type">Var</span> <span class="type">Name</span>
+          <span class="variable-name">|</span> <span class="type">Pred</span> <span class="type">Predicate</span> <span class="keyword">deriving</span> (<span class="type">Show</span>, <span class="type">Eq</span>)
+                                    
+<span class="keyword">data</span> <span class="type">Name</span> <span class="variable-name">=</span> <span class="type">Name</span> <span class="type">Int</span> <span class="type">String</span> <span class="keyword">deriving</span> (<span class="type">Show</span>, <span class="type">Eq</span>)
+                                    
+<span class="keyword">data</span> <span class="type">Rule</span> <span class="variable-name">=</span> <span class="type">Rule</span> <span class="type">Predicate</span> [<span class="type">Predicate</span>] <span class="keyword">deriving</span> (<span class="type">Show</span>, <span class="type">Eq</span>)
+                                            
+<span class="keyword">data</span> <span class="type">Predicate</span> <span class="variable-name">=</span> <span class="type">Predicate</span> <span class="type">Bool</span> <span class="type">String</span> [<span class="type">Term</span>] <span class="keyword">deriving</span> (<span class="type">Show</span>, <span class="type">Eq</span>)
+
+<span class="keyword">type</span> <span class="type">MGU</span> <span class="variable-name">=</span> [(<span class="type">Name</span>, <span class="type">Term</span>)] <span class="comment-delimiter">-- </span><span class="comment">This should map variables to values.
+</span>
+<span class="function-name">merge</span> <span class="variable-name">::</span> <span class="type">MGU</span> <span class="variable-name">-&gt;</span> <span class="type">MGU</span> <span class="variable-name">-&gt;</span> <span class="type">MGU</span>
+<span class="function-name">merge</span> left right <span class="variable-name">=</span> left <span class="variable-name">++</span> (second (subst left) <span class="variable-name">&lt;$&gt;</span> right)
+
+<span class="function-name">freshen</span> <span class="variable-name">::</span> <span class="type">Rule</span> <span class="variable-name">-&gt;</span> <span class="type">Rule</span>
+<span class="function-name">freshen</span> (<span class="type">Rule</span> hd body) <span class="variable-name">=</span> <span class="type">Rule</span> (freshenPred hd) <span class="variable-name">$</span> freshenPred <span class="variable-name">&lt;$&gt;</span> body
+  <span class="keyword">where</span> freshenPred (<span class="type">Predicate</span> a n args) <span class="variable-name">=</span> <span class="type">Predicate</span> a n <span class="variable-name">$</span> freshenTerm <span class="variable-name">&lt;$&gt;</span> args
+        freshenTerm (<span class="type">Var</span> (<span class="type">Name</span> i n)) <span class="variable-name">=</span> <span class="type">Var</span> <span class="variable-name">$</span> <span class="type">Name</span> (i <span class="variable-name">+</span> 1) n
+        freshenTerm (<span class="type">Pred</span> p)         <span class="variable-name">=</span> <span class="type">Pred</span> <span class="variable-name">$</span> freshenPred p
+        freshenTerm term             <span class="variable-name">=</span> term
+
+<span class="function-name">substPred</span> <span class="variable-name">::</span> <span class="type">MGU</span> <span class="variable-name">-&gt;</span> <span class="type">Predicate</span> <span class="variable-name">-&gt;</span> <span class="type">Predicate</span>
+<span class="function-name">substPred</span> mgu (<span class="type">Predicate</span> a n b) <span class="variable-name">=</span> <span class="type">Predicate</span> a n <span class="variable-name">$</span> subst mgu <span class="variable-name">&lt;$&gt;</span> b
+
+<span class="function-name">subst</span> <span class="variable-name">::</span> <span class="type">MGU</span> <span class="variable-name">-&gt;</span> <span class="type">Term</span> <span class="variable-name">-&gt;</span> <span class="type">Term</span>
+<span class="function-name">subst</span> mgu var<span class="variable-name">@</span>(<span class="type">Var</span> name) <span class="variable-name">=</span> fromMaybe var <span class="variable-name">$</span> lookup name mgu
+<span class="function-name">subst</span> mgu (<span class="type">Pred</span> p)       <span class="variable-name">=</span> <span class="type">Pred</span> <span class="variable-name">$</span> substPred mgu p
+<span class="function-name">subst</span> <span class="keyword">_</span> atom             <span class="variable-name">=</span> atom
+
+<span class="function-name">unify</span> <span class="variable-name">::</span> <span class="type">Predicate</span> <span class="variable-name">-&gt;</span> <span class="type">Predicate</span> <span class="variable-name">-&gt;</span> <span class="type">Maybe</span> <span class="type">MGU</span>
+<span class="function-name">unify</span> (<span class="type">Predicate</span> <span class="keyword">_</span> name1 body1) (<span class="type">Predicate</span> <span class="keyword">_</span> name2 body2)
+  <span class="variable-name">|</span> name1 <span class="variable-name">/=</span> name2 <span class="variable-name">||</span> length body1 <span class="variable-name">/=</span> length body2 <span class="variable-name">=</span> <span class="type">Nothing</span>
+  <span class="variable-name">|</span> otherwise <span class="variable-name">=</span> foldM combine <span class="type">[]</span> <span class="variable-name">$</span> zip body1 body2
+  <span class="keyword">where</span> combine mgu (left, right) <span class="variable-name">=</span> go mgu (subst mgu left) (subst mgu right)
+        go mgu (<span class="type">Var</span> l) r <span class="variable-name">|</span> not (r <span class="variable-name">`contains`</span> <span class="type">Var</span> l) <span class="variable-name">=</span> <span class="type">Just</span> <span class="variable-name">$</span> (l, r) <span class="type">:</span> mgu
+        go mgu l (<span class="type">Var</span> r) <span class="variable-name">|</span> not (l <span class="variable-name">`contains`</span> <span class="type">Var</span> r) <span class="variable-name">=</span> <span class="type">Just</span> <span class="variable-name">$</span> (r, l) <span class="type">:</span> mgu
+        go mgu (<span class="type">Pred</span> l) (<span class="type">Pred</span> r)                  <span class="variable-name">=</span> merge <span class="variable-name">&lt;$&gt;</span> unify l r <span class="variable-name">&lt;*&gt;</span> <span class="type">Just</span> mgu
+        go mgu l r                                <span class="variable-name">=</span> <span class="keyword">if</span> l <span class="variable-name">==</span> r <span class="keyword">then</span> <span class="type">Just</span> mgu <span class="keyword">else</span> <span class="type">Nothing</span> 
+        
+<span class="function-name">contains</span> <span class="variable-name">::</span> <span class="type">Term</span> <span class="variable-name">-&gt;</span> <span class="type">Term</span> <span class="variable-name">-&gt;</span> <span class="type">Bool</span>
+<span class="function-name">contains</span> v1<span class="variable-name">@</span><span class="type">Var</span>{} v2<span class="variable-name">@</span><span class="type">Var</span>{}          <span class="variable-name">=</span> v1 <span class="variable-name">==</span> v2
+<span class="function-name">contains</span> (<span class="type">Pred</span> (<span class="type">Predicate</span> <span class="keyword">_</span> <span class="keyword">_</span> p)) n <span class="variable-name">=</span> or <span class="variable-name">$</span> (<span class="variable-name">`contains`</span> n) <span class="variable-name">&lt;$&gt;</span> p
+<span class="function-name">contains</span> <span class="keyword">_</span> <span class="keyword">_</span>                        <span class="variable-name">=</span> <span class="type">False</span>
+
+<span class="function-name">resolve</span> <span class="variable-name">::</span> <span class="type">Predicate</span> <span class="variable-name">-&gt;</span> [<span class="type">Rule</span>] <span class="variable-name">-&gt;</span> [<span class="type">MGU</span>]
+<span class="function-name">resolve</span> goal rules <span class="variable-name">=</span> mapMaybe match (freshen <span class="variable-name">&lt;$&gt;</span> rules) <span class="variable-name">&gt;&gt;=</span> exec
+  <span class="keyword">where</span> match rule<span class="variable-name">@</span>(<span class="type">Rule</span> hd <span class="keyword">_</span>) <span class="variable-name">=</span> <span class="type">(,)</span> rule <span class="variable-name">&lt;$&gt;</span> unify goal hd
+        exec ((<span class="type">Rule</span> <span class="keyword">_</span> body), mgu) <span class="variable-name">=</span> join (map <span class="variable-name">.</span> second <span class="variable-name">.</span> subst) <span class="variable-name">&lt;$&gt;</span> foldM append mgu body
+        append mgu p<span class="variable-name">@</span>(<span class="type">Predicate</span> <span class="type">True</span> <span class="keyword">_</span> <span class="keyword">_</span>) <span class="variable-name">=</span> merge mgu <span class="variable-name">&lt;$&gt;</span> resolve (substPred mgu p) (freshen <span class="variable-name">&lt;$&gt;</span> rules)
+        append mgu p <span class="variable-name">=</span> <span class="keyword">if</span> null <span class="variable-name">.</span> resolve (substPred mgu p) <span class="variable-name">$</span> freshen <span class="variable-name">&lt;$&gt;</span> rules <span class="keyword">then</span> [mgu] <span class="keyword">else</span> <span class="type">[]</span>
+        
+<span class="function-name">disjoin</span> <span class="variable-name">::</span> [<span class="type">Predicate</span>] <span class="variable-name">-&gt;</span> (<span class="type">Predicate</span>, <span class="type">Rule</span>) 
+<span class="function-name">disjoin</span> preds <span class="variable-name">=</span> (goal, <span class="type">Rule</span> goal <span class="variable-name">$</span> preds)
+  <span class="keyword">where</span> goal <span class="variable-name">=</span> <span class="type">Predicate</span> <span class="type">True</span> <span class="string">&quot;*&quot;</span> <span class="variable-name">.</span> nub <span class="variable-name">$</span> preds <span class="variable-name">&gt;&gt;=</span> <span class="variable-name">\</span> (<span class="type">Predicate</span> <span class="keyword">_</span> <span class="keyword">_</span> t) <span class="variable-name">-&gt;</span> t
+        
+<span class="function-name">simplify</span> <span class="variable-name">::</span> <span class="type">MGU</span> <span class="variable-name">-&gt;</span> <span class="type">MGU</span>
+<span class="function-name">simplify</span> <span class="type">[]</span>         <span class="variable-name">=</span> <span class="type">[]</span>
+<span class="function-name">simplify</span> ((n,v)<span class="type">:</span>rs) <span class="variable-name">=</span> (n, fromMaybe v <span class="variable-name">$</span> <span class="type">Var</span> <span class="variable-name">&lt;$&gt;</span> replacement) <span class="type">:</span> rest
+  <span class="keyword">where</span> replacement <span class="variable-name">=</span> fst <span class="variable-name">&lt;$&gt;</span> find ((<span class="variable-name">==</span> v) <span class="variable-name">.</span> snd) rs
+        rest <span class="variable-name">=</span> simplify <span class="variable-name">$</span> <span class="keyword">if</span> isJust replacement <span class="keyword">then</span> filter ((<span class="variable-name">/=</span> n) <span class="variable-name">.</span> fst) rs <span class="keyword">else</span> rs
+</pre>
+
+ </body>
+</html>
