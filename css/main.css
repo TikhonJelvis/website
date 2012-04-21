@@ -1,7 +1,5 @@
 /* CSS document */
 
-@import url(http://fonts.googleapis.com/css?family=Maven+Pro:400,500,700&v2);
-@import url(http://fonts.googleapis.com/css?family=Ovo);
 @import url(http://fonts.googleapis.com/css?family=Megrim);
 
 /* GENERAL */
@@ -67,25 +65,27 @@ a > img {
     position : relative;
     height : 24pt;
     margin-top : 30pt;
-    font-size : 16pt;
-    font-family : "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
+    font-size : 20pt;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
 }
 
 /* This div makes the background of the navigation menu. */
 #navigation > div {
     position : relative;
-    height : 100%;
+    height : 70%;
     margin-left : 0;
     width : 55%;
-    min-width : 28.5em;
+    min-width : 29em;
     background-color : #90A9CB;
 }
 
 /* This list is the actual navigation menu--each item is a link. */
 #navigation ul {
-    position : absolute;
-    right : 1em;
-    margin-top : 4pt;
+    position : relative;
+    float : right;
+    margin-right : 7px;
+    top : -7px;
+    margin-bottom : -20px;
     list-style : none;
 }
 
@@ -93,31 +93,17 @@ a > img {
    word in each navigation item. */
 #navigation li {
     position : relative;
-    margin-top : -3pt;
+    top : -22px;
     display : block;
     float : left;
     margin-left : 0.5em;
+    margin-bottom : 2px;
+    padding-left : 2px;
+    border-left : 3px solid #0B4FAA;
 }
-
-/* This lets us use a:first-letter. */
-#navigation li a {
-    display : block
-}
-
-/* This controls the first letter of each navigation item. */
-#navigation li a:first-letter {
-    position : relative;
-    color : #053d89;
-    font-size : 22pt;
-    float : left;
-} 
 
 #navigation li a:hover {
     color : #053d89;
-}
-
-#navigation li a:hover:first-letter {
-    color : #006;
 }
 
 #navigation a {
@@ -129,11 +115,7 @@ a > img {
     position : relative;
     top : -2px;
     font-weight : 900;
-    font-family : megrim, "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
-    font-size : 21pt;
-}
-
-#navigation li.tpl a:first-letter {
+    font-family : megrim, Verdana, Arial, Helvetica, sans-serif;
     font-size : 21pt;
 }
 
@@ -147,7 +129,7 @@ a > img {
     color : black;
     background-color : #90A9CB;
 
-    font-family : Ovo, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family : "Palatino Linotype", "Book Antiqua", Palatino, serif;
 
     margin-top : 4pt;
     margin-left : auto;
@@ -163,7 +145,7 @@ a > img {
     text-align : center;
     color : #0b4faa;
     font-weight : normal;
-    font-family : "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
 }
 
 .content .header:first-letter {
@@ -250,13 +232,13 @@ a > img {
 
 /* This is the styling for typesetting LaTeX properly. */
 .latex {
-    letter-spacing : -0.225em;
+    letter-spacing : -0.225em; 
 }
 
 .latex .A {
     position : relative;
-    top : -0.6ex;
-    left : -0.25em;
+    top : -0.55ex;
+    left : -0.3em;
     font-size : 75%;
 }
 
@@ -268,20 +250,11 @@ a > img {
 
 .tex .E {
     position : relative;
-    top : 0.6ex;
-    left : -0.3ex;
+    top : 0.65ex;
+    left : -0.25ex;
 }
 
 .tex .X {
     position : relative;
-    left : -0.3ex;
-}
-
-/* The one in the menu has to be a little special: */
-#navigation .latex span:first-child {
-    color : #039;
-}
-
-#navigation a:hover .latex span:first-child {
-    color : #006;
+    left : -0.25ex;
 }
