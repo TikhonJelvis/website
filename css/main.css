@@ -219,7 +219,18 @@ a > img {
 
 .content .code {
     font-family : lucida console, monospace;
-    background-color : #7089CB;
+    background : #8099BB;
+    font-size : 15px;
+    padding : 1px 6px;
+    border-radius : 6px;
+}
+
+.content pre {
+    background : #8099BB;
+    margin : 0 14%;
+    padding : 10px 4px;
+    border-radius : 6px;
+    font-size : 15px;
 }
 
 /* This is the div at the very bottom of the page. */

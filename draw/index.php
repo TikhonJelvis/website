@@ -76,15 +76,14 @@ include '../header.php';
 	  Here is a simple example of a function that can be used
 	  here, which creates an interesting pattern:
 	</p>
-	<pre class="code">
+	<pre>
 function (x, y, d, a) {
   var r = cos(round(x / 10, 0)) * 256;
   var g = sin(round(y / 10, 0)) * 256;
   var b = random() * d;
 
   return new Color(r, g, b);
-}
-	</pre>
+} </pre>
           
       </div>
       <p>

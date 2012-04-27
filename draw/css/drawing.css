@@ -37,14 +37,6 @@
     margin-right : auto;
 }
 
-pre {
-    color : black;
-    width : 90%;
-    margin-left : 5%;
-    margin-right : 5%;
-    border : 1px solid #039;
-}
-
 #help {
     position : relative;
 }
