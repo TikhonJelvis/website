@@ -10,8 +10,13 @@
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
 <?php echo <<<EOD
-		<link rel="stylesheet" type="text/css"
-		href="$homePath/css/main.css" />
-		<link rel="shortcut icon" href="$homePath/favicon.ico"/>
+ <script src="$homePath/js/jquery.js"></script>
+ <script src="$homePath/js/hide.js"></script>
+ <script src="$homePath/js/code-highlighting.js"></script>
+  
+ <link rel="stylesheet" type="text/css" href="$homePath/css/main.css" />
+ <link rel="stylesheet" type="text/css" href="$homePath/css/code-highlighting.css" />
+ 
+ <link rel="shortcut icon" href="$homePath/favicon.ico"/>
 EOD;
 ?>
