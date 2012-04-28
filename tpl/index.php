@@ -228,7 +228,7 @@ fn a := x &lt;- a
     you.
   </p>
 
-  <h2 class="header"> Laziness </h1>
+  <h2 class="header"> Laziness </h2>
 
   <p>
     If you declare a function taking <em>no</em> arguments, it isn't
@@ -279,7 +279,7 @@ fn a := x &lt;- a
     This also works on patterns (like <code>f $[a, b]</code>).
   </p>
 
-  <h2 class="header"> Custom Scope </h1>
+  <h2 class="header"> Custom Scope </h2>
 
   <p>
     You can add bindings to the environment of a closure using
@@ -617,8 +617,6 @@ with [name -&gt; 11] $(x^11)
     terms of objects and environments rather than needing it to be
     provided by the interpreter.
   </p>
-  </div>
-
 </div>
 
 <?php
