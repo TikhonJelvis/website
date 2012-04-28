@@ -1,0 +1,210 @@
+code.highlight pre {
+    padding : 8px;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    color: #000000;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+    overflow : auto;
+}
+
+code.highlight span.default {
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    color: #000000;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.default a {
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    color: #000000;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.js2-function-param-face   {
+    color: #0a4b24;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.js2-function-param-face a {
+    color: #2e8b57;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.constant   {
+    color: #C0C040;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: bold;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.constant a {
+    color: #d8fa3c;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.comment   {
+    color: #383838;
+    font-style: italic;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.comment a {
+    color: #aeaeae;
+    font-style: italic;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.string   {
+    color: #0033CC;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.string a {
+    color: #61ce3c;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.variable-name   {
+    color: #660099;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.variable-name a {
+    color: #ff6400;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.function-name   {
+    color: #660099;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.function-name a {
+    color: #ff6400;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.keyword   {
+    color: #092F8A;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: bold;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.keyword a {
+    color: #fbde2d;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
+
+code.highlight span.doc   {
+    color: #383838;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: none;
+}
+
+code.highlight span.doc a {
+    color: #61ce3c;
+    font-family: DejaVu Sans Mono;
+    font-stretch: normal;
+    font-weight: 500;
+    font-style: normal;
+    background: #8099BB;
+    font-size: 11pt;
+    text-decoration: underline;
+}
