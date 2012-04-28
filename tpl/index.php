@@ -21,12 +21,12 @@ include "$homePath/header.php";
   <h1 class="tpl header"> tpl </h1>
 
   <p>
-    TPL is a simple dynamically typed scripting language. The idea
-    behind the language is to combine minimalism with flexibility&mdash;the
-    language has a small core flexible enough to move things like
-    control structures into libraries. This means, naturally, that you
-    are free to design your own control structures or even replace the
-    standard ones.
+    TPL is a simple dynamically typed scripting language. The core
+    idea is to combine minimalism with flexibility&mdash;the language
+    has a small core flexible enough to delegate things like control
+    structures to libraries. This also means you are free to add your
+    own control structures to the language if you feel some are
+    missing.
   </p>
 
   <p>

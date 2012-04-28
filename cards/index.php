@@ -39,6 +39,10 @@ include '../header.php';
       Card Game Library
     </h1>
     <p>
+      Note: this seems to only work on Chrome. When you're pressed for
+      time in a hackathon, browser compatibility is beyond irrelevant.
+    </p>
+    <p>
       For the spring 2011
       Berkeley <a href="http://www.huffingtonpost.com/marissa-louie/for-the-win-at-the-berkel_b_844749.html">CSUA
       hackathon</a> two friends and I designed and implemented a
