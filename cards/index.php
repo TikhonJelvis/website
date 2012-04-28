@@ -74,6 +74,8 @@ include '../header.php';
         </p>
       </div>
     </div>
+    <p>
+      You can get the full source on <a href="http://code.google.com/p/blarg"">Google code</a>.
   </div>
 </div>
 

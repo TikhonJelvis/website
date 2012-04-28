@@ -17,18 +17,26 @@ include 'header.php'
 ?>
 
 <!-- This is the div where the actual contents of the page will go. -->
-<div class="content" id="news">
+<div class="content" id="main">
 <h1 class="header">
-News
+Welcome
 </h1>
+<div class="caption">
+  <a href="img/me_at_casa_mila_med.jpg" title="Click for full size">
+    <img src="img/me_at_casa_mila_med.jpg" alt="A nice picture of me in Spain"
+/> 
+  </a>
+  <p>
+    A gratuitous picture of me on the roof of Casa Mil&agrave; in
+    Barcelona. You can barely make out the Sagrada Fam&iacute;lia in the
+    background. 
+ </p>
+</div>
 <p>
-I was on the team that got second place in this semester's CSUA hackathon (team
-blarg)! The project we made can be found
-on <a href="http://code.google.com/p/blarg">Google code</a>; you can read about
-the 
-event <a href="http://www.huffingtonpost.com/marissa-louie/for-the-win-at-the-berkel_b_844749.html"
-title="An article about the hackathon.">here</a>. Apart from glory, we also all
-got Amazon Kindles!
+I am a second-year Electrical Engineering and Computer Sciences (EECS)
+major at the University of California, Berkeley. I am particularly
+interested in programming languages and functional
+programming. 
 </p>
 </div>
 <div class="content" id="languages">
@@ -36,7 +44,7 @@ got Amazon Kindles!
 Programming Languages
 </h1>
 <p>
-  Here are the programming languages I'm familiar with, roughly in
+  Here are most of the programming languages I'm acquainted with, roughly in
   order of preference:
 </p>
 <ul class="languages">
@@ -92,37 +100,18 @@ Programming Languages
   </li>
 </ul>
 </div>
-<div class="content" id="main">
-<h1 class="header">
-Welcome
-</h1>
-<div class="caption">
-  <a href="img/me_at_casa_mila_med.jpg" title="Click for full size">
-    <img src="img/me_at_casa_mila_med.jpg" alt="A nice picture of me in Spain"
-/> 
-  </a>
-  <p>
-    A gratuitous picture of me on the roof of Casa Mil&agrave; in
-    Barcelona. You can barely make out the Sagrada Fam&iacute;lia in the
-    background. 
- </p>
-</div>
-<p>
-I am a freshman Electrical Engineering and Computer Sciences (EECS)
-major at the University of California, Berkeley. I am particularly
-interested in computer science and programming. Additionally, I am
-casually interested in digital typography, fencing and ping pong.
-</p>
+<div class="content">
 <h2 class="header">
 EECS
 </h2>
 <p>
 EECS stands for "Electrical Engineering and Computer Sciences", which
 is really a bit of a mouthful, so everybody just calls it "EECS"
-(pronounced "eeks"). This major is a superset of what most schools
-refer to as "computer engineering"&mdash;an EECS major can get a
-"computer engineering"-style education, but can also study either EE
-or CS almost exclusively.
+(pronounced "eeks"). This major is the union of CS and EE, and so is a
+superset of what most schools refer to as "computer
+engineering"&mdash;an EECS major can get a "computer
+engineering"-style education, but can also study either EE or CS
+almost exclusively.
 </p>
 <p>
 I am a big fan of the EECS major because of its extreme
@@ -133,7 +122,7 @@ requirements. Additionally, I think this major is particularly well
 suited for people who, like me, are primarily interested in
 CS&mdash;electrical engineering may be boring, but some is necessary,
 and I will probably get a more thorough grounding in it than I would
-in a pure CS major.
+in a pure CS program.
 </p>
 <h2 class="header">
 Programming
@@ -145,70 +134,37 @@ towards the latter half of 2004, when I started learning
 JavaScript. The state of JavaScript at that time was very different
 from now; I remember commenting out the actual code inside the
 <span class="code">script</span> tag because older browsers did not
-acknowledge script tags at all&mdash;a positively ancient practice now!
+acknowledge script tags at all&mdash;a positively ancient practice!
 </p>
 <p>
-Ever since learning JavaScript on my own, I have continued to
-program. Initially, I was concentrating almost entirely on
-mechanics&mdash;I was having enough difficulty doing anything at all,
-so I didn't even consider trying to finish something coherent. Later
-on, I began to work on increasingly large projects; however, thanks to
-my poor practices and lack of back ups, most of my very early projects
-have disappeared irretrievably.
+Since then, I have continued to program on my own. Initially, I was
+concentrating almost entirely on mechanics&mdash;I was having enough
+difficulty doing anything at all, so I didn't even consider trying to
+finish anything coherent. Later on, I began to work on increasingly
+complex projects; however, thanks to poor practices and lack of
+back-ups, most of my very early projects have disappeared
+irrevocably.
 </p>
 <p>
 As time went on, my technical grasp of programming improved, as did my
-practices. This means that I have a couple relatively large, coherent and
-somewhat well-written projects from the latter half of high school.
+practices. On this site I have my larger projects since junior year of
+high school. This was the time when I went from just tinkering to
+actually programming; I stopped programming just to program and
+started actually making things.
 </p>
 <h3 class="header">
-  Simulation
+  Projects
 </h3>
 <p>
-I took my first CS class during junior year of high school; here I
-learned Java, my first compiled language. I wrote several projects
-during this time, but lost the first couple on a flash drive. I
-learned to keep back ups after that! The last project of junior year
-was the most interesting. I was assigned a <em>very</em> open-ended
-project for physics, so decided, along with some friends, to write a
-program for it.
+This site has pages for several of my projects. Simulation and Chess
+are from high school; TPL and Cards are from my first two years of
+college. 
 </p>
 <p>
-We ended up making a fairly nice 2D polygon collision simulation with a
-thorough UI that, while weak on user experience and not very intuitive, is
-relatively useable and rather capable.
-</p>
-<p>
-This project, even now, is the my largest by lines of code&mdash;it has
-somewhere around 8500 lines written by two people. Of course, one of the main
-reasons for this is Java: not exactly the most concise language. That said,
-this was a fairly complicated project; <a href="simulation" title="User
-Guide">here</a> is a user guide for it. It can be found on
-<a href="http://www.github.com/TikhonJelvis/simulation">github</a> as well.
-</p>
-<h2 class="header">
-Other Projects
-</h2>
-<p>
-I have finished several projects since the collision simulation. Right now,
-some projects can be accessed via the menu above: <a href="chess" title="Maptac
-Chess"> chess </a> and <a href="draw" title="Draw with JavaScript!">
-drawing </a>. However, this is nowhere near an exhaustive list: I mean to put
-up a proper project page, but have yet to do so. 
-</p>
-<p>
-All my projects from now on should be up
+I have a bunch of other projects as well. All the most recent ones are
 on <a href="http://www.github.com/TikhonJelvis" title="My github
 page.">github</a>. I also mean to move my old projects to github (they are
 mostly on Google code right now), but I will probably never get around to it. 
-</p>
-<h2 class="header">
-This Site
-</h2>
-<p>
-This site is currently hosted on the EECS instructional Unix server at
-inst.eecs.berkeley.edu. Both the xhtml and css should be standards compliant;
-feel free to complain to me if it isn't! 
 </p>
 </div>
 
