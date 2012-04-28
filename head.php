@@ -10,9 +10,9 @@
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
 <?php echo <<<EOD
- <script src="$homePath/js/jquery.js"></script>
- <script src="$homePath/js/hide.js"></script>
- <script src="$homePath/js/code-highlighting.js"></script>
+ <script src="$homePath/js/jquery.js" type="text/javascript"></script>
+ <script src="$homePath/js/hide.js" type="text/javascript"></script>
+ <script src="$homePath/js/code-highlighting.js" type="text/javascript"></script>
   
  <link rel="stylesheet" type="text/css" href="$homePath/css/main.css" />
  <link rel="stylesheet" type="text/css" href="$homePath/css/code-highlighting.css" />

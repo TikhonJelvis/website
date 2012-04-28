@@ -57,6 +57,13 @@ tpl
 </li>
 <li>
 <?php
+echo "<a href=\"$homePath/cards\" title=\"Card Game Library\">"
+?>
+Cards
+</a>
+</li>
+<li>
+<?php
 echo "<a href=\"$homePath/chess\" title=\"Maptac Chess\">"
 ?>
 Chess
@@ -82,13 +89,6 @@ Simulation
 echo "<a href=\"$homePath/latex\" title=\"All your typesetting needs!\">\n";
 latex();
 ?>
-</a>
-</li>
-<li>
-<?php
-echo "<a href=\"$homePath/resume\" title=\"My current r&eacute;sum&eacute;.\">\n";
-?>
-R&eacute;sum&eacute;
 </a>
 </li>
 </ul>

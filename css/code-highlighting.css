@@ -1,4 +1,4 @@
-code.highlight pre {
+div.highlight pre {
     padding : 8px;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -11,7 +11,7 @@ code.highlight pre {
     overflow : auto;
 }
 
-code.highlight span.default {
+div.highlight span.default {
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
     font-weight: 500;
@@ -22,7 +22,7 @@ code.highlight span.default {
     text-decoration: none;
 }
 
-code.highlight span.default a {
+div.highlight span.default a {
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
     font-weight: 500;
@@ -33,7 +33,7 @@ code.highlight span.default a {
     text-decoration: underline;
 }
 
-code.highlight span.js2-function-param-face   {
+div.highlight span.js2-function-param-face   {
     color: #0a4b24;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -44,7 +44,7 @@ code.highlight span.js2-function-param-face   {
     text-decoration: none;
 }
 
-code.highlight span.js2-function-param-face a {
+div.highlight span.js2-function-param-face a {
     color: #2e8b57;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -55,7 +55,7 @@ code.highlight span.js2-function-param-face a {
     text-decoration: underline;
 }
 
-code.highlight span.constant   {
+div.highlight span.constant   {
     color: #C0C040;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -66,7 +66,7 @@ code.highlight span.constant   {
     text-decoration: none;
 }
 
-code.highlight span.constant a {
+div.highlight span.constant a {
     color: #d8fa3c;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -77,7 +77,7 @@ code.highlight span.constant a {
     text-decoration: underline;
 }
 
-code.highlight span.comment   {
+div.highlight span.comment   {
     color: #383838;
     font-style: italic;
     font-family: DejaVu Sans Mono;
@@ -88,7 +88,7 @@ code.highlight span.comment   {
     text-decoration: none;
 }
 
-code.highlight span.comment a {
+div.highlight span.comment a {
     color: #aeaeae;
     font-style: italic;
     font-family: DejaVu Sans Mono;
@@ -99,7 +99,7 @@ code.highlight span.comment a {
     text-decoration: underline;
 }
 
-code.highlight span.string   {
+div.highlight span.string   {
     color: #0033CC;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -110,7 +110,7 @@ code.highlight span.string   {
     text-decoration: none;
 }
 
-code.highlight span.string a {
+div.highlight span.string a {
     color: #61ce3c;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -121,7 +121,7 @@ code.highlight span.string a {
     text-decoration: underline;
 }
 
-code.highlight span.variable-name   {
+div.highlight span.variable-name   {
     color: #660099;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -132,7 +132,7 @@ code.highlight span.variable-name   {
     text-decoration: none;
 }
 
-code.highlight span.variable-name a {
+div.highlight span.variable-name a {
     color: #ff6400;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -143,7 +143,7 @@ code.highlight span.variable-name a {
     text-decoration: underline;
 }
 
-code.highlight span.function-name   {
+div.highlight span.function-name   {
     color: #660099;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -154,7 +154,7 @@ code.highlight span.function-name   {
     text-decoration: none;
 }
 
-code.highlight span.function-name a {
+div.highlight span.function-name a {
     color: #ff6400;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -165,7 +165,7 @@ code.highlight span.function-name a {
     text-decoration: underline;
 }
 
-code.highlight span.keyword   {
+div.highlight span.keyword   {
     color: #092F8A;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -176,7 +176,7 @@ code.highlight span.keyword   {
     text-decoration: none;
 }
 
-code.highlight span.keyword a {
+div.highlight span.keyword a {
     color: #fbde2d;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -187,7 +187,7 @@ code.highlight span.keyword a {
     text-decoration: underline;
 }
 
-code.highlight span.doc   {
+div.highlight span.doc   {
     color: #383838;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;
@@ -198,7 +198,7 @@ code.highlight span.doc   {
     text-decoration: none;
 }
 
-code.highlight span.doc a {
+div.highlight span.doc a {
     color: #61ce3c;
     font-family: DejaVu Sans Mono;
     font-stretch: normal;

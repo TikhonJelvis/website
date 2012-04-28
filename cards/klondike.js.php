@@ -1,4 +1,4 @@
-<code class="highlight">
+<div class="highlight">
 <pre><span class="doc">/**
  * A game of Klondike Solitaire.
  */</span>
@@ -96,4 +96,4 @@
     }
 }
 $(document).ready(<span class="keyword">function</span>() { <span class="keyword">new</span> Solitaire(); });</pre>
-</code>
+</div>
