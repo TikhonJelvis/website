@@ -25,16 +25,12 @@ include "$homePath/header.php"
     HTML R&eacute;sum&eacute;/CV</a> at
   StackOverflow Careers.
 </p>
-<h2 class="header">
-  Old Paper R&eacute;sum&eacute;
-</h2>
 <p>
-  I used to maintain a paper r&eacute;sum&eacute; in LaTeX but have
-  since decided to use the StackOverflow one exclusively. However, you
-  can still find a somewhat-outdated copy of
-  it <a href="../resume.pdf">here</a>. Since I haven't updated it
-  since the end of my last school year, it's probably more interesting
-  as a testament to LaTex than for its contents.
+  I used to have a paper r&eacute;sum&eacute;, but I've been too lazy
+  to maintain it and now it is over a year out of date. For a college
+  student, a year is important! You can read
+  it <a href="../resume.pdf">here</a>, but it's little more than a
+  curio.
 </p>
 <h2 class="header">
   Other Sites

@@ -20,8 +20,9 @@
 	left:5px;
 }
 
-#game-container {
+#games {
     width : 65%;
+    margin-top : 20px;
     margin-left : auto;
     margin-right : auto;
     padding-left : 4px;
@@ -29,3 +30,57 @@
     background : url('../images/woodbg.gif');
     border : 3px solid #0B4FAA;
 }
+
+#games .controls {
+    position : relative;
+    height : 30px;
+    width : 150px;
+    top : -23px;
+    border : 3px solid #0B4FAA;
+    background-color : #90A9CB;
+    color : #0B4FAA;
+    font-family : Verdana, Ariel, Helvetica, sans-serif;
+    font-size : 14pt;
+}
+
+#games .controls ul {
+    display : block;
+    margin-top : 0px;
+    list-style : none;
+    padding : 0;
+    padding-left : 4px;
+    padding-top : 4px;
+}
+
+#games .controls ul li {
+    display : block;
+    height : 100%;
+    float : left;
+    margin-right : 10px;
+}
+
+#games .controls ul li.active {
+    font-weight : bold;
+}
+
+#games .controls ul li a {
+    color : #0B4FAA;
+}
+
+#games .controls ul li a:visited {
+    color : #0B4FAA;
+}
+
+#games .controls ul li a:hover {
+    color : #2B6FCA;
+}
+
+#Klondike {
+    position : relative;
+}
+
+#War {
+    position : relative;
+    display : none;
+}
+

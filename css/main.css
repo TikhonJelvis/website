@@ -156,6 +156,15 @@ a > img {
     color : #053d89;
 }
 
+.content .header a, .content .header a:visited, .content .header a:link {
+    color : #0B4FAA;
+}
+
+.content .header a:active, .content .header a:hover {
+    color : #0D6FCA;
+    text-decoration : underline;
+}
+
 /* All of the large groups of text should be in p tags. */
 .content p, .content ul, .content ol {
     color : black;

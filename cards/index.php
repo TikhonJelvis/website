@@ -17,19 +17,27 @@ Card Games Library
 <script src="js/Deck.js" type="text/javascript"></script>
 <script src="js/Board.js" type="text/javascript"></script>
 <script src="js/Solitaire.js" type="text/javascript"></script>
+<script src="js/War.js" type="text/javascript"></script>
+
+<!-- This file is not part of the card game library. -->
+<script src="js/cards.js" type="text/javascript"></script>
 
 </head>
 
 <body id="body">
 
-<?php
+<?php include '../header.php'; ?>
 
-include '../header.php';
-
-?>
-
-<div id="game-container">
+<div id="games">
+  <div class="controls">
+    <ul>
+      <li id="Klondike-control" class="active"> <a href="#"> Klondike </a> </li>
+      <li id="War-control"> <a href="#"> War </a> </li>
+    </ul>
+  </div>
   <div id="Klondike">
+  </div>
+  <div id="War">
   </div>
 </div>
 
