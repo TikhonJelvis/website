@@ -63,6 +63,12 @@ function War() {
 					playerDeck.deal(playerWarPile,3,false,true);
 					computerDeck.deal(computerWarPile,3,false,true);
 				}
+
+                                if (Math.random() < 0.05) {
+                                  playerDeck.shuffle();
+                                  computerDeck.shuffle();
+                                }
+                          
 				setWaiting(true);
 			},interval,playerDeck,playerPlayCard,computerDeck,computerPlayCard,setWaiting,playerWarPile,computerWarPile,board);
 		}

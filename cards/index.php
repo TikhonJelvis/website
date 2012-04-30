@@ -87,7 +87,8 @@ Card Games Library
       </div>
     </div>
     <p>
-      You can get the full source on <a href="http://code.google.com/p/blarg"">Google code</a>.
+      You can get the full source on <a href="http://code.google.com/p/blarg">Google code</a>.
+    </p>
   </div>
 </div>
 
