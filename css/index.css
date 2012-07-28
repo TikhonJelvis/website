@@ -16,3 +16,8 @@ ul.languages li {
 ul.languages li img {
     width : 100%;
 }
+
+li.ocaml {
+    position : relative;
+    top : 14px;
+}
