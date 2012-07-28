@@ -19,7 +19,7 @@ function Board(options) {
 	var root=$("#"+__MY_ROOT);
 	root.addClass("board");
 	var decks = new Array();
-	var appendString = "cardHolder";
+	var appendString = options.appendString || "cardHolder";
 	var counter = 0;
 	var cardHash = {};
 	var maxX = 0;

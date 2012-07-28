@@ -4,7 +4,8 @@
 function Solitaire() {
     var board = new Board({
         rootId : "Klondike",
-        magicalX : 106
+        magicalX : 106,
+        appendString : "solitaireHolder"
     });
 
     var totalDeck = new Deck(board.collapsedType, 0, 0, {

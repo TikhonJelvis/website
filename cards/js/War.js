@@ -6,7 +6,8 @@ function War() {
 		rootId : "War",
 		magicalX : 106,
 		deckHeight : 150,
-		magicalY : 160
+		magicalY : 160,
+                appendString : "warHolder"
 	});
 	
 	var interval=1000;
@@ -76,6 +77,3 @@ function War() {
 	board.addDeck(playerDeck);
 	
 }
-$(document).ready(function() {
-	new War();
-});
