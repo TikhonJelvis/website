@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>.emacs</title>
-<meta name="generator" content="emacs 23.3.1; htmlfontify 0.21" />
+<meta name="generator" content="emacs 24.0.97.1; htmlfontify 0.21" />
 <style type="text/css"><!-- 
 body { font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #f8f8f8;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
 span.default   { font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  color: #f8f8f8;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
@@ -15,6 +15,8 @@ span.constant   { color: #d8fa3c;  font-family: DejaVu Sans Mono;  font-stretch:
 span.constant a { color: #d8fa3c;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
 span.doc   { color: #61ce3c;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
 span.doc a { color: #61ce3c;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
+span.variable-name   { color: #ff6400;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
+span.variable-name a { color: #ff6400;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
 span.string   { color: #61ce3c;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
 span.string a { color: #61ce3c;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: underline; }
 span.function-name   { color: #ff6400;  font-family: DejaVu Sans Mono;  font-stretch: normal;  font-weight: 500;  font-style: normal;  background: #0c1021;  font-size: 11pt;  text-decoration: none; }
@@ -125,39 +127,36 @@ span.comment-delimiter a { color: #aeaeae;  font-style: italic;  font-family: De
   </head>
   <body onload="stripe('index'); return true;">
 
-<pre>                                        <span class="comment-delimiter">; </span><span class="comment">UTILITY 
+<pre>                                        <span class="comment-delimiter">; </span><span class="comment">UTILITY FUNCTIONS
 </span>(<span class="keyword">defun</span> <span class="function-name">easy-move</span> ()
   (local-set-key (kbd <span class="string">&quot;n&quot;</span>) 'next-line)
   (local-set-key (kbd <span class="string">&quot;p&quot;</span>) 'previous-line)
   (local-set-key (kbd <span class="string">&quot;l&quot;</span>) 'recenter-top-bottom))
 
-<span class="comment-delimiter">;; </span><span class="comment">I really have to make my bool flipping function prettier, probably
-</span><span class="comment-delimiter">;; </span><span class="comment">by using an assoc list or something.
-</span>(<span class="keyword">defun</span> <span class="function-name">is-bool</span> (str)
-  (member str '(<span class="string">&quot;true&quot;</span> <span class="string">&quot;True&quot;</span> <span class="string">&quot;#t&quot;</span> <span class="string">&quot;t&quot;</span> <span class="string">&quot;false&quot;</span> <span class="string">&quot;False&quot;</span> <span class="string">&quot;#f&quot;</span> <span class="string">&quot;nil&quot;</span> <span class="string">&quot;yes&quot;</span> <span class="string">&quot;no&quot;</span> <span class="string">&quot;Yes&quot;</span> <span class="string">&quot;No&quot;</span>)))
+<span class="comment-delimiter">;; </span><span class="comment">A list of opposite boolean pairs.
+</span>(<span class="keyword">defvar</span> <span class="variable-name">bools</span> '((<span class="string">&quot;true&quot;</span> . <span class="string">&quot;false&quot;</span>) (<span class="string">&quot;True&quot;</span> . <span class="string">&quot;False&quot;</span>) (<span class="string">&quot;#t&quot;</span> . <span class="string">&quot;#f&quot;</span>)
+                (<span class="string">&quot;yes&quot;</span> . <span class="string">&quot;no&quot;</span>) (<span class="string">&quot;Yes&quot;</span> . <span class="string">&quot;No&quot;</span>)))
       
-
 (<span class="keyword">defun</span> <span class="function-name">flip-bool-at-point</span> ()
   <span class="doc">&quot;Flips the boolean literal at point, changing true to false and
 vice-versa.&quot;</span>
   (interactive)
-  (<span class="keyword">if</span> (is-bool (current-word))
+  (<span class="keyword">let*</span> ((true  (cdr (assoc  (current-word) bools)))
+         (false (car (rassoc (current-word) bools)))
+         (wrd (<span class="keyword">cond</span> (true true)
+                    (false false)
+                    (t (current-word)))))
     (<span class="keyword">save-excursion</span>
       (forward-word)
-      (<span class="keyword">let</span> ((wrd (current-word)))
-        (backward-kill-word 1)
-        (insert (<span class="keyword">cond</span>
-                 ((equal wrd <span class="string">&quot;true&quot;</span>) <span class="string">&quot;false&quot;</span>)
-                 ((equal wrd <span class="string">&quot;True&quot;</span>) <span class="string">&quot;False&quot;</span>)
-                 ((equal wrd <span class="string">&quot;#t&quot;</span>) <span class="string">&quot;#f&quot;</span>)
-                 ((equal wrd <span class="string">&quot;yes&quot;</span>) <span class="string">&quot;no&quot;</span>)
-                 ((equal wrd <span class="string">&quot;Yes&quot;</span>) <span class="string">&quot;No&quot;</span>)
-                 ((equal wrd <span class="string">&quot;false&quot;</span>) <span class="string">&quot;true&quot;</span>)
-                 ((equal wrd <span class="string">&quot;False&quot;</span>) <span class="string">&quot;True&quot;</span>)
-                 ((equal wrd <span class="string">&quot;#f&quot;</span>) <span class="string">&quot;#t&quot;</span>)
-                 ((equal wrd <span class="string">&quot;no&quot;</span>) <span class="string">&quot;yes&quot;</span>)
-                 ((equal wrd <span class="string">&quot;No&quot;</span>) <span class="string">&quot;Yes&quot;</span>)
-                 (t wrd)))))))
+      (backward-kill-word 1)
+      (insert wrd))))
+
+(<span class="keyword">defun</span> <span class="function-name">file-name-at-point</span> ()
+  <span class="doc">&quot;Prompts the user for a file path using the standard C-x C-f
+interface and inserts it at point.&quot;</span>
+  (interactive)
+  (<span class="keyword">if</span> ido-mode (insert (ido-read-file-name <span class="string">&quot;file path: &quot;</span>))
+    (insert (read-file-name <span class="string">&quot;file path: &quot;</span>))))
 
                                         <span class="comment-delimiter">; </span><span class="comment">GENERAL STUFF
 </span><span class="comment-delimiter">;; </span><span class="comment">Add my ~/elisp directory and all subdirectories to load-path
@@ -166,9 +165,6 @@ vice-versa.&quot;</span>
            (default-directory my-lisp-dir))
       (setq load-path (cons my-lisp-dir load-path))
       (normal-top-level-add-subdirs-to-load-path)))
-
-<span class="comment-delimiter">;; </span><span class="comment">Make emacs whine:
-</span>(load <span class="string">&quot;whine.el&quot;</span>)
 
 <span class="comment-delimiter">;; </span><span class="comment">I want an easy command for opening new shells:
 </span>(<span class="keyword">defun</span> <span class="function-name">new-shell</span> (name)
@@ -182,7 +178,7 @@ prompt to name&gt;.&quot;</span>
     (sleep-for 0 200)
     (delete-region (point-min) (point-max))
     (comint-simple-send (get-buffer-process (current-buffer)) 
-                        (concat <span class="string">&quot;export PS1='&quot;</span> name <span class="string">&quot;&gt;'&quot;</span>))))
+                        (concat <span class="string">&quot;export PS1=\&quot;\033[33m&quot;</span> name <span class="string">&quot;\033[0m:\033[35m\\W\033[0m&gt;\&quot;&quot;</span>))))
 
 <span class="comment-delimiter">;; </span><span class="comment">A better mode for proper terminal interaction:
 </span>(load <span class="string">&quot;multi-term.el&quot;</span>)
@@ -194,16 +190,18 @@ prompt to name&gt;.&quot;</span>
 (ido-mode t)
 (setq ido-default-buffer-method 'selected-window)
 
-<span class="comment-delimiter">;; </span><span class="comment">Get rid of the annoying beeping:
+<span class="comment-delimiter">;; </span><span class="comment">Auto Complete mode
+</span>(add-to-list 'load-path <span class="string">&quot;~/elisp/&quot;</span>)
+(<span class="keyword">require</span> '<span class="constant">auto-complete-config</span>)
+(add-to-list 'ac-dictionary-directories <span class="string">&quot;~/elisp//ac-dict&quot;</span>)
+(ac-config-default)
+
+<span class="comment-delimiter">;; </span><span class="comment">Some minor preferences:
 </span>(setq visible-bell t)
-<span class="comment-delimiter">;; </span><span class="comment">Reasonable parentheses mode:
-</span>(show-paren-mode 1)
-<span class="comment-delimiter">;; </span><span class="comment">Show the column number:
-</span>(column-number-mode t)
-<span class="comment-delimiter">;; </span><span class="comment">Transient mark mode is for the weak!
-</span>(transient-mark-mode -1)
-<span class="comment-delimiter">;; </span><span class="comment">I want lines truncated by default:
-</span>(setq-default truncate-lines t)
+(show-paren-mode 1)
+(column-number-mode t)
+(transient-mark-mode -1)
+(setq-default truncate-lines t)
 
 <span class="comment-delimiter">;; </span><span class="comment">Auto-indenting on RET:
 </span>(add-hook 'c-mode-common-hook '(<span class="keyword">lambda</span> ()
@@ -216,16 +214,6 @@ prompt to name&gt;.&quot;</span>
 <span class="comment-delimiter">;; </span><span class="comment">I don't like tabs very much:
 </span>(setq-default indent-tabs-mode nil)
 
-<span class="comment-delimiter">;;</span><span class="comment">Make the window simpler:
-</span>(tool-bar-mode -1)
-(scroll-bar-mode -1) 
-(menu-bar-mode -1)
-(fringe-mode 0)
-(menu-bar-mode -1)
-
-<span class="comment-delimiter">;; </span><span class="comment">Get rid of the annoying splash screen:
-</span>(setq inhibit-splash-screen t)
-
 <span class="comment-delimiter">;; </span><span class="comment">For enabling color themes:
 </span>(<span class="keyword">require</span> '<span class="constant">color-theme</span>)
 (<span class="keyword">eval-after-load</span> <span class="string">&quot;color-theme&quot;</span>
@@ -233,11 +221,28 @@ prompt to name&gt;.&quot;</span>
      (color-theme-initialize)
      (color-theme-blackboard)))
 
+<span class="comment-delimiter">;;</span><span class="comment">Make the window simpler:
+</span>(tool-bar-mode -1)
+(scroll-bar-mode -1) 
+(menu-bar-mode -1)
+(fringe-mode 0)
+(menu-bar-mode -1)
+
+<span class="comment-delimiter">;; </span><span class="comment">Now make it prettier:
+</span>(add-to-list 'load-path <span class="string">&quot;~/elisp/emacs-powerline&quot;</span>)
+(<span class="keyword">require</span> '<span class="constant">powerline</span>)
+(set-face-attribute 'mode-line nil
+                    <span class="builtin">:background</span> <span class="string">&quot;DarkOrange&quot;</span>
+                    <span class="builtin">:box</span> nil)
+
+<span class="comment-delimiter">;; </span><span class="comment">Get rid of the annoying splash screen:
+</span>(setq inhibit-splash-screen t)
+
 <span class="comment-delimiter">;; </span><span class="comment">Have a list of recent files:
-</span>(recentf-mode 1)
+</span>(add-hook 'recentf-dialog-mode-hook 'easy-move)
+(recentf-mode 1)
 (recentf-open-files nil <span class="string">&quot;*Recent Files*&quot;</span>)
 (setq recentf-max-saved-items 1200)
-(add-hook 'recentf-dialog-mode-hook 'easy-move)
 
 <span class="comment-delimiter">;; </span><span class="comment">make text-mode the default major mode and start auto-fill mode
 </span>(setq default-major-mode 'text-mode)
@@ -249,23 +254,23 @@ prompt to name&gt;.&quot;</span>
 
 <span class="comment-delimiter">;; </span><span class="comment">Make complete tag not be alt-tab!
 </span>(global-set-key (kbd <span class="string">&quot;M-&lt;return&gt;&quot;</span>) 'complete-tag)
+
 <span class="comment-delimiter">;; </span><span class="comment">Some nice keyboard shortcuts:
 </span>(global-set-key (kbd <span class="string">&quot;C-x 5 3&quot;</span>) 'make-frame-command)
-<span class="comment-delimiter">;; </span><span class="comment">Open recent files easily:
-</span>(global-set-key (kbd <span class="string">&quot;C-x C-a&quot;</span>) 'recentf-open-files)
-<span class="comment-delimiter">;; </span><span class="comment">Hippie-expand!
+(global-set-key (kbd <span class="string">&quot;C-x C-a&quot;</span>) 'recentf-open-files) <span class="comment-delimiter">;; </span><span class="comment">Open recent files easily
 </span>(global-set-key (kbd <span class="string">&quot;M-/&quot;</span>) 'hippie-expand)
+(global-set-key (kbd <span class="string">&quot;C-c C-j&quot;</span>) 'compile)
+(global-set-key (kbd <span class="string">&quot;C-c a&quot;</span>) 'align-regexp)
+(global-set-key (kbd <span class="string">&quot;M-#&quot;</span>) 'ispell-complete-word)
+(global-set-key (kbd <span class="string">&quot;C-c s&quot;</span>) 'new-shell)
+(global-set-key (kbd <span class="string">&quot;C-c C-b&quot;</span>) 'flip-bool-at-point)
+(global-set-key (kbd <span class="string">&quot;C-c f&quot;</span>) 'file-name-at-point)
+
 <span class="comment-delimiter">;; </span><span class="comment">C-w remap:
 </span>(global-set-key (kbd <span class="string">&quot;C-w&quot;</span>) 'backward-kill-word)
 (global-set-key (kbd <span class="string">&quot;C-x C-k&quot;</span>) 'kill-region)
 (global-set-key (kbd <span class="string">&quot;C-c C-k&quot;</span>) 'kill-region)
-<span class="comment-delimiter">;; </span><span class="comment">Easy compiling:
-</span>(global-set-key (kbd <span class="string">&quot;C-c C-j&quot;</span>) 'compile)
-<span class="comment-delimiter">;; </span><span class="comment">Align stuff:
-</span>(global-set-key (kbd <span class="string">&quot;C-c a&quot;</span>) 'align-regexp)
-(global-set-key (kbd <span class="string">&quot;M-#&quot;</span>) 'ispell-complete-word)
-(global-set-key (kbd <span class="string">&quot;C-c s&quot;</span>) 'new-shell)
-(global-set-key (kbd <span class="string">&quot;C-c b&quot;</span>) 'flip-bool-at-point)
+
                                         <span class="comment-delimiter">; </span><span class="comment">JABBER
 </span><span class="comment-delimiter">;; </span><span class="comment">Spellcheck my jabber conversations.
 </span>(add-hook 'jabber-chat-mode-hook 'flyspell-mode)
@@ -277,6 +282,9 @@ prompt to name&gt;.&quot;</span>
          (<span class="builtin">:network-server</span> . <span class="string">&quot;talk.google.com&quot;</span>)
          (<span class="builtin">:connection-type</span> . ssl))))
 (add-hook 'jabber-roster-mode-hook 'easy-move)
+
+                                        <span class="comment-delimiter">; </span><span class="comment">GOLANG
+</span>(<span class="keyword">require</span> '<span class="constant">go-mode-load</span>)
 
                                         <span class="comment-delimiter">; </span><span class="comment">HASKELL
 </span><span class="comment-delimiter">;; </span><span class="comment">Load Haskell mode:
@@ -294,7 +302,7 @@ prompt to name&gt;.&quot;</span>
 </span><span class="comment-delimiter">;; </span><span class="comment">Set the scheme binary correctly:
 </span>(setq scheme-program-name <span class="string">&quot;guile&quot;</span>)
 
-                                        <span class="comment-delimiter">; </span><span class="comment">LATEX
+<span class="comment-delimiter">;;                                         </span><span class="comment">; LATEX
 </span><span class="comment-delimiter">;; </span><span class="comment">Better LaTeX support:
 </span>(load <span class="string">&quot;auctex.el&quot;</span> nil t t)
 (load <span class="string">&quot;preview-latex.el&quot;</span> nil t t)
@@ -361,11 +369,12 @@ prompt to name&gt;.&quot;</span>
 	     (django-html-mode))))<span class="comment-delimiter">;; </span><span class="comment">I think we need to sleep because changing modes is weird.
 </span>(add-hook 'sgml-mode-hook 'django-mode-for-templates)
 
-<span class="comment-delimiter">;; </span><span class="comment">If I open a shell called *django*, load gsp mode with profile &quot;django&quot;:
+<span class="comment-delimiter">;; </span><span class="comment">∀ x ∈ gosu-program-profiles: buffer ≡ 〈*,x,*〉 → (gosu-program-mode buffer)
 </span>(add-hook 'shell-mode-hook
-	  '(<span class="keyword">lambda</span> () (<span class="keyword">if</span> (string-match-p <span class="string">&quot;\\*django\\*&quot;</span> (buffer-name))
-			  (<span class="keyword">progn</span> (gosu-program-mode)
-				 (gosu-program-profile-by-name <span class="string">&quot;django&quot;</span>)))))
+	  '(<span class="keyword">lambda</span> () (<span class="keyword">let</span> ((mode (substring (buffer-name) 1 -1)))
+                        (<span class="keyword">if</span> (assoc mode gosu-program-profiles)
+                            (<span class="keyword">progn</span> (gosu-program-mode)
+                                   (gosu-program-profile-by-name mode))))))
 
 <span class="comment-delimiter">;; </span><span class="comment">If I'm at work, make sure python-indent is set to 4:
 </span>(add-hook 'python-mode-hook
@@ -382,22 +391,24 @@ prompt to name&gt;.&quot;</span>
 
                                         <span class="comment-delimiter">; </span><span class="comment">CUSTOM-SET STUFF
 </span>(custom-set-variables
-  <span class="comment-delimiter">;; </span><span class="comment">custom-set-variables was added by Custom.
-</span>  <span class="comment-delimiter">;; </span><span class="comment">If you edit it by hand, you could mess it up, so be careful.
-</span>  <span class="comment-delimiter">;; </span><span class="comment">Your init file should contain only one such instance.
-</span>  <span class="comment-delimiter">;; </span><span class="comment">If there is more than one, they won't work right.
+ <span class="comment-delimiter">;; </span><span class="comment">custom-set-variables was added by Custom.
+</span> <span class="comment-delimiter">;; </span><span class="comment">If you edit it by hand, you could mess it up, so be careful.
+</span> <span class="comment-delimiter">;; </span><span class="comment">Your init file should contain only one such instance.
+</span> <span class="comment-delimiter">;; </span><span class="comment">If there is more than one, they won't work right.
 </span> '(column-number-mode t)
  '(cs164-base-directory <span class="string">&quot;~/Documents/cs/164/p/2/cs164sp12/pa2/&quot;</span>)
  '(cs164-grammar <span class="string">&quot;cs164b.grm&quot;</span>)
+ '(frame-background-mode (quote dark))
+ '(js2-basic-offset 2)
  '(mark-even-if-inactive t)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(transient-mark-mode nil))
 (custom-set-faces
-  <span class="comment-delimiter">;; </span><span class="comment">custom-set-faces was added by Custom.
-</span>  <span class="comment-delimiter">;; </span><span class="comment">If you edit it by hand, you could mess it up, so be careful.
-</span>  <span class="comment-delimiter">;; </span><span class="comment">Your init file should contain only one such instance.
-</span>  <span class="comment-delimiter">;; </span><span class="comment">If there is more than one, they won't work right.
+ <span class="comment-delimiter">;; </span><span class="comment">custom-set-faces was added by Custom.
+</span> <span class="comment-delimiter">;; </span><span class="comment">If you edit it by hand, you could mess it up, so be careful.
+</span> <span class="comment-delimiter">;; </span><span class="comment">Your init file should contain only one such instance.
+</span> <span class="comment-delimiter">;; </span><span class="comment">If there is more than one, they won't work right.
 </span> '(default ((t (<span class="builtin">:inherit</span> nil <span class="builtin">:stipple</span> nil <span class="builtin">:background</span> <span class="string">&quot;#0C1021&quot;</span> <span class="builtin">:foreground</span> <span class="string">&quot;#F8F8F8&quot;</span> <span class="builtin">:inverse-video</span> nil <span class="builtin">:box</span> nil <span class="builtin">:strike-through</span> nil <span class="builtin">:overline</span> nil <span class="builtin">:underline</span> nil <span class="builtin">:slant</span> normal <span class="builtin">:weight</span> normal <span class="builtin">:height</span> 113 <span class="builtin">:width</span> normal <span class="builtin">:foundry</span> <span class="string">&quot;unknown&quot;</span> <span class="builtin">:family</span> <span class="string">&quot;DejaVu Sans Mono&quot;</span>))))
  '(sgml-namespace ((t (<span class="builtin">:inherit</span> font-lock-builtin-face)))))
 

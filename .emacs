@@ -1,36 +1,33 @@
-                                        ; UTILITY 
+                                        ; UTILITY FUNCTIONS
 (defun easy-move ()
   (local-set-key (kbd "n") 'next-line)
   (local-set-key (kbd "p") 'previous-line)
   (local-set-key (kbd "l") 'recenter-top-bottom))
 
-;; I really have to make my bool flipping function prettier, probably
-;; by using an assoc list or something.
-(defun is-bool (str)
-  (member str '("true" "True" "#t" "t" "false" "False" "#f" "nil" "yes" "no" "Yes" "No")))
+;; A list of opposite boolean pairs.
+(defvar bools '(("true" . "false") ("True" . "False") ("#t" . "#f")
+                ("yes" . "no") ("Yes" . "No")))
       
-
 (defun flip-bool-at-point ()
   "Flips the boolean literal at point, changing true to false and
 vice-versa."
   (interactive)
-  (if (is-bool (current-word))
+  (let* ((true  (cdr (assoc  (current-word) bools)))
+         (false (car (rassoc (current-word) bools)))
+         (wrd (cond (true true)
+                    (false false)
+                    (t (current-word)))))
     (save-excursion
       (forward-word)
-      (let ((wrd (current-word)))
-        (backward-kill-word 1)
-        (insert (cond
-                 ((equal wrd "true") "false")
-                 ((equal wrd "True") "False")
-                 ((equal wrd "#t") "#f")
-                 ((equal wrd "yes") "no")
-                 ((equal wrd "Yes") "No")
-                 ((equal wrd "false") "true")
-                 ((equal wrd "False") "True")
-                 ((equal wrd "#f") "#t")
-                 ((equal wrd "no") "yes")
-                 ((equal wrd "No") "Yes")
-                 (t wrd)))))))
+      (backward-kill-word 1)
+      (insert wrd))))
+
+(defun file-name-at-point ()
+  "Prompts the user for a file path using the standard C-x C-f
+interface and inserts it at point."
+  (interactive)
+  (if ido-mode (insert (ido-read-file-name "file path: "))
+    (insert (read-file-name "file path: "))))
 
                                         ; GENERAL STUFF
 ;; Add my ~/elisp directory and all subdirectories to load-path
@@ -39,9 +36,6 @@ vice-versa."
            (default-directory my-lisp-dir))
       (setq load-path (cons my-lisp-dir load-path))
       (normal-top-level-add-subdirs-to-load-path)))
-
-;; Make emacs whine:
-(load "whine.el")
 
 ;; I want an easy command for opening new shells:
 (defun new-shell (name)
@@ -55,7 +49,7 @@ prompt to name>."
     (sleep-for 0 200)
     (delete-region (point-min) (point-max))
     (comint-simple-send (get-buffer-process (current-buffer)) 
-                        (concat "export PS1='" name ">'"))))
+                        (concat "export PS1=\"\033[33m" name "\033[0m:\033[35m\\W\033[0m>\""))))
 
 ;; A better mode for proper terminal interaction:
 (load "multi-term.el")
@@ -67,15 +61,17 @@ prompt to name>."
 (ido-mode t)
 (setq ido-default-buffer-method 'selected-window)
 
-;; Get rid of the annoying beeping:
+;; Auto Complete mode
+(add-to-list 'load-path "~/elisp/")
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/elisp//ac-dict")
+(ac-config-default)
+
+;; Some minor preferences:
 (setq visible-bell t)
-;; Reasonable parentheses mode:
 (show-paren-mode 1)
-;; Show the column number:
 (column-number-mode t)
-;; Transient mark mode is for the weak!
 (transient-mark-mode -1)
-;; I want lines truncated by default:
 (setq-default truncate-lines t)
 
 ;; Auto-indenting on RET:
@@ -89,16 +85,6 @@ prompt to name>."
 ;; I don't like tabs very much:
 (setq-default indent-tabs-mode nil)
 
-;;Make the window simpler:
-(tool-bar-mode -1)
-(scroll-bar-mode -1) 
-(menu-bar-mode -1)
-(fringe-mode 0)
-(menu-bar-mode -1)
-
-;; Get rid of the annoying splash screen:
-(setq inhibit-splash-screen t)
-
 ;; For enabling color themes:
 (require 'color-theme)
 (eval-after-load "color-theme"
@@ -106,11 +92,28 @@ prompt to name>."
      (color-theme-initialize)
      (color-theme-blackboard)))
 
+;;Make the window simpler:
+(tool-bar-mode -1)
+(scroll-bar-mode -1) 
+(menu-bar-mode -1)
+(fringe-mode 0)
+(menu-bar-mode -1)
+
+;; Now make it prettier:
+(add-to-list 'load-path "~/elisp/emacs-powerline")
+(require 'powerline)
+(set-face-attribute 'mode-line nil
+                    :background "DarkOrange"
+                    :box nil)
+
+;; Get rid of the annoying splash screen:
+(setq inhibit-splash-screen t)
+
 ;; Have a list of recent files:
+(add-hook 'recentf-dialog-mode-hook 'easy-move)
 (recentf-mode 1)
 (recentf-open-files nil "*Recent Files*")
 (setq recentf-max-saved-items 1200)
-(add-hook 'recentf-dialog-mode-hook 'easy-move)
 
 ;; make text-mode the default major mode and start auto-fill mode
 (setq default-major-mode 'text-mode)
@@ -122,23 +125,23 @@ prompt to name>."
 
 ;; Make complete tag not be alt-tab!
 (global-set-key (kbd "M-<return>") 'complete-tag)
+
 ;; Some nice keyboard shortcuts:
 (global-set-key (kbd "C-x 5 3") 'make-frame-command)
-;; Open recent files easily:
-(global-set-key (kbd "C-x C-a") 'recentf-open-files)
-;; Hippie-expand!
+(global-set-key (kbd "C-x C-a") 'recentf-open-files) ;; Open recent files easily
 (global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-c C-j") 'compile)
+(global-set-key (kbd "C-c a") 'align-regexp)
+(global-set-key (kbd "M-#") 'ispell-complete-word)
+(global-set-key (kbd "C-c s") 'new-shell)
+(global-set-key (kbd "C-c C-b") 'flip-bool-at-point)
+(global-set-key (kbd "C-c f") 'file-name-at-point)
+
 ;; C-w remap:
 (global-set-key (kbd "C-w") 'backward-kill-word)
 (global-set-key (kbd "C-x C-k") 'kill-region)
 (global-set-key (kbd "C-c C-k") 'kill-region)
-;; Easy compiling:
-(global-set-key (kbd "C-c C-j") 'compile)
-;; Align stuff:
-(global-set-key (kbd "C-c a") 'align-regexp)
-(global-set-key (kbd "M-#") 'ispell-complete-word)
-(global-set-key (kbd "C-c s") 'new-shell)
-(global-set-key (kbd "C-c b") 'flip-bool-at-point)
+
                                         ; JABBER
 ;; Spellcheck my jabber conversations.
 (add-hook 'jabber-chat-mode-hook 'flyspell-mode)
@@ -150,6 +153,9 @@ prompt to name>."
          (:network-server . "talk.google.com")
          (:connection-type . ssl))))
 (add-hook 'jabber-roster-mode-hook 'easy-move)
+
+                                        ; GOLANG
+(require 'go-mode-load)
 
                                         ; HASKELL
 ;; Load Haskell mode:
@@ -167,7 +173,7 @@ prompt to name>."
 ;; Set the scheme binary correctly:
 (setq scheme-program-name "guile")
 
-                                        ; LATEX
+;;                                         ; LATEX
 ;; Better LaTeX support:
 (load "auctex.el" nil t t)
 (load "preview-latex.el" nil t t)
@@ -234,11 +240,12 @@ prompt to name>."
 	     (django-html-mode))));; I think we need to sleep because changing modes is weird.
 (add-hook 'sgml-mode-hook 'django-mode-for-templates)
 
-;; If I open a shell called *django*, load gsp mode with profile "django":
+;; ∀ x ∈ gosu-program-profiles: buffer ≡ 〈*,x,*〉 → (gosu-program-mode buffer)
 (add-hook 'shell-mode-hook
-	  '(lambda () (if (string-match-p "\\*django\\*" (buffer-name))
-			  (progn (gosu-program-mode)
-				 (gosu-program-profile-by-name "django")))))
+	  '(lambda () (let ((mode (substring (buffer-name) 1 -1)))
+                        (if (assoc mode gosu-program-profiles)
+                            (progn (gosu-program-mode)
+                                   (gosu-program-profile-by-name mode))))))
 
 ;; If I'm at work, make sure python-indent is set to 4:
 (add-hook 'python-mode-hook
@@ -255,22 +262,24 @@ prompt to name>."
 
                                         ; CUSTOM-SET STUFF
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(cs164-base-directory "~/Documents/cs/164/p/2/cs164sp12/pa2/")
  '(cs164-grammar "cs164b.grm")
+ '(frame-background-mode (quote dark))
+ '(js2-basic-offset 2)
  '(mark-even-if-inactive t)
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(transient-mark-mode nil))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "#0C1021" :foreground "#F8F8F8" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
  '(sgml-namespace ((t (:inherit font-lock-builtin-face)))))
 
