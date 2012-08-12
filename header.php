@@ -40,56 +40,26 @@ EOD;
 
 <div id="navigation">
 <div>
-<ul>
+<ul class="navigation">
 <li>
 <?php
 echo "<a href=\"$homePath\">"
 ?>
-Home
-</a>
-</li>
-<li class="tpl">
-<?php
-echo "<a href=\"$homePath/tpl\">"
-?>
-tpl
+About
 </a>
 </li>
 <li>
-<?php
-echo "<a href=\"$homePath/cards\" title=\"Card Game Library\">"
-?>
-Cards
-</a>
+  <?php
+     echo "<a href=\"$homePath/projects\">"
+  ?>
+    Projects
+  </a>
 </li>
 <li>
-<?php
-echo "<a href=\"$homePath/chess\" title=\"Maptac Chess\">"
-?>
-Chess
-</a>
+  <a href="https://github.com/TikhonJelvis" title="My projects">GitHub</a>
 </li>
 <li>
-<?php
-echo "<a href=\"$homePath/draw\" title=\"Draw stuff with
-JavaScript!\">"
-?>
-Drawing
-</a>
-</li>
-<li>
-<?php
-echo "<a href=\"$homePath/simulation\">";
-?>
-Simulation
-</a>
-</li>
-<li>
-<?php
-echo "<a href=\"$homePath/latex\" title=\"All your typesetting needs!\">\n";
-latex();
-?>
-</a>
+  <a href="http://careers.stackoverflow.com/tikhonjelvis">Resume</a>
 </li>
 </ul>
 </div>

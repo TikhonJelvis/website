@@ -32,10 +32,15 @@ Welcome
  </p>
 </div>
 <p>
-I am a second-year Electrical Engineering and Computer Sciences (EECS)
-major at the University of California, Berkeley. I am particularly
-interested in programming languages and functional
-programming. 
+  I am a college student majoring in Electrical Engineering and
+  Computer Sciences (EECS) at Berkeley and working at Ashima Arts, a
+  tiny startup developing tooling for GLSL in OCaml.
+</p>
+<p>
+  I am particularly interested in programming languages, functional
+  programming (especially Haskell), static analysis, type systems and
+  program synthesis. I also have experience in developer tools and web
+  development.
 </p>
 </div>
 <div class="content" id="languages">
