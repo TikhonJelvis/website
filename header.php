@@ -59,7 +59,7 @@ About
   <a href="https://github.com/TikhonJelvis" title="My projects">GitHub</a>
 </li>
 <li>
-  <a href="http://careers.stackoverflow.com/tikhonjelvis">Resume</a>
+  <a href="http://careers.stackoverflow.com/tikhonjelvis">R&eacute;sum&eacute;</a>
 </li>
 </ul>
 </div>

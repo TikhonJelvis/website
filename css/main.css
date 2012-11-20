@@ -128,6 +128,7 @@ ul.navigation li.tpl a {
 .content {
     position : relative;
     width : 70%;
+    max-width : 60em;
 
     color : black;
     background-color : #90A9CB;
@@ -192,7 +193,7 @@ ul.navigation li.tpl a {
     background-color : #7089CB;
 }
 
-.content table, .content td{
+.content table, .content td {
     border : 2px solid #039;
 }
 
@@ -205,7 +206,6 @@ ul.navigation li.tpl a {
     background-color : #8099BB;
     margin-left : 12.5%;
     text-align : center;
-    border : 2px solid #039;
 }
 
 .content div.caption a {
