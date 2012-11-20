@@ -46,3 +46,22 @@
     top : 10pt;
     float : left;
 }
+
+.controls {
+    margin-left : 5%;
+    margin-right : 5%;
+    height : 4.2ex;
+}
+
+.buttons {
+    float : left;
+}
+
+.dimensions {
+    float : right;
+}
+
+.dimensions input {
+    width : 4em;
+    margin-right : 4px;
+}
