@@ -1,7 +1,5 @@
 <?php $homePath = '..'; include '../head.php'; ?>
 
-<link rel="stylesheet" type="text/css" href="css/projects.css" />
-
 <title>
   Projects
 </title>
@@ -21,6 +19,11 @@
       <li class="tpl">
         <?php echo "<a href=\"$homePath/tpl\">" ?>
           tpl
+        </a>
+      </li>
+      <li>
+        <?php echo "<a href=\"$homePath/cow\">" ?>
+          Cow
         </a>
       </li>
       <li>
@@ -46,21 +49,25 @@
     </ul>
   </div>
 
-  <div id="after-projects" class="content">
+  <div class="content">
     <p>
-      I have worked on a bunch of side projects in my spare time. The
-      projects vary drastically, but have one thing in common: they
-      were all fun to work on. 
+      I often work on random programming projects in my spare
+      time. This is a collection of my projects that seem at least
+      moderately interesting. I haven't put <em>all</em> of my
+      projects here yet. Also, some of the ones I have put on here are
+      still works in progress: nothing is guaranteed to work!
     </p>
     <p>
-      Some of the projects were solo efforts, but many of the others
-      would not have been possible without help from some eminently
-      competent friends. Overall, these were the more fun
-      projects. I've linked to the websites of my collaborators for
-      every project; they are all worth visiting.
+      I wrote some of these projects on my own. However, most of the
+      particularly fun ones were done with others' help. I've tried to
+      link to my collaborators' sites on the appropriate projects;
+      they are all worth visiting.
     </p>
   </div>
 
 <?php include '../footer.php' ?>
 </body>
 </html>
+
+
+
