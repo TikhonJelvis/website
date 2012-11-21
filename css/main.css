@@ -85,14 +85,14 @@ a > img {
     float : right;
 }
 
-ul.navigation {
+.navigation ul {
     position : relative;
     list-style : none;
 }
 
 /* This controls the individual navigation items. It is best to only have one
    word in each navigation item. */
-ul.navigation li {
+.navigation li {
     position : relative;
     top : -22px;
     display : block;
@@ -105,16 +105,16 @@ ul.navigation li {
     font-family : Verdana, Arial, Helvetica, sans-serif;
 }
 
-ul.navigation li a:hover {
+.navigation li a:hover {
     color : #053d89;
 }
 
-ul.navigation a {
+.navigation a {
     text-decoration : none;
     color : #0b4faa;
 }
 
-ul.navigation li.tpl a {
+.navigation span.tpl a {
     position : relative;
     top : -2px;
     font-weight : 900;
@@ -145,26 +145,22 @@ ul.navigation li.tpl a {
 }
 
 /* This is the general style for all headers: */
-.content .header {
+.content h1, .content h2 {
     text-align : center;
     color : #0b4faa;
     font-weight : normal;
     font-family : Verdana, Arial, Helvetica, sans-serif;
 }
 
-.content .header:first-letter {
+.content h1:first-letter, .content h2:first-letter {
    color : #053d89;
 }
 
-.content .header .L {
-    color : #053d89;
-}
-
-.content .header a, .content .header a:visited, .content .header a:link {
+.content h1 a, .content h1 a:visited, .content h1 a:link {
     color : #0B4FAA;
 }
 
-.content .header a:active, .content .header a:hover {
+.content h1 a:active, .content h1 a:hover {
     color : #0D6FCA;
     text-decoration : underline;
 }
@@ -198,7 +194,7 @@ ul.navigation li.tpl a {
 }
 
 /* This is the div that holds images and their captions. */
-.content div.caption {
+.content div.figure {
     position : relative;
     left : -2px;
     max-width : 75%;
@@ -208,17 +204,17 @@ ul.navigation li.tpl a {
     text-align : center;
 }
 
-.content div.caption a {
+.content div.figure a {
     border : none;
 }
 
-.content div.caption img {
+.content div.figure img {
     position : relative;
     max-width : 90%;
     margin-top : 1ex;
 }
 
-.content div.caption p {
+.content div.figure p {
     position : relative;
     margin-left : 10%;
     margin-right : 10%;
