@@ -1691,3 +1691,5 @@
    function onld() {
        game = new Game("holder");
    }
+
+jQuery(onld);
