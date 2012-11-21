@@ -1,3 +1,8 @@
 # Emacs backup files and the like:
 *~
 \#*\#
+_site
+_cache
+*.o
+*.hi
+hakyll
