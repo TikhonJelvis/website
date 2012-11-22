@@ -60,36 +60,4 @@ function getData(n, width, height, step) {
     return {raw : data, mean : mean, stdDev : stdDev, max : max};
 }
 
-$(function () {
-    var holder = $("<div>"),
-        plotDiv = $("<div>").css("width", 500).css("height", 250),
-        statsDiv = $("<div>");
 
-    $("body").append(plotDiv);
-    $("body").append(statsDiv);
-
-    /* Plots the distribution of n solutions to mazes of the specified width and
-     * height. Also outputs the average of the data.
-     */
-    function plot(n, width, height) {
-        // Now we get some data:
-        var data = getData(n, width, height, 1),
-            plotData = [];
-
-        for (var i in data.raw) {
-            plotData.push([i * 1, data.raw[i] * 1]);
-        }
-        
-        var plot = $.plot(plotDiv, [{data : plotData,
-                                     label : "Solution length",
-                                     lines : {show : false},
-                                     points : {show : true}},
-                                    {data : [[data.mean, 0],
-                                             [data.mean, data.max]],
-                                     label : "Mean"}]);
-        statsDiv.append("Mean: " + data.mean.toFixed(2) + "<br />");
-        statsDiv.append("Standard deviation: " + data.stdDev.toFixed(2));
-    }
-
-    plot(1000, 10, 10);
-});

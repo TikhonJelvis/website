@@ -1,0 +1,42 @@
+/* CSS Document */
+
+.maze canvas {
+    display : block;
+    margin-top : 10px;
+    margin-left : auto;
+    margin-right : auto;
+}
+
+.maze div {
+    margin-top : 6px;
+    margin-left : auto;
+    margin-right : auto;
+    width : 407px;
+}
+
+.maze-graph div, .maze-graph-controls div {
+    margin-left : auto;
+    margin-right : auto;
+}
+
+.maze-graph-controls div {
+    margin-bottom : 6px;
+    width : 450px;
+}
+
+.maze-stats {
+    width : 450px;
+}
+
+#maze-samples {
+    width : 3em;
+}
+
+#maze-height, #maze-width {
+    width : 2em;
+}
+
+#maze-recalculate {
+    float : right;
+    margin-right : -23px;
+}
