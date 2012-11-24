@@ -25,7 +25,7 @@ main = hakyll $ do
     compile templateCompiler
 
   match (deep "misc/**") $ do
-    route   upRoute
+    route $ removeDir "misc"
     compile copyFileCompiler
 
   match (alternates ["img/**", "js/**", "images/**", "*.html"]) $ do
@@ -49,9 +49,9 @@ main = hakyll $ do
     route   idRoute
     compile copyFileCompiler
 
-upRoute = customRoute $ up . identifierPath
-  where up file = let path = F.splitPath file in
-          F.joinPath $ init (init path) ++ [last path]
+removeDir dir = customRoute $ remove .  identifierPath
+  where remove file = F.joinPath . filter (/= target) $ F.splitPath file
+        target = F.addTrailingPathSeparator dir
 
 deep pat = predicate $ \ i -> (matches (parseGlob pat) i) ||
                               (matches (parseGlob $ "**/" ++ pat) i)
