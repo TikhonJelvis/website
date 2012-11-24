@@ -223,6 +223,10 @@ a > img {
     font-size : 15px;
 }
 
+.projects ul {
+    list-style : none;
+}
+
 /* This is the div at the very bottom of the page. */
 #footer {
     color : black;
