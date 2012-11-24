@@ -19,6 +19,8 @@ Jacob primarily worked on the actual physics, using Newton's method to approxima
 
 I worked on the user interface and putting everything together. To make the design more module, I used the observer pattern---everything has to be a pattern in Java, after all.
 
+The code was actually fairly reusable. We even used the physics engine to write a pong game with oddly shaped paddles where the ball actually followed the laws of physics! And, perhaps surprisingly for high school, most of the code is fully document with [Javadocs](doc/index.html).
+
 ## Powerpoint
 
 As part of the project, we had to make and present a powerpoint presentation on the simulation. The slides give a good overview of the whole project. The presentation is available in [pdf](simulation.pdf) and [ppt](simulation.ppt).
