@@ -1,20 +1,24 @@
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-import           Control.Arrow        (arr, second, (&&&), (>>>), (>>^))
+import           Prelude              hiding (id)
+
+import           Control.Arrow        (arr, (&&&), (>>>), (>>^))
+import           Control.Category     (id)
 import           Control.Monad        (filterM)
 
+import           Data.Char            (toLower)
 import           Data.Function        (on)
 import           Data.Functor         ((<$>))
-import           Data.List            (nubBy)
+import           Data.List            (isPrefixOf, nubBy)
 
 import           System.Directory     (doesFileExist, getDirectoryContents)
 import           System.FilePath      ((</>))
 import qualified System.FilePath      as F
 
-import           Hakyll
+import qualified Text.HTML.TagSoup    as TS
 
-import           Hakyll.Core.Resource (Resource (..))
+import           Hakyll
 
 main = hakyll $ do
   match "templates/*" $ do
@@ -39,7 +43,7 @@ main = hakyll $ do
       >>> arr applySelf
       >>> pageRenderPandoc
       >>> applyTemplateCompiler "templates/default.html"
-      >>> relativizeUrlsCompiler
+      >>> relativizeCompiler
 
   match (deep "*.html") $ do
     route   idRoute
@@ -55,7 +59,7 @@ deep pat = predicate $ \ i -> (matches (parseGlob pat) i) ||
 alternates pats = predicate . foldl go (const False) $ map deep pats
   where go prevs pat = \ inp -> prevs inp || matches pat inp
 
-addIncludes = getIncludes &&& arr id >>^ setFields
+addIncludes = getIncludes &&& id >>^ setFields
   where getIncludes = getIdentifier >>> unsafeCompiler (readIncludes . includePath)
         includePath (Identifier {identifierPath}) =
           F.dropFileName identifierPath </> "include"
@@ -69,3 +73,20 @@ addIncludes = getIncludes &&& arr id >>^ setFields
 
 include file page = setField key (pageBody file) page
   where key = F.dropExtension . F.takeFileName $ getField "path" file
+
+        -- Fixed the weird self-closing tags issue:
+relativizeCompiler = getRoute &&& id >>^ uncurry relativize
+  where relativize Nothing  = id
+        relativize (Just r) = fmap (fixUrls $ toSiteRoot r)
+        fixUrls root = mapUrls rel
+          where isRel x = "/" `isPrefixOf` x && not ("//" `isPrefixOf` x)
+                rel x = if isRel x then root ++ x else x
+
+mapUrls f = render . map tag . TS.parseTags
+  where tag (TS.TagOpen s a) = TS.TagOpen s $ map attr a
+        tag x                = x
+        attr (k, v) = (k, if k `elem` ["src", "href"] then f v else v)
+        render = TS.renderTagsOptions TS.renderOptions {
+          TS.optRawTag = (`elem` ["script", "style"]) . map toLower,
+          TS.optMinimize = (`elem` ["link", "meta", "img", "br"])
+        }
