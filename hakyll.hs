@@ -88,5 +88,5 @@ mapUrls f = render . map tag . TS.parseTags
         attr (k, v) = (k, if k `elem` ["src", "href"] then f v else v)
         render = TS.renderTagsOptions TS.renderOptions {
           TS.optRawTag = (`elem` ["script", "style"]) . map toLower,
-          TS.optMinimize = (`elem` ["link", "meta", "img", "br"])
+          TS.optMinimize = (`elem` ["link", "meta", "img", "br"]) . map toLower
         }
