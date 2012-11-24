@@ -1,3 +1,8 @@
+---
+title: Mazes
+author: Tikhon Jelvis
+---
+
 <div class="content">
 
 # Maze Generation
@@ -36,3 +41,5 @@ Even with relatively few (1000) sample points, it's clear there is some sort of 
 So I now had a good approximation of the average solution length of a maze! This is where I learned another lesson: numeric methods are extremely unsatisfying. Sure, I had an answer, but it was just that---an answer. I got no real insight by running this experiment. It was still a fun exercise, but an analytic solution would have been much better. 
 
 I still haven't figured out how to solve this problem without random sampling. After a little while I just gave up and never got back to it. If you how to solve it, please email me!
+
+</div>

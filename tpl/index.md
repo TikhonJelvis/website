@@ -88,3 +88,5 @@ So here is how the definition of the for-loop looks:
 In the end we return `null` because a for-loop should not really have a value.
 
 You can write things as fundamental as loops in TPL itself. This also means that if you want something not included in the language---like a traditional class system, for example---it should be possible to implement it yourself. I think this sort of flexibility is very important: it gives the language room to grow. 
+
+</div>

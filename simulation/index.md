@@ -37,3 +37,5 @@ have quite a few features. I'm not going to list all of them right now, but here
 We support any sort of polygon as well as circles. You can add shapes when everything is paused, but you can also add them interactively. You can even drag and throw shapes around while the simulation is active, which turns out to be pretty fun. All the parameters of the world and each shape---things like mass, friction, bounciness and gravity---can be changed on the fly for some potentially amusing effects.
 
 Everything becomes much more fun---but also less realistic---if you set bounciness very high and density very low. 
+
+</div>
