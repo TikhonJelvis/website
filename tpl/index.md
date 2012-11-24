@@ -8,7 +8,7 @@ author: Tikhon Jelvis
 
 TPL is a simple dynamically typed programming language I designed and implemented, largely for fun. Creating a language is very fascinating---you feel virtually omnipotent because you have complete control over everything.
 
-NOTE: This language is a work in progress. At any given time, this text is probably outdated and the interpreter probably doesn't work. Having to no real users gives me a lot of freedom :).
+NOTE: This language is a work in progress. At any given time, this text is probably outdated and the interpreter probably doesn't work. Having no real users gives me a lot of freedom :).
 
 You can get the source on [GitHub](https://github.com/TikhonJelvis/tpl). There is a more in-depth [User Guide](guide.html), but it isn't completely up-to-date at the moment. Also, unless you want to actually write TPL code, it isn't terribly interesting.
 

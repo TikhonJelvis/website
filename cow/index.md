@@ -53,7 +53,9 @@ function foo(a, b) {
   return a + bar(b, 10);
 }
 ```
+
 to:
+
 ```javascript
 function foo(a, b) {
   return a + bar(b, 10);
