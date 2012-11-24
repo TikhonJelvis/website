@@ -1,26 +1,31 @@
-{-# LANGUAGE OverloadedStrings, NamedFieldPuns #-}
+{-# LANGUAGE NamedFieldPuns    #-}
+{-# LANGUAGE OverloadedStrings #-}
 
-import Control.Arrow ((>>>), arr, second)
+import           Control.Arrow        (arr, second, (>>>))
 
-import System.Directory (doesFileExist)
-import System.FilePath (replaceExtension)
+import           System.Directory     (doesFileExist)
+import qualified System.FilePath      as F
 
-import Hakyll
+import           Hakyll
 
-import Hakyll.Core.Resource (Resource (..))
+import           Hakyll.Core.Resource (Resource (..))
 
 main = hakyll $ do
   match "templates/*" $ compile templateCompiler
 
-  match (deep "img/*") $ do
+  match (deep "misc/**") $ do
+    route   upRoute
+    compile copyFileCompiler
+
+  match (deep "img/**") $ do
     route   idRoute
     compile copyFileCompiler
 
-  match (deep "js/*") $ do
+  match (deep "js/**") $ do
     route   idRoute
     compile copyFileCompiler
 
-  match (deep "css/*") $ do
+  match (deep "css/**") $ do
     route   idRoute
     compile compressCssCompiler
 
@@ -31,11 +36,18 @@ main = hakyll $ do
       >>> applyTemplateCompiler "templates/default.html"
       >>> relativizeUrlsCompiler
 
-deep pat = predicate $ \ i -> check pat i || check ("**/" ++ pat) i
-  where check = matches . parseGlob 
+  match (deep "*.html") $ do
+    route   idRoute
+    compile copyFileCompiler
 
-headers = split >>> setFieldA "includes" (unsafeCompiler $ readHeader . includeFile)
+upRoute = customRoute $ up . identifierPath
+  where up file = let path = F.splitPath file in F.joinPath $ init (init path) ++ [last path]
+
+deep pat = predicate $ \ i -> (matches (parseGlob pat) i) || (matches (parseGlob $ "**/" ++ pat) i)
+
+headers = split >>> setFieldA "includes" (unsafeCompiler readHead)
   where split = arr (\ x -> (x, x)) >>> second getIdentifier
-        readHeader path = do exists <- doesFileExist path
-                             if exists then readFile path else return ""
-        includeFile (Identifier {identifierPath}) = replaceExtension identifierPath "head"
+        readHead (Identifier {identifierPath}) =
+          let name = F.replaceFileName identifierPath "head" in
+          do exists <- doesFileExist name
+             if exists then readFile name else return ""
