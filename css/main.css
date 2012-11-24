@@ -145,14 +145,14 @@ a > img {
 }
 
 /* This is the general style for all headers: */
-.content h1, .content h2 {
+.content h1, .content h2, .content h3 {
     text-align : center;
     color : #0b4faa;
     font-weight : normal;
     font-family : Verdana, Arial, Helvetica, sans-serif;
 }
 
-.content h1:first-letter, .content h2:first-letter {
+.content h1:first-letter, .content h2:first-letter, .content h3:first-letter {
    color : #053d89;
 }
 
@@ -173,24 +173,6 @@ a > img {
     text-align : justify;
     font-size : 14pt;
     line-height : 1.3em;
-}
-
-/* Various options for managing tables: */
-.content table {
-    position : relative;
-    width : 80%;
-    margin-left : 10%;
-    background-color : #90A9CB;
-}
-
-.content td {
-    padding-left : 0.5ex;
-    padding-right : 0.5ex;
-    background-color : #7089CB;
-}
-
-.content table, .content td {
-    border : 2px solid #039;
 }
 
 /* This is the div that holds images and their captions. */
@@ -225,7 +207,7 @@ a > img {
     font-family : lucida console, monospace;
 }
 
-.content .code {
+.content code {
     font-family : lucida console, monospace;
     background : #8099BB;
     font-size : 15px;
