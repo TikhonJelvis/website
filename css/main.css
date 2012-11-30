@@ -37,6 +37,13 @@
     font-style : italic;
 }
 
+@font-face {
+    font-family : "DejaVu Sans Mono";
+    src : url("../fonts/DejaVu-Sans-Mono/DejaVuSansMono.ttf");
+    font-weight : normal;
+    font-style : normal;
+}
+
 /* GENERAL */
 
 /* This, naturally, applies to the whole page. */
@@ -244,19 +251,20 @@ a > img {
     font-family : lucida console, monospace;
 }
 
-.content code {
-    font-family : lucida console, monospace;
+.content code, .content pre {
+    font-family : "DejaVu Sans Mono", lucida console, monospace;
     background : #8099BB;
     font-size : 15px;
+}
+
+.content code {
     padding : 1px 6px;
     border-radius : 6px;
 }
 
 .content pre {
-    background : #8099BB;
     margin : 0 14%;
     padding : 10px 4px;
-    font-size : 15px;
 }
 
 .projects ul {
