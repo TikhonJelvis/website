@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="192"
+   height="135.6875"
+   version="1.0"
+   id="svg2"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="gold-blue-256.svg">
+  <metadata
+     id="metadata20">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs18" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview16"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.921875"
+     inkscape:cx="96.4375"
+     inkscape:cy="40.125"
+     inkscape:window-x="1280"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <title
+     id="title4">Haskell Logo</title>
+  <desc
+     id="desc6">Combination bind and lambda symbol</desc>
+  <path
+     d="M 35.293155,134.70164 79.86359,67.84598 35.293155,0.990327 l -33.427828,0 44.570437,66.855653 -44.570437,66.85566 z"
+     id="path8"
+     inkscape:connector-curvature="0"
+     style="fill:#dca03c;stroke:#dca03c;stroke-width:2" />
+  <path
+     d="m 79.86359,134.70164 27.85652,-41.78479 27.85653,41.78479 33.42782,0 -89.14087,-133.711313 -33.427826,0 L 91.0062,67.84598 46.435764,134.70164 z"
+     id="path10"
+     inkscape:connector-curvature="0"
+     style="fill:#0f4d92;stroke:#0f4d92;stroke-width:2" />
+  <path
+     d="m 132.67026,63.906437 58.33941,0 0,-23.63727 -74.09759,0 z"
+     id="path12"
+     inkscape:connector-curvature="0"
+     style="fill:#dca03c;stroke:#dca03c;stroke-width:2" />
+  <path
+     d="m 153.68117,95.4228 37.3285,0 0,-23.63727 -53.08668,0 z"
+     id="path14"
+     inkscape:connector-curvature="0"
+     style="fill:#dca03c;stroke:#dca03c;stroke-width:2" />
+</svg>
