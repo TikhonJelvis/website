@@ -2,6 +2,41 @@
 
 @import url(http://fonts.googleapis.com/css?family=Megrim);
 
+@font-face {
+    font-family : Aller;
+    src : url("../fonts/Aller/Aller_Rg.ttf");
+    font-weight : normal;
+    font-style : normal;
+}
+
+@font-face {
+    font-family : Aller;
+    src : url("../fonts/Aller/Aller_Bd.ttf");
+    font-weight : bold;
+    font-style : normal;
+}
+
+@font-face {
+    font-family : Garamond;
+    src : url("../fonts/Garamond/GaramondNo8-Regular.ttf");
+    font-weight : normal;
+    font-style : normal;
+}
+
+@font-face {
+    font-family : Garamond;
+    src : url("../fonts/Garamond/GaramondNo8-Bold.ttf");
+    font-weight : bold;
+    font-style : normal;
+}
+
+@font-face {
+    font-family : Garamond;
+    src : url("../fonts/Garamond/GaramondNo8-Italic.ttf");
+    font-weight : normal;
+    font-style : italic;
+}
+
 /* GENERAL */
 
 /* This, naturally, applies to the whole page. */
@@ -94,15 +129,17 @@ a > img {
    word in each navigation item. */
 .navigation li {
     position : relative;
-    top : -22px;
+    top : -17pt;
     display : block;
     float : left;
     margin-left : 0.5em;
-    margin-bottom : 2px;
+    margin-bottom : 10px;
     padding-left : 2px;
+    padding-bottom : 4px;
     border-left : 3px solid #0B4FAA;
+    font-weight : normal;
     font-size : 20pt;
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
 }
 
 .navigation li a:hover {
@@ -133,7 +170,7 @@ a > img {
     color : black;
     background-color : #90A9CB;
 
-    font-family : "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family : Garamond, "Palatino Linotype", "Book Antiqua", Palatino, serif;
 
     margin-top : 4pt;
     margin-left : auto;
@@ -149,7 +186,7 @@ a > img {
     text-align : center;
     color : #0b4faa;
     font-weight : normal;
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
 }
 
 .content h1:first-letter, .content h2:first-letter, .content h3:first-letter {

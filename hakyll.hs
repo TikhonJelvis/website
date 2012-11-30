@@ -28,7 +28,7 @@ main = hakyll $ do
     route $ removeDir "misc"
     compile copyFileCompiler
 
-  match (alternates ["img/**", "js/**", "images/**", "*.html"]) $ do
+  match (alternates ["img/**", "js/**", "images/**", "fonts/**", "*.html"]) $ do
     route   idRoute
     compile copyFileCompiler
 
