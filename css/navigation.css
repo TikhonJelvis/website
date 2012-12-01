@@ -1,0 +1,110 @@
+/* This is needed to make the header not create a horizontal scroll bar. */
+#top {
+    position : relative;
+    width : 100%;
+    overflow : hidden;
+}
+
+/* HEADER */
+
+/* This is the title on top of every page. */
+#header {
+    font-size : 64pt;
+    height : 100px;
+}
+
+/* This is just to center the header. */
+#header > div {
+    margin-left : auto;
+    margin-right : auto;
+    width : 6.9em;
+}
+
+/* This is the rectangle that is behind the header's banner. */
+#headerBackground {
+    position : absolute;
+    background-color : #90A9CB;
+    height : 75px;
+    top : 28pt;
+    width : 100%;
+    z-index : -1;
+}
+
+#headerBackground > img {
+    position : absolute;
+    top : -19px;
+}
+
+/* NAVIGATION */
+
+/* This div contains the list that serves as the navigation menu. */
+#navigation {
+    position : relative;
+    height : 24pt;
+    margin-top : 30pt;
+}
+
+/* This div makes the background of the navigation menu. */
+#navigation > div {
+    position : relative;
+    height : 70%;
+    margin-left : 0;
+    width : 55%;
+    min-width : 29em;
+    background-color : #90A9CB;
+}
+
+/* This list is the actual navigation menu--each item is a link. */
+#navigation ul {
+    margin-right : 7px;
+    top : 2px;
+    margin-bottom : -20px;
+    float : right;
+}
+
+.navigation ul {
+    position : relative;
+    list-style : none;
+}
+
+/* This controls the individual navigation items. It is best to only have one
+   word in each navigation item. */
+.navigation li {
+    position : relative;
+    top : -17pt;
+    display : block;
+    float : left;
+    margin-left : 0.5em;
+    margin-bottom : 10px;
+    padding-left : 2px;
+    padding-bottom : 4px;
+    border-left : 3px solid #0B4FAA;
+    font-weight : normal;
+    font-size : 20pt;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.navigation li a:hover {
+    color : #053d89;
+}
+
+.navigation a {
+    text-decoration : none;
+    color : #0b4faa;
+}
+
+.navigation span.tpl a {
+    position : relative;
+    top : -2px;
+    font-weight : 900;
+    font-family : megrim, Verdana, Arial, Helvetica, sans-serif;
+    font-size : 21pt;
+}
+
+/* This is the div at the very bottom of the page. */
+#footer {
+    color : black;
+    margin-top : 4pt;
+    padding-top : 2pt;
+    padding-bottom : 2pt;
+}
