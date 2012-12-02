@@ -1,0 +1,3 @@
+[submodule "scheme"]
+	path = scheme
+	url = git://github.com/TikhonJelvis/js-scheme.git

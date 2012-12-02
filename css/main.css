@@ -98,7 +98,7 @@ a > img {
     font-family : lucida console, monospace;
 }
 
-.content code, .content pre {
+.content code, .content pre, .content .code {
     font-family : "DejaVu Sans Mono", lucida console, monospace;
     background : #8099BB;
     font-size : 15px;
