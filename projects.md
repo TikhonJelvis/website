@@ -28,6 +28,9 @@ Here are some of those projects. They vary from silly little things I wrote in a
 * [Maze](/maze/)
   Exploring randomly generated mazes with JavaScript and canvas.
 
+* [JS Scheme](/scheme/)
+  A very basic Scheme interpreter written in JavaScript. Does not support the *all* of Scheme's features, unfortunately.
+
 * [Cards](/cards/)
   A library for writing card games in JavaScript, written at an 18-hour hackathon.
 
