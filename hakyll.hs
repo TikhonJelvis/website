@@ -17,6 +17,7 @@ import           System.FilePath      ((</>))
 import qualified System.FilePath      as F
 
 import qualified Text.HTML.TagSoup    as TS
+import           Text.Pandoc.Shared   as P
 
 import           Hakyll
 
@@ -39,15 +40,19 @@ main = hakyll $ do
   match (deep "*.md") $ do
     route   $ setExtension "html"
     compile $ readPageCompiler
-      >>> addIncludes
-      >>> arr applySelf
-      >>> pageRenderPandoc
+      >>> addIncludes >>> addDefaultFields
+      >>> arr (changeField "title" (++ " | jelv.is") . applySelf)
+      >>> pageRenderPandocWith defaultHakyllParserState pandocOptions
       >>> applyTemplateCompiler "templates/default.html"
       >>> relativizeCompiler
 
   match (deep "*.html") $ do
     route   idRoute
     compile copyFileCompiler
+
+pandocOptions = defaultHakyllWriterOptions {
+  P.writerHTMLMathMethod = P.MathJax ""
+}
 
 removeDir dir = customRoute $ remove .  identifierPath
   where remove file = F.joinPath . filter (/= target) $ F.splitPath file

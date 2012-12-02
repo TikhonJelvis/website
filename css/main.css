@@ -114,6 +114,10 @@ a > img {
     padding : 10px 4px;
 }
 
+.content pre code {
+    padding : 0;
+}
+
 .projects ul {
     list-style : none;
 }
