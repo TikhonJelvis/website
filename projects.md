@@ -16,28 +16,30 @@ I wrote some of these projects on my own. However, most of the particularly fun 
 
 Here are some of those projects. They vary from silly little things I wrote in a couple of days to more interesting projects that took weeks or months. 
 
-* <span class="tpl"> [tpl](/tpl) </span>
+* [FRP](/frp)
+
+* <span class="tpl"> [TPL](/tpl) </span>
   A simple but flexible dynamically typed scripting language.
 
-* [Cow](/cow/)
+* [Cow](/cow)
   A proof-of-concept for a diff and merge tool that looks at your code semantically.
 
-* [Drawing](/draw/)
+* [Drawing](/draw)
   A little toy for drawing pictures from mathematical functions---it can be a lot of fun!
 
-* [Maze](/maze/)
+* [Maze](/maze)
   Exploring randomly generated mazes with JavaScript and canvas.
 
-* [JS Scheme](/scheme/)
+* [JS Scheme](/scheme)
   A very basic Scheme interpreter written in JavaScript. Does not support the *all* of Scheme's features, unfortunately.
 
-* [Cards](/cards/)
+* [Cards](/cards)
   A library for writing card games in JavaScript, written at an 18-hour hackathon.
 
-* [Chess](/chess/)
+* [Chess](/chess)
   A JavaScript chess game I wrote with a friend in high school. 
 
-* [Simulation](/simulation/)
+* [Simulation](/simulation)
   A 2d physics engine supporting polygons and circles that I wrote with a friend in high school.
 
 </div>
