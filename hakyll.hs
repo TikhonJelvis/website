@@ -12,7 +12,7 @@ import           Data.Function        (on)
 import           Data.Functor         ((<$>))
 import           Data.List            (isPrefixOf, nubBy)
 
-import           System.Directory     (doesFileExist, getDirectoryContents)
+import           System.Directory     (doesDirectoryExist, doesFileExist, getDirectoryContents)
 import           System.FilePath      ((</>))
 import qualified System.FilePath      as F
 
@@ -46,10 +46,6 @@ main = hakyll $ do
       >>> applyTemplateCompiler "templates/default.html"
       >>> relativizeCompiler
 
-  match (deep "*.html") $ do
-    route   idRoute
-    compile copyFileCompiler
-
 pandocOptions = defaultHakyllWriterOptions {
   P.writerHTMLMathMethod = P.MathJax ""
 }
@@ -64,12 +60,15 @@ deep pat = predicate $ \ i -> (matches (parseGlob pat) i) ||
 alternates pats = predicate . foldl go (const False) $ map deep pats
   where go prevs pat = \ inp -> prevs inp || matches pat inp
 
-addIncludes = getIncludes &&& id >>^ setFields
+addIncludes = getIncludes &&& id >>^ trySetField "imports" "" . setFields
   where getIncludes = getIdentifier >>> unsafeCompiler (readIncludes . includePath)
         includePath (Identifier {identifierPath}) =
           F.dropFileName identifierPath </> "include"
         readIncludes path =
-          do allFiles <- map (path </>) <$> getDirectoryContents path
+          do exists   <- doesDirectoryExist path
+             allFiles <- if exists
+                         then map (path </>) <$> getDirectoryContents path
+                         else return []
              files    <- filterM doesFileExist allFiles
              contents <- mapM readFile files
              return . nubBy ((==) `on` fst) $ zip (key <$> files) contents
