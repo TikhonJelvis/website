@@ -17,6 +17,7 @@ I wrote some of these projects on my own. However, most of the particularly fun 
 Here are some of those projects. They vary from silly little things I wrote in a couple of days to more interesting projects that took weeks or months. 
 
 * [FRP](/frp)
+  Some information on Functional Reactive Programming. Soon to have a tutorial.
 
 * <span class="tpl"> [TPL](/tpl) </span>
   A simple but flexible dynamically typed scripting language.
