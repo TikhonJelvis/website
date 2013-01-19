@@ -7,12 +7,10 @@ author: Tikhon Jelvis
 
 # Programming UIs
 
-Writing responsive, interactive UIs with modern tools and frameworks is relatively tricky. Most frameworks present an event-oriented interface: UI logic is written using callbacks that respond to events coupled with mutable models of both the "business logic" and the actual onscreen controls. Such code ends up non-linear and hard to follow. Everything being written with callbacks naturally obscures the underlying meaning and flow of the code. Ultimately, these UI frameworks are at too low a level: implementation details dominate the actual meaning of the code.
+Writing UIs is relatively tricky: most common approaches involve an ungainly mix of events, callbacks and mutable state obscuring the code's meaning and flow. Additionally, these approaches are all staunchly imperative and do not fit fell with functional code.
 
-Implementing UI logic would be much simpler---and correspondingly more productive---with a more declarative approach: a model abstracting away the *how* in favor of the *what*. The actual code should reflect its high-level meaning instead of the relatively complex control flow actually required to couple it with GUI elements.
-
-Another problem is that the standard method is staunchly imperative. It fits well into imperative, object-oriented languages but feels rather jarring in more functional settings. A declarative approach would work well with functional code.
-
+Functional reactive programming (FRP) presents an alternative, more declarative model. While FRP is relatively new and untested, I've found UIs easier to write and maintain with it.
+ 
 ## A Game of Life
 
 To help illustrate these concepts, we're going to write a simple program with FRP. I will cover exactly how to write the *core* part of the application---enough to make it usable--and leave some additional features as exercises. 
