@@ -72,9 +72,12 @@ a > img {
     text-decoration : underline;
 }
 
+.content p, .content ul, .content ol, .content td {
+    color : black;
+}
+
 /* All of the large groups of text should be in p tags. */
 .content p, .content ul, .content ol {
-    color : black;
     margin-left : 12%;
     margin-right : 12%;
     text-align : justify;
@@ -104,6 +107,7 @@ a > img {
     max-width : 75%;
     overflow : hidden;
 
+    margin-top : 10px;
     padding-top : 20px;
     padding-bottom : 20px;
 }

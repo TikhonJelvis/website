@@ -25,13 +25,15 @@ For convenience, all of the properties of the `Math` class are available without
 
 Here is a simple example of a function that can be used here, which creates an interesting pattern: 
 
-    function (x, y, d, a) {
-      var r = cos(round(x / 10, 0)) * 256;
-      var g = sin(round(y / 10, 0)) * 256;
-      var b = random() * d;
+```javascript
+function (x, y, d, a) {
+  var r = cos(round(x / 10, 0)) * 256;
+  var g = sin(round(y / 10, 0)) * 256;
+  var b = random() * d;
 
-      return new Color(r, g, b);
-    }
+  return new Color(r, g, b);
+}
+```
 
 </div>
 

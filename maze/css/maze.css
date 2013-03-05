@@ -1,5 +1,14 @@
 /* CSS Document */
 
+.tickLabel {
+    color : black;
+}
+
+td.legendLabel {
+    padding-left : 5px;
+    text-align : left;
+}
+
 .maze canvas {
     display : block;
     margin-top : 10px;

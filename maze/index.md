@@ -28,13 +28,14 @@ Now that I have a program that could generate mazes, I wanted to know more about
 
 Happily, I'm a computer programmer---if I'm not smart enough to solve the problem, I can just use brute force! So I wrote a simple little script that generated a whole bunch of random mazes and plotted their solution lengths on a little graph. Here is such a graph:
 
+<div class="figure">
 <div class="maze-graph-controls"><div>
 Samples: <input type="text" id="maze-samples" value="1000"></input>
 Maze size: W<input type="text" value="10" id="maze-width"></input>         H<input type="text" value="10" id="maze-height"></input>
 <input type="button" id="maze-recalculate" value="recalculate"></input>
 </div>
 </div>
-<div class="maze-graph"></div>
+<div class="maze-graph"></div></div>
 
 Even with relatively few (1000) sample points, it's clear there is some sort of non-normal distribution. You can get a much smoother graph by increasing the number of sample points; however, this can take a little while to calculate. It is using completely unoptimized JavaScript, after all. You can also change the size of each sample maze, although much bigger sizes will take significantly longer to calculate.
 

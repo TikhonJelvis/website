@@ -9,9 +9,9 @@
 
 #container textarea {
     position : relative;
-    width : 90%;
-    margin-left : 5%;
-    margin-right : 5%;
+    width : 75%;
+    margin-left : 12.5%;
+    margin-right : 12.5%;
     height : 300px;
 }
 
@@ -48,8 +48,8 @@
 }
 
 .controls {
-    margin-left : 5%;
-    margin-right : 5%;
+    margin-left : 12.5%;
+    margin-right : 12.5%;
     height : 4.2ex;
 }
 
@@ -59,6 +59,7 @@
 
 .dimensions {
     float : right;
+    margin-right : -14px;
 }
 
 .dimensions input {
