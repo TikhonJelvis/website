@@ -1,0 +1,51 @@
+/* This is needed to make the header not create a horizontal scroll bar. */
+#top {
+    position : relative;
+    width : 100%;
+    overflow : hidden;
+}
+
+/* CSS for the banner on top of each page. */
+#header {
+    font-size : 65px;
+    height : 75px;
+}
+
+/* This is just to center the header. */
+#header > div {
+    margin-left : auto;
+    margin-right : auto;
+    width : 6.9em;
+}
+
+/* This is the rectangle that is behind the header's banner. */
+#headerBackground {
+    position : absolute;
+    background-color : #90A9CB;
+    height : 50px;
+    top : 28pt;
+    width : 100%;
+    z-index : -1;
+}
+
+#header span {
+    position : relative;
+    font-family : Aller, Verdana, sans-serif;
+    color : #0b4faa;
+}
+
+#header .big {
+    margin-left : -2px;
+    top : -19px;
+    color : #053d89;
+    font-size : 90px;
+}
+
+#header #tikhon {
+    top : -43px;
+    margin-right : -15px;
+}
+
+#header #jelvis {
+    top : -27px;
+}
