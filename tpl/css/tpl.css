@@ -6,11 +6,3 @@
     margin-bottom : -20px;
     font-family : Megrim, "Maven Pro", Verdana, Arial, Helvetica, sans-serif;
 }
-
-.tpl.content pre {
-    background : #8099BB;
-    margin : 0 14%;
-    padding : 10px 4px;
-    border-radius : 6px;
-    font-size : 15px;
-}
