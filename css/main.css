@@ -56,7 +56,6 @@ a > img {
     font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
     margin-top : 15px;
     margin-bottom : 15px;
-    text-rendering: optimizeLegibility;
 }
 
 .content h1:first-letter, .content h2:first-letter, .content h3:first-letter {
@@ -137,7 +136,6 @@ a > img {
     font-family : "DejaVu Sans Mono", lucida console, monospace;
     background : #8099BB;
     font-size : 15px;
-    text-rendering: optimizeLegibility;
 }
 
 .content code {
