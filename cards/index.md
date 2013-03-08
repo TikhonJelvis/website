@@ -38,7 +38,7 @@ The Klonide source:  [<a href="#" class="hide-control"> show </a>]
 $klondike$
 ```
 
-[<a href="#" class="hide-control"> show </a>]
+[<a href="#" class="hide-control">show</a>]
 
 </div>
 </div>

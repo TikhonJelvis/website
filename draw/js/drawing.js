@@ -1,9 +1,9 @@
 /* Lets you draw stuff programatically! */
 $(document).ready(function (e) {
   // Toggle the text when the link is clicked:
-  $(".hidehelp").click(function (e) {
+  $(".hide-control").click(function (e) {
     $("#help").toggle();
-    $(".hidehelp").html(/hide/.test($(".hidehelp").html()) ? "show" : "hide");
+    $(".hide-control").html(/hide/.test($(".hide-control").html()) ? "show" : "hide");
   });
 
   function createOutput() {

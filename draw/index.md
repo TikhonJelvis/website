@@ -9,7 +9,7 @@ author: Tikhon Jelvis
 
 <div id="help">
 
-<span class="hide">[<a href="#" class="hidehelp"> hide </a>]</span>
+<span class="hide">[<a href="#" class="hide-control">hide</a>]</span>
 
 ## Instructions
 
@@ -37,7 +37,7 @@ function (x, y, d, a) {
 
 </div>
 
-[<a href="#" class="hidehelp"> hide </a>]
+[<a href="#" class="hide-control">hide</a>]
 
 This only works on browsers supporting pixel manipulation using canvas.
 

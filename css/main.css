@@ -13,6 +13,11 @@ a > img {
     border-style : none;
 }
 
+.hide-control {
+    font-family : "DejaVu Sans Mono", lucida console, monospace;
+    font-size : 2ex;
+}
+
 /* CONTENT */
 
 /* This div has the actual content of the site in it. */
