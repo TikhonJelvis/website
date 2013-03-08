@@ -16,31 +16,31 @@ I wrote some of these projects on my own. However, most of the particularly fun 
 
 Here are some of those projects. They vary from silly little things I wrote in a couple of days to more interesting projects that took weeks or months. 
 
-* [FRP](/frp)
-  Some information on Functional Reactive Programming. Soon to have a tutorial.
+[Cow: Semantic Version Control](/cow)
+  ~ A proof-of-concept diff and merge tool that looks at the structure of code rather than just text.
 
-* <span class="tpl"> [TPL](/tpl) </span>
-  A simple but flexible dynamically typed scripting language.
+[FRP](/frp)
+  ~ Some information and slides on Functional Reactive Programming. Soon to have a tutorial.
 
-* [Cow](/cow)
-  A proof-of-concept for a diff and merge tool that looks at your code semantically.
+<span class="tpl"> [TPL](/tpl) </span>
+  ~ A simple but flexible dynamically typed scripting language. Has a working implementation but is really a work in progress.
 
-* [Drawing](/draw)
-  A little toy for drawing pictures from mathematical functions---it can be a lot of fun!
+[Drawing](/draw)
+  ~ A little toy for drawing pictures from mathematical functions---it can be a lot of fun!
 
-* [Maze](/maze)
-  Exploring randomly generated mazes with JavaScript and canvas.
+[Maze](/maze)
+  ~ Exploring randomly generated mazes with JavaScript and canvas.
 
-* [JS Scheme](/scheme)
-  A very basic Scheme interpreter written in JavaScript. Does not support the *all* of Scheme's features, unfortunately.
+[JS Scheme](/scheme)
+  ~ A basic Scheme interpreter written in JavaScript. Does not support *all* of Scheme (e.g. no macros or continuations), unfortunately.
 
-* [Cards](/cards)
-  A library for writing card games in JavaScript, written at an 18-hour hackathon.
+[Cards](/cards)
+  ~ A library for writing card games in JavaScript, entirely created at an 18-hour hackathon.
 
-* [Chess](/chess)
-  A JavaScript chess game I wrote with a friend in high school. 
+[Chess](/chess)
+  ~ A JavaScript chess game I wrote with a friend in high school. 
 
-* [Simulation](/simulation)
-  A 2d physics engine supporting polygons and circles that I wrote with a friend in high school.
+[Simulation](/simulation)
+  ~ A 2D physics engine supporting polygons and circles that I wrote with a friend in high school.
 
 </div>
