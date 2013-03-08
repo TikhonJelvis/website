@@ -47,13 +47,17 @@
     font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
 }
 
-.navigation li a:hover {
+.navigation li:first-letter {
     color : #053d89;
 }
 
 .navigation a {
     text-decoration : none;
     color : #0b4faa;
+}
+
+.navigation a:hover {
+    color : #053d89;
 }
 
 .navigation span.tpl a {
