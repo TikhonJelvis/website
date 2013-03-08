@@ -11,7 +11,9 @@ A while back, I was fascinated with mazes. In particular, I was interested in ho
 
 Here is an example maze:
 
+<div class="figure">
 <div class="maze"></div>
+</div>
 </div>
 
 <div class="content">

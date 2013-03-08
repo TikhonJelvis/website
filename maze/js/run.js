@@ -1,4 +1,4 @@
-jQuery(function () {
+jQuery(function ($) {
   generateMaze();
   generateStats(1000, 10, 10);
 
