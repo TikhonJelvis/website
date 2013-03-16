@@ -63,6 +63,12 @@ type shapes = Circle of int * int
             | Rectangle of point * point
 ```
 
+The syntax for writing values of this type is also a combination of the syntax for products and sums. For example, lets take the rectangle. A value of `point` looks like: `(1, 2)`. So `point * point` would look like `((1, 2), (3, 4))`. We combine this with the `Rectangle` tag to get the whole value:
+
+```ocaml
+Rectangle ((1, 2), (3, 4))
+```
+
 Sometimes, we want to have a tag without *any* associated values. This is conceptually equivalent to a tag of `union`. Since `union` only has one possible value, it carries no additional information. This is very similar to the value of an enum in a language like `Java`; a type that is just a sum of tags like this behaves exactly like an enum. We can use this to define a boolean type:
 
 ```ocaml
@@ -70,6 +76,41 @@ type bool = True | False
 ```
 
 This type declaration is very simple to read: a `bool` is either `True` or `False`. 
+
+## Pattern Matching
+
+We now know how to define algebraic data types. We also know how to write their values. But how do we actually use them? We need some way of unpacking products: from `int * int`, we want to be able to access the first `int` and the second `int` separated. For sum types, we need to know which variant we have: how to we differentiate between a `Left` and a `Right` value?
+
+The answer to this is **pattern matching**. A pattern lets us give names to sub-parts of a value. It looks just like the value, with variables for the parts we want named. For example, if we want to break a `Rectangle` value into `x`, `y`, `width` and `height`, we would use this pattern:
+
+```ocaml
+Rectangle ((x, y), (width, height))
+```
+
+We could also break it up into `position` and `size` instead:
+
+```ocaml
+Rectangle (position, size)
+```
+
+If we don't care about some particular part of a pattern, it is customary to call it `_` instead of giving it a real name.
+
+We can use patterns like this in a function definition. We simply use multiple patterns to handle all the possible cases. Here is the function for finding the area of a shape:
+
+```ocaml
+let area = function Circle (_, radius) -> pi * radius * radius
+                  | Rectangle (_, (width, height)) -> width * height
+```
+
+Note how I didn't provide the area of a triangle. Getting the area from three points is a bit tedious! Unfortunately, this means that if somebody actually tried passing a triangle into this function, they would get an error at runtime. However, the compiler actually has enough information to know that this is possible, so I would get a warning when I compiled this function: 
+
+    Warning 8: this pattern-matching is not exhaustive.
+    Here is an example of a value that is not matched:
+    Triangle (_, _, _)
+
+The compiler even knows enough to tell me exactly which case I forgot and what sort of values would cause an error. This is very useful for preventing the very common mistake of forgetting about an alternative.
+
+Pattern matching makes it very easy to unpack product types and choose between different variants of sum types. It also makes for very visual code---a pattern looks just like the data it matches.
 
 ## Recursive Types
 
@@ -99,3 +140,15 @@ type ('a, 'b) point = 'a * 'b
 ```
 
 Now we have defined a type that can be used for two `int`s: `(int, int) point`, two `char`s: `(char, char) point`, a combination of the two: `(int, char) point` or anything you would like: `((int, char) point, int) point`.
+
+We can combine polymorphism and recursive types to define some very common data structures. The most common data structure in functional programming is the linked list. A node of a linked list has two options: either it's the end of the list or it has a value and the rest of the list. We can transcribe this into an ADT directly:
+
+```ocaml
+type 'a list = End | Value of 'a * 'a list
+```
+
+We can use this to very easily encode even more complicated types like binary trees where every node is either a leaf or has two children:
+
+```ocaml
+type 'a binary_tree = Leaf of 'a | Node of 'a * 'a binary_tree * 'a binary_tree
+```
