@@ -114,7 +114,7 @@ Pattern matching makes it very easy to unpack product types and choose between d
 
 ## Recursive Types
 
-Algebraic data types can also be *recursive*: that is, an algebraic data type can have a field of its own type. This property makes them very good for representing abstract syntax trees. Let's imagine a very trivial language: we have numbers, variables, addition and multiplication. The type for expressions in this language would be:
+Algebraic data types can also be *recursive*: that is, an algebraic data type can have a field of its own type. This property makes them very good for representing abstract syntax trees (ASTs). Let's imagine a very trivial language: we have numbers, variables, addition and multiplication. The type for expressions in this language would be:
 
 ```ocaml
 type expression = Variable of string
@@ -144,7 +144,13 @@ Now we have defined a type that can be used for two `int`s: `(int, int) point`, 
 We can combine polymorphism and recursive types to define some very common data structures. The most common data structure in functional programming is the linked list. A node of a linked list has two options: either it's the end of the list or it has a value and the rest of the list. We can transcribe this into an ADT directly:
 
 ```ocaml
-type 'a list = End | Value of 'a * 'a list
+type 'a list = Value of 'a * 'a list | End
+```
+
+For historical reasons, `End` is usually called `Nil` and `Value` is called `Cons`, short for "constructor". So the actual definition is usually given as:
+
+```ocaml
+type 'a list = Cons of 'a * 'a list | Nil
 ```
 
 We can use this to very easily encode even more complicated types like binary trees where every node is either a leaf or has two children:
@@ -152,3 +158,86 @@ We can use this to very easily encode even more complicated types like binary tr
 ```ocaml
 type 'a binary_tree = Leaf of 'a | Node of 'a * 'a binary_tree * 'a binary_tree
 ```
+
+## Phantom Types
+
+Polymorphic types have type variables. In the list example, the type variable is used in `Cons`: `Cons of 'a * 'a list`. So some value of `Cons` will always have a specific type for the type variable; for example, `Cons (1, Nil)` has the type `int list`: `int` is substituted in for `'a`.
+
+However, interestingly, the variable `'a` is not used *at all* in `Nil`. So the value `Nil` can be part of *any* `'a list`: `int list`, `char list` or even `(int * char list) list`. So the type of `Nil` is actually `'a list` since it's valid for any `'a`; it gets specialized when it's used in a context: in `Cons (1, Nil)`, its type is actually `int list`, just like the whole term.
+
+So it's meaningful to have a variant that does not use any given type variable at all. We can extend this to allow type variables that are *not used at all* in the actual type; after all, there is no rule saying otherwise! The following type, then, is valid:
+
+```ocaml
+type 'a foo = Foo of int | Bar of char
+```
+
+Type variables that are never used in the type itself are called **phantom types**. The idea is simple, but why do we care? A type variable never used seems useless. Happily, they do have a use: we can use phantom types to give additional custom tags to our types. 
+
+These tags can be used to express and enforce additional invariants, beyond what the type system normally supports. One such example is a "taint" bit strings which keeps track of unsanitized inputs: when you read a string in, it's tagged as "unsanitized"; a sanitization function (one that might escape SQL, for example) then tags it as sanitized. All the database functions check this tag to make sure you don't have hidden SQL-injection vulnerabilities.
+
+First, we need to create a wrapper type for string. Note how it takes a type variable but never uses it:
+
+```ocaml
+type 'a web_string = Web_String of string;;
+```
+
+We also need to create the "tag" types `sanitized` and `unsanitized`. This shows a practical use for empty types like `void`: making `sanitized` and `unsanitized` empty shows that they are just tags and ensures they cannot be instantiated.
+
+```ocaml
+type sanitized
+type unsanitized
+```
+
+Now we just make all our IO functions produce `unsanitized web_string` values and ensure functions like `runSQL` only accept `sanitized web_string` arguments. With this, if we try to pass a user-supplied string directly to the database, we will get an error like this:
+
+    Error: This expression has type unsanitized web_string
+           but an expression was expected of type sanitized web_string
+
+This can help prevent almost all SQL injection errors that are probably the single most common security vulnerability in web programs.
+
+## Language Expressions
+
+Another place where phantom type tags are very useful is in representing ASTs for some language, like our `expression` type above. We can use the tags to represent custom types for the expressions in the little language. 
+
+To demonstrate, lets extend our expression with booleans:
+
+```ocaml
+type expression = Variable of string
+                | Number of int
+                | True
+                | False
+                | Add of expression * expression
+                | Multiply of expression * expression
+                | And of expression * expression
+                | Or of expression * expression
+                | Less of expression * expression
+                | Greater of expression * expression
+```
+
+Now we can write little expression involving both booleans and numbers. So expressions like `x > 10 && x < 15` can be rendered:
+
+```ocaml
+And (Greater (Variable "x", Number 10), Less (Variable "x", Number 15))
+```
+
+Unfortunately, we might also accidentally use a number where we mean to use a boolean or vice-versa. Our type can just as happily encode nonsensical expressions like `10 && 11`:
+
+```ocaml
+And (Number 10, Number 11)
+```
+
+How can we prevent this? We need some way of tagging expressions with the type they produce; this is exactly what we can use phantom types for! So our new `expression` type would let us specify whether it's a boolean or numeric expression:
+
+```ocaml
+type 'a expression = Variable of string
+                   | Number of int
+                   | True
+                   | False
+                   | Add of int expression * int expression
+                   | Multiply of int expression * int expression
+                   | And of bool expression * bool expression
+                   | Or of bool expression * bool expression
+                   | Less of int expression * int expression
+                   | Greater of int expression * int expression
+```
+
