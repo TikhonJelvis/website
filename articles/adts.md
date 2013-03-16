@@ -51,7 +51,7 @@ We could have a product type containing of *no* types, which was called `unit` a
 type void
 ```
 
-Having no values, it is not terribly useful in practice but makes for a nice symmetry with product types and is very useful from a theoretical standpoint.
+Having no values, it is not immediately useful in practice but makes for a nice symmetry with product types. This sort of type also becomes useful later on, when we start using more complex types to describe values.
 
 ## Putting It All Together
 
@@ -133,7 +133,7 @@ Add (Number 1, Multiply (Variable "a", Number 2))
 
 So far, all our types have been very concrete. We always know exactly what type everything is; when we defined a `point` type, it always had two `int`s. In reality, however, we really want to be able to define a `point` type that could take values of *any* types. We can do this by making the type definition **polymorphic**, which just means that we define it in terms of type *variables*---which can be *any* type---instead of concrete types like `int` or `char`. This is usually called **parametric** polymorphism, because the type variables act as parameters to the whole type.
 
-It makes sense to redefine our point type to accept pairs of *any* two types rather than just `int` and `int`. Here is how we can do it by introducing two type variables `'a` and `'b`':
+It makes sense to redefine our point type to accept pairs of *any* two types rather than just `int` and `int`. Here is how we can do it by introducing two type variables. In Ocaml, type variables are denoted by starting with a `'` and are traditionally one letter, so we'll call ours `'a` and `'b`:
 
 ```ocaml
 type ('a, 'b) point = 'a * 'b
@@ -156,14 +156,14 @@ type 'a list = Cons of 'a * 'a list | Nil
 We can use this to very easily encode even more complicated types like binary trees where every node is either a leaf or has two children:
 
 ```ocaml
-type 'a binary_tree = Leaf of 'a | Node of 'a * 'a binary_tree * 'a binary_tree
+type 'a bin_tree = Leaf of 'a | Node of 'a bin_tree * 'a * 'a bin_tree
 ```
 
 ## Phantom Types
 
 Polymorphic types have type variables. In the list example, the type variable is used in `Cons`: `Cons of 'a * 'a list`. So some value of `Cons` will always have a specific type for the type variable; for example, `Cons (1, Nil)` has the type `int list`: `int` is substituted in for `'a`.
 
-However, interestingly, the variable `'a` is not used *at all* in `Nil`. So the value `Nil` can be part of *any* `'a list`: `int list`, `char list` or even `(int * char list) list`. So the type of `Nil` is actually `'a list` since it's valid for any `'a`; it gets specialized when it's used in a context: in `Cons (1, Nil)`, its type is actually `int list`, just like the whole term.
+However, interestingly, the variable `'a` is not used *at all* in `Nil`. So the value `Nil` can be part of *any* `'a list`: `int list`, `char list` or even `(int * char list) list`. The type of `Nil` is actually `'a list` since it's valid for any `'a`; it gets specialized when it's used in a context: in `Cons (1, Nil)`, its type is actually `int list`, just like the whole term.
 
 So it's meaningful to have a variant that does not use any given type variable at all. We can extend this to allow type variables that are *not used at all* in the actual type; after all, there is no rule saying otherwise! The following type, then, is valid:
 
@@ -173,7 +173,7 @@ type 'a foo = Foo of int | Bar of char
 
 Type variables that are never used in the type itself are called **phantom types**. The idea is simple, but why do we care? A type variable never used seems useless. Happily, they do have a use: we can use phantom types to give additional custom tags to our types. 
 
-These tags can be used to express and enforce additional invariants, beyond what the type system normally supports. One such example is a "taint" bit strings which keeps track of unsanitized inputs: when you read a string in, it's tagged as "unsanitized"; a sanitization function (one that might escape SQL, for example) then tags it as sanitized. All the database functions check this tag to make sure you don't have hidden SQL-injection vulnerabilities.
+These tags can be used to express and enforce additional invariants, beyond what the type system normally supports. One such example is a "taint" bit on strings which keeps track of unsanitized inputs: when you read a string in, it's tagged as "unsanitized"; a sanitization function (one that might escape SQL, for example) then tags it as "sanitized". All the database functions check this tag to make sure you don't have hidden SQL-injection vulnerabilities.
 
 First, we need to create a wrapper type for string. Note how it takes a type variable but never uses it:
 
@@ -193,7 +193,7 @@ Now we just make all our IO functions produce `unsanitized web_string` values an
     Error: This expression has type unsanitized web_string
            but an expression was expected of type sanitized web_string
 
-This can help prevent almost all SQL injection errors that are probably the single most common security vulnerability in web programs.
+This can prevent almost all SQL injection errors that are probably the single most common security vulnerability on the web.
 
 ## Language Expressions
 
@@ -241,3 +241,4 @@ type 'a expression = Variable of string
                    | Greater of int expression * int expression
 ```
 
+</div>
