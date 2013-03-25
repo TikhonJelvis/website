@@ -11,7 +11,7 @@ Functional reactive programming (usually referred to as FRP) is a novel, more de
 
 ## Slides
 
-I recently did a survey of FRP for one of my CS classes. At the end of the semester, I gave a presentation on the subject. Here are my [slides](slides.html). (Note: The slides currently don't work on Firefox, sorry.)
+I recently did a survey of FRP for one of my CS classes. At the end of the semester, I gave a presentation on the subject. Here are my [slides](slides.html).
 
 The slides are a little terse and cover both the more theoretical and the more practical sides of FRP.
 
