@@ -58,7 +58,7 @@ Having no values, it is not immediately useful in practice but makes for a nice 
 Algebraic data types are just types made up of sums and products. They represent a choice between combinations of values. As a contrived example, we can have a type representing different shapes:
 
 ```ocaml
-type shapes = Circle of int * int
+type shapes = Circle of point * int
             | Triangle of point * point * point
             | Rectangle of point * point
 ```
@@ -114,7 +114,9 @@ Pattern matching makes it very easy to unpack product types and choose between d
 
 ## Recursive Types
 
-Algebraic data types can also be *recursive*: that is, an algebraic data type can have a field of its own type. This property makes them very good for representing abstract syntax trees (ASTs). Let's imagine a very trivial language: we have numbers, variables, addition and multiplication. The type for expressions in this language would be:
+Algebraic data types can also be *recursive*: that is, an algebraic data type can have a field of its own type. This lets algebraic data types represent values of arbitrary sizes. 
+
+A good example of such a type is an abstract syntax tree (AST). Expressions in a programming language have sub-expressions, which are just expressions themselves; this is directly encoded by using a recursive type. Let's imagine a very trivial language: we have numbers, variables, addition and multiplication. The type for expressions in this language would be:
 
 ```ocaml
 type expression = Variable of string
