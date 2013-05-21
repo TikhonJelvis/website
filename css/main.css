@@ -132,6 +132,49 @@ a > img {
     margin-right : 10%;
 }
 
+/* A div for special announcements: */
+.content div.announcement {
+    position : relative;
+    left : -2px;
+    z-index : 1;
+    
+    background-color : #8099BB;
+
+    margin-left : 12.5%;
+    max-width : 75%;
+    overflow : hidden;
+
+    padding-bottom : 20px;
+}
+
+.content div.announcement:before {
+    content : "news";
+
+    position : absolute;
+    left : -14px;
+    top : -42px;
+    z-index : -1;
+
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
+    font-weight : bold;
+    font-size : 600%;
+
+    color : #738CAD;
+}
+
+.content div.announcement ul {
+    margin-left : 17%;
+    list-style : none;
+}
+
+.content div.announcement ul li:before {
+    position : relative;
+    content : "■";
+    color : #053d89;
+    font-size : 60%;
+    bottom : 0.4ex;
+}
+    
 /* Special kinds of text: code, ui elements...etc */
 .content .uiElement {
     font-family : lucida console, monospace;

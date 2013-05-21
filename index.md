@@ -6,6 +6,14 @@ author: Tikhon Jelvis
 <div class="content">
 
 # Welcome
+
+<div class="announcement">
+I gave two lightning talks at [BayHac 2013](http://www.haskell.org/haskellwiki/BayHac2013):
+
+  * [Program synthesis](af-slides.html) for GreenArrays
+  * [Algebras and Coalgebras](algebras.html), based on [a post I wrote](http://stackoverflow.com/questions/16015020/what-does-coalgebra-mean-in-the-context-of-programming/16022059#16022059)
+</div>
+
 ![Me on the roof of the Casa Milà in Barcelona. For even more Guadí, you can barely see the Sagrada Família in the background.](img/me_at_casa_mila_med.jpg)
 
 I am a student particularly interested in programming languages, functional programming, program synthesis, semantics, type theory and startups (not necessarily in that order!). In the near future I want to combine as many of these as possible.
