@@ -29,7 +29,7 @@ a > img {
     color : black;
     background-color : #90A9CB;
 
-    font-family : Garamond, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-family : Junction, Helvetica, Arial, sans-serif;
 
     margin-top : 4pt;
     margin-left : auto;
@@ -86,12 +86,13 @@ a > img {
     margin-right : 12%;
     text-align : justify;
     word-wrap : break-word;
-    font-size : 14pt;
-    line-height : 3ex;
+    font-size : 12pt;
+    line-height : 2.75ex;
 }
 
 .content p {
     margin-top : 20px;
+    margin-bottom : 8px;
 }
 
 .content p +  p {
@@ -152,7 +153,7 @@ a > img {
 
     position : absolute;
     left : -14px;
-    top : -42px;
+    top : -55px;
     z-index : -1;
 
     font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
@@ -168,16 +169,18 @@ a > img {
 }
 
 .content div.announcement ul li:before {
-    position : relative;
     content : "■";
+
+    position : relative;
+    bottom : 2px;
+
     color : #053d89;
     font-size : 60%;
-    bottom : 0.4ex;
 }
     
 /* Special kinds of text: code, ui elements...etc */
 .content .uiElement {
-    font-family : lucida console, monospace;
+    font-family : "DejaVu Sans Mono", lucida console, monospace;
 }
 
 .content code, .content pre, .content .code {
