@@ -1,0 +1,17 @@
+* Algebraic Data Types as Initial algebras
+
+** Basic idea
+   - relate ADTs, f-algebras, folds and initial algebras
+   - a fold is like the unique homomorphism from an initial algebra to
+     some other algebra
+     - remember the type signature:
+       - =fold :: Functor f => (f a -> a) -> (Fix f -> a)=
+       - =fold :: Algebra f a => Fix f -> a=
+     - how can we rephrase this in terms of a homomorphism from the
+       initial algebra?
+
+** Bananas
+   - this probably has something to do with bananas
+   - I bet it's the definition of a catamorphism or something equally
+     fundamental :(
+     - still interesting to work out and explain
