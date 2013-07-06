@@ -15,12 +15,13 @@ I gave two lightning talks at [BayHac 2013](http://www.haskell.org/haskellwiki/B
 
 And a longer talk at [Hac φ](http://www.haskell.org/haskellwiki/Hac_%CF%86):
 
-  * [Program synthesis](synthesis-slides.html) in general
+  * [Program synthesis](synthesis-slides.html) (a general overview)
+
 </div>
 
 ![Me on the roof of the Casa Milà in Barcelona. For even more Guadí, you can barely see the Sagrada Família in the background.](img/me_at_casa_mila_med.jpg)
 
-I am a student particularly interested in programming languages, functional programming, program synthesis, semantics, type theory and startups (not necessarily in that order!). In the near future I want to combine as many of these as possible.
+I am a student particularly interested in programming languages, functional programming, program synthesis, semantics, type theory and startups (not necessarily in that order!). In the near future I want to combine as many of these as possible. Currently, I'm an intern at [Jane Street Capital](http://www.janestreet.com/), one of the biggest and best functional programming companies in the world.
 
 Most recently, I have been looking into total functional programming, universal algebra and functional reactive programming. Writing programs that are well-defined for all inputs but do *not* necessarily terminate is very fascinating---these models allow using a language that is not Turing-complete to write things like web servers and UIs, which in turn makes it easier to ensure correctness.
 
