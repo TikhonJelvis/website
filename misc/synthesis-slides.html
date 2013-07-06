@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Program Synthesis</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-07-04 19:42:00 EDT"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Program Synthesis
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Synthesis </h1></header>
+
+<section class="Synthesis">
+<ul class="summary">
+<li>Find a program to some specification (\(\phi(input, output)\))
+<ul class="summary">
+<li>input/output pairs
+</li>
+<li>executable specification 
+</li>
+</ul>
+
+</li>
+<li>\(\exists P \forall x. \phi(x, P(x))\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> Why? </h1></header>
+
+<section class="Why?">
+<ul class="summary">
+<li>easy
+<ul class="summary">
+<li>spec might be easier than program
+</li>
+</ul>
+
+</li>
+<li>correct
+<ul class="summary">
+<li>verifying spec easier than verifying program
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> Compilers </h1></header>
+
+<section class="Compilers">
+<ul class="summary">
+<li>compilers are deterministic
+</li>
+<li>only consider <b>correct</b> optimizations
+</li>
+<li>hard to write
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> Synthesizer </h1></header>
+
+<section class="Synthesizer">
+<ul class="summary">
+<li>can be non-deterministic
+</li>
+<li>considers potentially incorrect optimizations
+</li>
+<li>hard to scale
+</li>
+<li>accept partial specifications
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> Programming by Demonstration </h1></header>
+
+<section class="Programming-by-Demonstration">
+<ul class="summary">
+<li>user provides inputs/outputs
+</li>
+<li>generate program to match
+</li>
+<li><b>interactive</b>
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Example </h1></header>
+
+<section class="Example">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">First</th><th scope="col" class="left">Last</th><th scope="col" class="left">Initials</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">John</td><td class="left">Doe</td><td class="left"></td></tr>
+<tr><td class="left">Bob</td><td class="left">Smith</td><td class="left"></td></tr>
+<tr><td class="left">Tikhon</td><td class="left">Jelvis</td><td class="left"></td></tr>
+<tr><td class="left">&hellip;</td><td class="left">&hellip;</td><td class="left"></td></tr>
+</tbody>
+</table>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Example </h1></header>
+
+<section class="Example">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">First</th><th scope="col" class="left">Last</th><th scope="col" class="left">Initials</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">John</td><td class="left">Doe</td><td class="left">J. D.</td></tr>
+<tr><td class="left">Bob</td><td class="left">Smith</td><td class="left"></td></tr>
+<tr><td class="left">Tikhon</td><td class="left">Jelvis</td><td class="left"></td></tr>
+<tr><td class="left">&hellip;</td><td class="left">&hellip;</td><td class="left"></td></tr>
+</tbody>
+</table>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> Example </h1></header>
+
+<section class="Example">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">First</th><th scope="col" class="left">Last</th><th scope="col" class="left">Initials</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">John</td><td class="left">Doe</td><td class="left">J. D.</td></tr>
+<tr><td class="left">Bob</td><td class="left">Smith</td><td class="left">B. S.</td></tr>
+<tr><td class="left">Tikhon</td><td class="left">Jelvis</td><td class="left">T. J.</td></tr>
+<tr><td class="left">&hellip;</td><td class="left">&hellip;</td><td class="left">&hellip;</td></tr>
+</tbody>
+</table>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Spec </h1></header>
+
+<section class="Spec">
+<ul class="summary">
+<li><b>One</b> input/output:
+<ul class="summary">
+<li>"John" "Doe" → "J. D."
+</li>
+</ul>
+
+</li>
+<li>Usually only a few needed
+</li>
+<li>Interactive
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Small Language </h1></header>
+
+<section class="Small-Language">
+<ul class="summary">
+<li>Targets a custom language
+</li>
+<li>Heavily limits looping
+</li>
+<li>Much smaller space of possible programs
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Rough Approach </h1></header>
+
+<section class="Rough-Approach">
+<ul class="summary">
+<li>Uses <b>Version Space Algebra</b> (VSA)
+</li>
+<li>"Space" of possible programs
+<ul class="summary">
+<li>inputs/outputs trim space
+</li>
+</ul>
+
+</li>
+<li>Haskell package: HaVSA
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Superoptimization </h1></header>
+
+<section class="Superoptimization">
+<ul class="summary">
+<li>optimize existing program
+<ul class="summary">
+<li>synthesize equivalent program
+</li>
+</ul>
+
+</li>
+<li>much easier to implement
+</li>
+<li>limited scalability
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Example </h1></header>
+
+<section class="Example">
+<ul class="summary">
+<li>GreenArrays
+<ul class="summary">
+<li>stack-based architecture
+</li>
+<li>uses Forth
+</li>
+<li>difficult to use
+</li>
+</ul>
+
+</li>
+<li>Haskell package: array-forth
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> MCMC </h1></header>
+
+<section class="MCMC">
+<ul class="summary">
+<li>Markov Chain Monte Carlo (MCMC)
+</li>
+<li>randomized hill climbing
+<ul class="summary">
+<li>random mutations
+</li>
+<li>incorrect code
+</li>
+</ul>
+
+</li>
+<li>Haskell package: mcmc-synthesis (limited)
+</li>
+<li>needs cluster
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> SMT </h1></header>
+
+<section class="SMT">
+<ul class="summary">
+<li>SMT: SAT modulo theories
+</li>
+<li>Solve logic formulas
+</li>
+<li>reasonably fast
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> Formulas </h1></header>
+
+<section class="Formulas">
+<ul class="summary">
+<li>compile program to formula
+<ul class="summary">
+<li>\(\phi(input, program, output)\)
+<ul class="summary">
+<li>fix \(input\), \(program\): interpreter
+</li>
+<li>fix \(program\), \(output\): reverse interpreter
+<ul class="summary">
+<li>non-deterministic
+</li>
+</ul>
+
+</li>
+<li>fix \(input\), \(output\): synthesis
+</li>
+</ul>
+
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">17</span> Verification </h1></header>
+
+<section class="Verification">
+<ul class="summary">
+<li>compare two programs <b>exhaustively</b>
+</li>
+<li>problem: 
+<ul class="summary">
+<li>\(\begin{eqnarray}\forall input. &amp;spec(input) = \\ &amp;program(input)\end{eqnarray}\)
+</li>
+</ul>
+
+</li>
+<li>actual: 
+<ul class="summary">
+<li>\(\begin{eqnarray}\exists input. &amp;spec(input) \ne \\ &amp;program(input)\end{eqnarray}\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">18</span> CEGIS </h1></header>
+
+<section class="CEGIS">
+<ul class="summary">
+<li>Counter-example guided inductive synthesis (CEGIS)
+</li>
+<li>solve for program
+<ul class="summary">
+<li>limited set of inputs/outputs
+</li>
+</ul>
+
+</li>
+<li>verify against spec
+<ul class="summary">
+<li>if verified: done
+</li>
+<li>else: new input/output pair; repeat
+</li>
+</ul>
+
+</li>
+<li>few pairs needed
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">19</span> Scaling (or not) </h1></header>
+
+<section class="Scaling-(or-not)">
+<ul class="summary">
+<li>formulas are hard to scale
+</li>
+<li><b>exponential</b> in program size
+</li>
+<li>maybe 100 instructions
+<ul class="summary">
+<li>with luck
+</li>
+<li>if you're patient
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">20</span> Sketching </h1></header>
+
+<section class="Sketching">
+<ul class="summary">
+<li>some things are easy for programmers
+</li>
+<li>some things are easy for solvers
+</li>
+<li>let programmers write the easy parts!
+</li>
+<li>specify a program with "holes" and solve for the holes
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">21</span> SBV </h1></header>
+
+<section class="SBV">
+<ul class="summary">
+<li>SMT-based verification (sbv)
+</li>
+<li>Haskell package for SMT solvers
+</li>
+<li>write symbolic Haskell program
+<ul class="summary">
+<li>prove facts about it
+</li>
+<li>solve for variables
+<ul class="summary">
+<li>synthesis!
+</li>
+</ul>
+
+</li>
+</ul>
+
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>

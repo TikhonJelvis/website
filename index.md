@@ -12,6 +12,10 @@ I gave two lightning talks at [BayHac 2013](http://www.haskell.org/haskellwiki/B
 
   * [Program synthesis](af-slides.html) for GreenArrays
   * [Algebras and Coalgebras](algebras.html), based on [a post I wrote](http://stackoverflow.com/questions/16015020/what-does-coalgebra-mean-in-the-context-of-programming/16022059#16022059)
+
+And a longer talk at [Hac φ](http://www.haskell.org/haskellwiki/Hac_%CF%86):
+
+  * [Program synthesis](synthesis-slides.html) in general
 </div>
 
 ![Me on the roof of the Casa Milà in Barcelona. For even more Guadí, you can barely see the Sagrada Família in the background.](img/me_at_casa_mila_med.jpg)
