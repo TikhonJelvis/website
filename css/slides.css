@@ -8,6 +8,14 @@
     margin-right : auto;
 }
 
+.Credit .summary {
+    font-size : 14pt;
+}
+
+.Credit .summary li {
+    padding : 3px 0;
+}
+
 .Demo .figure {
     padding-top : 0;
 }
@@ -255,11 +263,10 @@ section.no-heading {
 }
 
 a {
-  color: inherit;
+  font-weight : bold;
   display: inline-block;
   text-decoration: none;
   line-height: 110%;
-  border-bottom: 2px solid #3f3f3f;
 }
 
 #wmap a {
