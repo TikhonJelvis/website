@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Untyped Lambda Calculus</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-11-22 01:29:30 PST"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Untyped Lambda Calculus
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Why </h1></header>
+
+<section class="Why">
+<ul class="summary">
+<li>simple model of functions
+<ul class="summary">
+<li>everything else stripped away
+</li>
+</ul>
+
+</li>
+<li>makes it easier to <b>reason</b> about programs
+<ul class="summary">
+<li>formal reasoning: proofs
+</li>
+<li>informal reasoning: debugging
+</li>
+</ul>
+
+</li>
+<li>designing languages
+<ul class="summary">
+<li>simple semantics&mdash;easy to extent
+</li>
+<li>ML, Haskell, Lisp, &hellip; 
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> Introduction to theory </h1></header>
+
+<section class="Introduction-to-theory">
+<ul class="summary">
+<li>basis for type theory
+</li>
+<li>introduction to concepts &amp; notation
+</li>
+<li>"mathematical mindset"
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> Abstract Syntax </h1></header>
+
+<section class="Abstract-Syntax">
+<ul class="summary">
+<li>λ-calculus—syntactic manipulation
+</li>
+<li>made up of expressions (\(e\))
+    $$\begin{align}
+       e ::&= x & \text{variable}\\
+           &|\quad \lambda x. e & \text{abstraction} \\
+           &|\quad e_1 e_2 & \text{application}
+      \end{align}$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> Examples </h1></header>
+
+<section class="Examples">
+<ul class="summary">
+<li>\(\lambda x. x\) is the identity function 
+<ul class="summary">
+<li>compare: \(f(x) = x\)
+</li>
+</ul>
+
+</li>
+<li>\(\lambda x. \lambda y. x\) constant function
+<ul class="summary">
+<li>implicit parentheses: \(\lambda x. (\lambda y. x)\)
+</li>
+<li>compare: \(f(x, y) = x\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> Scoping </h1></header>
+
+<section class="Scoping">
+<ul class="summary">
+<li>static scope, just like most programming languages
+</li>
+<li>names do not matter (α equivalence):
+    $$\lambda x. x \equiv \lambda y. y$$
+</li>
+<li>variables can be shadowed:
+    $$\lambda x. \lambda x. x \equiv \lambda x. \lambda y. y$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Free vs Bound </h1></header>
+
+<section class="Free-vs-Bound">
+<ul class="summary">
+<li><b>bound</b>: defined inside an expression:
+    $$\lambda x. x$$
+</li>
+<li><b>free</b>: not defined inside an expression:
+    $$\lambda x. y$$
+</li>
+<li>free vs bound, \(y\) vs \(x\):
+    $$\lambda x. y x$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Evaluation </h1></header>
+
+<section class="Evaluation">
+<ul class="summary">
+<li>core idea: <b>substitution</b>
+<ul class="summary">
+<li>replace name of argument with its value
+</li>
+</ul>
+
+</li>
+<li>example: given \(y x\), we can substitute \(\lambda a. a\) for \(x\):
+    $$ y (\lambda a. a) $$
+</li>
+<li>careful with scoping! 
+<ul class="summary">
+<li>just rename everything
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> Evaluation Rules </h1></header>
+
+<section class="Evaluation-Rules">
+<ul class="summary">
+<li>function application (β-reduction)
+</li>
+</ul>
+
+<p>  $$ \frac{(\lambda x. e_1)e_2}{[e_2/x]e_1} $$
+</p><ul class="summary">
+<li>extension (η-reduction)
+</li>
+</ul>
+
+<p>  $$ \frac{\lambda x. F x}{F} $$
+</p><ul class="summary">
+<li>as long as \(x\) does not appear in \(F\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Writing an interpreter </h1></header>
+
+<section class="Writing-an-interpreter">
+<ul class="summary">
+<li>this is all we need to write an interpreter
+</li>
+<li>any typed functional language:
+<ul class="summary">
+<li>SML, F#, OCaml, Haskell, Scala
+</li>
+</ul>
+
+</li>
+<li>I will use Haskell syntax
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Type </h1></header>
+
+<section class="Type">
+<p>  $$\begin{align}
+     e ::&= x & \text{variable}\\
+         &|\quad \lambda x. e & \text{abstraction} \\
+         &|\quad e_1 e_2 & \text{application}
+    \end{align}$$
+
+</p><ul class="summary">
+<li>translate to an algebraic data type:
+</li>
+</ul>
+
+
+
+
+
+<pre class="example">type Name = Char
+
+data Expr = Variable Name
+          | Lambda Name Expr
+          | App Expr Expr
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Pattern Matching </h1></header>
+
+<section class="Pattern-Matching">
+<ul class="summary">
+<li>pattern matching: operate on ADT by cases
+</li>
+</ul>
+
+
+
+
+
+<pre class="example">eval ∷ Expr → Expr
+eval (Lambda x e) = Lambda x e
+eval (Variable n) = Variable n
+eval (App e₁ e₂)  = case eval e₁ of
+  Lambda x body → eval (subst x e₂ body)
+  result        → App result e₂
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Substitution </h1></header>
+
+<section class="Substitution">
+
+
+
+<pre class="example">subst ∷ Name → Expr → Expr → Expr
+subst x newVal (Lambda y body) 
+  | x ≠ y     = Lambda y (subst x newVal body)
+  | otherwise = Lambda y body
+subst x newVal (App e₁ e₂) =
+  App (subst x v e₁) (subst x v e₂)
+subst x newVal (Variable y)
+  | x ≡ y     = newVal
+  | otherwise = Variable y
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Evaluation Order </h1></header>
+
+<section class="Evaluation-Order">
+<ul class="summary">
+<li>How far to evaluate?
+</li>
+</ul>
+
+
+
+
+
+<pre class="example">eval (Lambda x e) = Lambda x (eval e)
+</pre>
+
+
+<ul class="summary">
+<li>What order to evaluate in?
+<ul class="summary">
+<li>when to evaluate arguments?
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+
+
+
+<pre class="example">Lambda x body → eval (subst x (eval e₂) body)
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Fun Stuff </h1></header>
+
+<section class="Fun-Stuff">
+<ul class="summary">
+<li>Write your own interpreter (&lt; 1hr)
+</li>
+<li>Add parsing, pretty printing and a REPL
+</li>
+<li>Experiment with different evaluation orders
+</li>
+<li>Add features like numbers
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> Numbers </h1></header>
+
+<section class="Numbers">
+<ul class="summary">
+<li>λ-calculus only has functions
+</li>
+<li>can we represent data structures and numbers?
+</li>
+<li>idea: numbers as repeated application
+</li>
+<li>zero: \(\lambda f.\lambda x. x\)
+</li>
+<li>one: \(\lambda f. \lambda x. f x\)
+</li>
+<li>two: \(\lambda f. \lambda x. f (f x)\)
+</li>
+<li>implement addition and subtraction*
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> Data Structures </h1></header>
+
+<section class="Data-Structures">
+<ul class="summary">
+<li>Lisp-style pairs
+</li>
+<li>idea: function that applies another function to two arguments
+</li>
+<li>cons: $$\lambda x. \lambda y. \lambda f. f x y$$
+</li>
+<li>first: $$\lambda x. \lambda y. x$$
+</li>
+<li>second: $$\lambda x. \lambda y. y$$
+</li>
+<li>build up things like lists
+</li>
+</ul>
+
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>
