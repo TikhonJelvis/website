@@ -1,14 +1,14 @@
 /* This, naturally, applies to the whole page. */
 body {
-    color : black; 
+    color   : black; 
     padding : 0;
-    margin : 0;
+    margin  : 0;
 
-    -moz-font-feature-settings: "liga=1, dlig=1";
-    -ms-font-feature-settings: "liga", "dlig";
-    -webkit-font-feature-settings: "liga", "dlig";
-    -o-font-feature-settings: "liga", "dlig";
-    font-feature-settings: "liga", "dlig";
+    -moz-font-feature-settings    : "liga";
+    -ms-font-feature-settings     : "liga";
+    -webkit-font-feature-settings : "liga";
+    -o-font-feature-settings      : "liga";
+    font-feature-settings         : "liga";
 }
 
 a {
@@ -48,15 +48,15 @@ a > img {
 
 /* Header sizes */
 .content h1 {
-    font-size : 36px;
+    font-size : 28pt;
 }
 
 .content h2 {
-    font-size : 24px;
+    font-size : 20pt;
 }
 
 .content h3 {
-    font-size : 21px;
+    font-size : 16pt;
 }
 
 /* This is the general style for all headers: */
@@ -169,12 +169,12 @@ a > img {
     color : #738CAD;
 }
 
-.content div.announcement ul {
+.content div.announcement ul, .content ul {
     margin-left : 17%;
     list-style : none;
 }
 
-.content div.announcement ul li:before {
+.content div.announcement ul li:before, .content ul li:before {
     content : "■";
 
     position : relative;
