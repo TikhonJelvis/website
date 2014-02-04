@@ -1,0 +1,759 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Functional Reactive Programming</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-11-28 13:17:02 PST"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Functional Reactive Programming
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+\(\newcommand{\B}{\mathcal{B}}\)
+\(\newcommand{\E}{\mathcal{E}}\)
+\(\newcommand{\S}{\mathcal{S}}\)
+\(\newcommand{\lb}{\unicode{x27E6}}\)
+\(\newcommand{\rb}{\unicode{x27E7}}\)
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Goals </h1></header>
+
+<section class="Goals">
+<ul class="summary">
+<li>Program reactive systems declaratively
+</li>
+<li>Purely functional: 
+<ul class="summary">
+<li>GUIs
+</li>
+<li>Controllers
+</li>
+<li>Music
+</li>
+<li>Games
+</li>
+<li>&hellip;
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> Main Idea </h1></header>
+
+<section class="Main-Idea">
+<ul class="summary">
+<li>Make time <b>explicit</b>
+</li>
+<li>Program with values over time
+</li>
+<li>Handle both <b>continuous</b> and <b>discrete</b> time
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> Behaviors and Events </h1></header>
+
+<section class="Behaviors-and-Events">
+<ul class="summary">
+<li>Behavior (\(\B\)): value continuous over time (signal)
+</li>
+<li>Event (\(\E\)): value at a particular time
+</li>
+<li>Stream (\(\S\)): infinite list of events ordered by time
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> Semantics </h1></header>
+
+<section class="Semantics">
+<ul class="summary">
+<li>Time has to be totally ordered
+</li>
+<li>Very simple denotational semantics
+<ul class="summary">
+<li>\(\lb \B \alpha \rb = \lambda time \to \alpha\)
+</li>
+<li>\(\lb \E \alpha \rb = time \times \alpha\)
+</li>
+</ul>
+
+</li>
+<li>\(\S\alpha = [\E\alpha ...] = \E(\alpha \times \S\alpha)\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> Curry-Howard </h1></header>
+
+<section class="Curry-Howard">
+<ul class="summary">
+<li>Temporal Logic
+<ul class="summary">
+<li>Propositions quantified over time
+</li>
+<li>\(\square x\) "x always holds" \(\leftrightarrow \B\)
+</li>
+<li>\(\Diamond x\) "x will eventually hold" \(\leftrightarrow \E\)
+</li>
+</ul>
+
+</li>
+<li>Modal Logic
+<ul class="summary">
+<li>\(\square x \Leftrightarrow \lnot\Diamond\lnot x\)
+</li>
+<li>\(\Diamond x \Leftrightarrow \lnot\square\lnot x\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Dependent Types </h1></header>
+
+<section class="Dependent-Types">
+<ul class="summary">
+<li>Types based on temporal logic:
+<ul class="summary">
+<li>\(\square x \equiv \forall t' \in [t, \infty).\ x_{t'}\)
+<ul class="summary">
+<li>\(\B\alpha \equiv \Pi t' : time.\ \alpha_{t'}\)
+</li>
+</ul>
+
+</li>
+<li>\(\Diamond x \equiv \exists t' \in [t, \infty).\ x_{t'}\)
+<ul class="summary">
+<li>\(\E\alpha \equiv \Sigma t' : time.\ \alpha_{t'}\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+</li>
+<li>Start time consistency
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Demo </h1></header>
+
+<section class="Demo">
+
+<div class="figure">
+<p><img src="img/gold-blue-256.svg"  alt="img/gold-blue-256.svg" /></p>
+<p>Haskell</p>
+</div>
+
+<div class="figure">
+<p><img src="img/Reactive-Banana-banana.png"  alt="img/Reactive-Banana-banana.png" /></p>
+<p>Reactive Banana</p>
+</div>
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> Combinators </h1></header>
+
+<section class="Combinators">
+<ul class="summary">
+<li><code>accumB ∷ α → Stream (α → α) → Behavior α</code>
+</li>
+<li><code>whenE ∷ Behavior Bool → Stream α → Stream α</code>
+</li>
+<li><code>union ∷ Stream α → Stream α → Stream α</code>
+</li>
+<li>Functor (Haskell, not OCaml)
+<ul class="summary">
+<li><code>(&lt;$&gt;) ∷ (α → β) → Stream α → Stream β</code>
+</li>
+<li><code>(&lt;$) ∷ β → Stream α → Stream β</code> 
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Life </h1></header>
+
+<section class="Life">
+
+<div class="figure">
+<p><img src="img/life.png" class="raised" alt="img/life.png" /></p>
+<p>Code: github.com/TikhonJelvis/Reactive-Life</p>
+</div>
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Background </h1></header>
+
+<section class="Background">
+<ul class="summary">
+<li>Functions:
+<ul class="summary">
+<li><code>blank  ∷ Life</code>
+</li>
+<li><code>step   ∷ Life → Life</code>
+</li>
+<li><code>modify ∷ Point → Life → Life</code>
+</li>
+</ul>
+
+</li>
+<li>Widgets:
+<ul class="summary">
+<li><code>pauseButton</code>
+</li>
+<li><code>lifePanel</code>
+</li>
+<li><code>timer</code>: event every 100ms
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Input Streams </h1></header>
+
+<section class="Input-Streams">
+<ul class="summary">
+<li><code>time ∷ Stream ()</code>
+<ul class="summary">
+<li>from <code>timer</code>
+</li>
+</ul>
+
+</li>
+<li><code>pauses ∷ Stream ()</code>
+<ul class="summary">
+<li>each <code>pauseButton</code> press
+</li>
+</ul>
+
+</li>
+<li><code>clicks ∷ Stream Point</code>
+<ul class="summary">
+<li>each click on <code>lifePanel</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Core Values </h1></header>
+
+<section class="Core-Values">
+
+
+
+<pre class="example">active ∷ Behavior Boolean
+active = accumB False (not &lt;$ pauses)
+
+changes ∷ Stream (Life → Life)
+changes = whenE active (step &lt;$ time) `union`
+          modify &lt;$&gt; clicks
+
+life ∷ Behavior Life
+life = accumB blank changes
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Output </h1></header>
+
+<section class="Output">
+<ul class="summary">
+<li><code>sink</code>: bind behavior to a property of a widget 
+
+
+
+
+<pre class="example">sink lifePanel   [paint := life]
+sink pauseButton [text := symb &lt;$&gt; active]
+  where symb b = if b then "❚❚" else "▶"
+</pre>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Interface </h1></header>
+
+<section class="Interface">
+<ul class="summary">
+<li>Monads
+<ul class="summary">
+<li>Everybody knows and loves monads
+</li>
+</ul>
+
+</li>
+<li>Applicative Functors
+<ul class="summary">
+<li>Generalization of monads
+</li>
+<li>Less powerful but easier to use
+</li>
+</ul>
+
+</li>
+<li>Arrows
+<ul class="summary">
+<li>Reactive values/time <b>not</b> first-class
+</li>
+<li>Less space/time leaks
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> More </h1></header>
+
+<section class="More">
+<ul class="summary">
+<li>Co-algebras
+<ul class="summary">
+<li>Different formalization
+</li>
+<li>Bisimilarity, coinduction and corecursion
+</li>
+</ul>
+
+</li>
+<li>Other temporal quantifiers:
+<ul class="summary">
+<li>\(\circ x\) "x will be true at the next time"
+</li>
+<li>\(x \triangleright y\) "x will be true then y will be true"
+</li>
+</ul>
+
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>

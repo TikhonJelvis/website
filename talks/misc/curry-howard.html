@@ -1,0 +1,1143 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Fun with Curry Howard</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-12-17 23:04:22 PST"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Fun with Curry Howard
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+
+
+$$ \newcommand{\ty}[1]{\mathbf{#1}} $$
+$$ \newcommand{\ite}[3]{\text{if }#1\text{ then }#2\text{ else }#3} $$
+$$ \newcommand{\case}[5]{\text{case }#1\text{ of }#2 \to #3 \quad|\ #4 \to #5} $$
+
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Curry-Howard </h1></header>
+
+<section class="Curry-Howard">
+<ul class="summary">
+<li>correspondence between <b>programming languages</b> and <b>formal logic     systems</b>
+<ul class="summary">
+<li>programming language ≡ logic
+</li>
+<li>program ≡ proof
+</li>
+</ul>
+
+</li>
+<li>shows deep relationship between mathematics and programming
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> Why </h1></header>
+
+<section class="Why">
+<ul class="summary">
+<li>useful for thinking by analogy—a new perspective on programming
+</li>
+<li>underlies proof assistants like Coq and Agda
+</li>
+<li>useful for <i>practical</i> programming in Haskell and OCaml
+<ul class="summary">
+<li>GADTs, DataKinds, Type Families&hellip;
+</li>
+<li><a href="http://web.cecs.pdx.edu/~sheard/papers/PutCurryHoward2WorkFinalVersion.ps">Putting Curry-Howard to Work</a>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> Basic Idea </h1></header>
+
+<section class="Basic-Idea">
+<ul class="summary">
+<li>type ≡ proposition
+</li>
+<li>program ≡ proof
+</li>
+<li>a type is <b>inhabited</b> if it has at least one element ≡ proposition
+    with proof
+</li>
+<li>\(\ty{unit}\) is trivially inhabited: \(()\) —like \(\top\)
+</li>
+<li>\(\ty{void}\) is uninhabited: like \(\bot\)
+<ul class="summary">
+<li>Haskell: <code>data Void</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> Comparing Inference Rules: True </h1></header>
+
+<section class="Comparing-Inference-Rules:-True">
+<ul class="summary">
+<li>STLC vs <b>intuitionistic propositional logic</b> 
+</li>
+<li><b>true</b> introduction:
+    $$ \frac{}{\quad \top \quad} $$
+</li>
+<li><b>unit</b> type:
+    $$ \frac{}{() : \ty{unit}} $$
+</li>
+</ul>
+
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> False </h1></header>
+
+<section class="False">
+<ul class="summary">
+<li>no way to introduce <b>false</b> (\(\bot\))
+</li>
+<li>similarly, no rule for \(\ty{void}\) !
+</li>
+<li>we can “eliminate” <b>false</b>:
+    $$ \frac{\bot}{\quad C \quad} $$
+</li>
+<li>this cannot actually happen!
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Implication Introduction </h1></header>
+
+<section class="Implication-Introduction">
+<ul class="summary">
+<li>if we can prove \(B\) given \(A\):
+    $$ \frac{A \vdash B}{A \Rightarrow B} $$
+</li>
+<li>just like rule for abstractions:
+    $$ \frac{\Gamma, x : \tau \vdash e : \tau'}{\Gamma \vdash (\lambda
+    x:\tau. e) : \tau \to \tau'} $$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Implication Elimination </h1></header>
+
+<section class="Implication-Elimination">
+<ul class="summary">
+<li>$$ \frac{A \Rightarrow B \quad A}{B} $$
+</li>
+<li>Just like function application:
+    $$ \frac{\Gamma \vdash e_1 : \tau \to \tau' \quad \Gamma \vdash
+    e_2 : \tau}{\Gamma \vdash e_1 e_2 : \tau'} $$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> And Introduction </h1></header>
+
+<section class="And-Introduction">
+<ul class="summary">
+<li>$$ \frac{A \quad B}{A \land B}$$
+</li>
+<li>just like product type:
+    $$ \frac{\Gamma \vdash e_1 : \tau_1 \quad \Gamma \vdash e_2 :
+    \tau_2}{\Gamma \vdash (e_1, e_2) : \tau_1 \times \tau_2}$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> And Elimination </h1></header>
+
+<section class="And-Elimination">
+<ul class="summary">
+<li>$$ \frac{A \land B}{A} \quad \frac{A \land B}{B} $$
+</li>
+<li>just like \(\text{first}\) and \(\text{second}\): 
+    $$ \frac{\Gamma \vdash e : \tau_1 \times \tau_2}{\Gamma \vdash
+    \text{first } e : \tau_1} \quad \frac{\Gamma \vdash e : \tau_1
+    \times \tau_2}{\Gamma \vdash \text{second } e : \tau_2} $$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Or Introduction </h1></header>
+
+<section class="Or-Introduction">
+<ul class="summary">
+<li>$$ \frac{A}{A \lor B} \quad \frac{B}{A \lor B} $$
+</li>
+<li>just like sum type:
+    $$ \frac{\Gamma \vdash e : \tau_1}{\Gamma \vdash \text{left } e :
+    \tau_1 + \tau_2} \frac{\Gamma \vdash e : \tau_2}{\Gamma \vdash
+    \text{right } e : \tau_1 + \tau_2} $$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Or Elimination </h1></header>
+
+<section class="Or-Elimination">
+<ul class="summary">
+<li>$$ \frac{A \vdash C \quad B \vdash C \quad A \lor B}{C} $$
+</li>
+<li>just like pattern matching (case):
+    $$ \frac{\Gamma\ \vdash\ e : \tau_1 + \tau_2 \atop \Gamma,\ x : \tau_1
+    \ \vdash\  e_1 : \tau' \quad \Gamma,\ y : \tau_2 \ \vdash\  e_2 :
+    \tau'}{\Gamma \vdash (\case{e}{x}{e_1}{y}{e_2}) : \tau'}$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Constructive Logic </h1></header>
+
+<section class="Constructive-Logic">
+<ul class="summary">
+<li>we did not talk about \(\lnot\) and Curry-Howard
+</li>
+<li>functional programming does not generally deal with \(\lnot\)
+</li>
+<li>functional programming corresponds to <b>intuitionistic</b> or
+    <b>constructive</b> logic
+<ul class="summary">
+<li>logic system <i>without</i> the <b>law of the excluded middle</b>
+</li>
+</ul>
+
+<p>    $$ \forall x. x \lor \lnot x $$
+</p></li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Negation </h1></header>
+
+<section class="Negation">
+<ul class="summary">
+<li>what does it mean for \(\lnot x\) to be true?
+</li>
+</ul>
+
+<p>  $$ \lnot x \equiv x \Rightarrow \bot $$
+</p><ul class="summary">
+<li>beacuse only
+</li>
+</ul>
+
+<p>  $$ \bot \Rightarrow \bot $$
+</p><ul class="summary">
+<li>we can't directly write programs/proofs with this idea
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Exceptions </h1></header>
+
+<section class="Exceptions">
+<ul class="summary">
+<li>control flow for handling errors
+</li>
+<li>does not play well with proving things!
+    $$ \frac{\Gamma \vdash e : \ty{exn}}{\text{raise } e : \tau} $$
+</li>
+<li>we could even have: $$\text{raise } e : \ty{void}$$
+</li>
+<li>\(\text{raise}\) does not return to context
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> Catching Exceptions </h1></header>
+
+<section class="Catching-Exceptions">
+<ul class="summary">
+<li>very similar to pattern matching
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e_1 : \tau \quad \Gamma, x : exn \vdash e_2 :
+  \tau}{\Gamma \vdash (\text{try }e_1\text{ with } x \Rightarrow
+  e_2) : \tau} $$
+</p><ul class="summary">
+<li>error handler and body have the same type
+</li>
+<li>exceptions <i>not</i> encoded in type system
+</li>
+<li>good example of isolating the design of a language feature
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> Generalizing Exceptions </h1></header>
+
+<section class="Generalizing-Exceptions">
+<ul class="summary">
+<li>we can generalize exceptions with <b>continuations</b>
+</li>
+<li>a continuation is a “snapshot” of the current execution
+<ul class="summary">
+<li>can be resumed multiple times
+</li>
+</ul>
+
+</li>
+<li><code>callCC</code> is a very powerful construct for control flow
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">17</span> Continuations </h1></header>
+
+<section class="Continuations">
+<ul class="summary">
+<li>very versatile
+<ul class="summary">
+<li>exceptions
+</li>
+<li>threads
+</li>
+<li>coroutines
+</li>
+<li>generators
+</li>
+<li>backtracking
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">18</span> Basic Idea </h1></header>
+
+<section class="Basic-Idea">
+<ul class="summary">
+<li>control what happens “next” as a program evaluates
+</li>
+<li>the next step (continuation) is reified as a function
+</li>
+<li>the continuation is a <i>first class value</i>
+<ul class="summary">
+<li>pass it around
+</li>
+<li>call it multiple times—or <b>none</b>
+</li>
+<li>be happy
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">19</span> Example </h1></header>
+
+<section class="Example">
+<p>  $$ \underset{\bullet}{e_1} + e_2 $$
+</p><ul class="summary">
+<li>split into current value (\(e_1\)) and “continuation”:
+</li>
+</ul>
+
+<p>  $$ \bullet + e_2 $$
+</p><ul class="summary">
+<li>we could get the continuation as a function:
+</li>
+</ul>
+
+<p>  $$ \lambda x. x + e_2 $$
+</p>
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">20</span> callCC </h1></header>
+
+<section class="callCC">
+<ul class="summary">
+<li>introduce a new primitive for getting <b>current continuation</b>
+</li>
+<li>\(\text{callCC}\) —“call with current continuation”
+</li>
+<li>continuation as <i>function</i>
+<ul class="summary">
+<li>calling continuation causes \(\text{callCC}\) to return
+</li>
+</ul>
+
+</li>
+<li>calls a function with a function&hellip;
+<ul class="summary">
+<li>“body” function gets “continuation” function as argument
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">21</span> callCC Example </h1></header>
+
+<section class="callCC-Example">
+<p>  $$ \underset{\bullet}{e_1} + e_2 $$
+</p><ul class="summary">
+<li>get continuation out:
+</li>
+</ul>
+
+<p>  $$ \text{callCC } k \text{ in } body + e_2 $$
+</p><ul class="summary">
+<li>\(body\) gets \(\bullet + e_2\) as \(k\)
+</li>
+<li>original expression <i>doesn't return</i>
+</li>
+<li>calling \(k\) is like original expression returning
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">22</span> Early Exit </h1></header>
+
+<section class="Early-Exit">
+<ul class="summary">
+<li>we can use continuations to return from an expression early
+</li>
+<li>like a hypothetical <code>(return 1) + 10</code> in a C-like language
+</li>
+</ul>
+
+<p>  $$ \text{callCC } exit \text{ in } (exit\ 1) + 10 $$
+</p><ul class="summary">
+<li>entire expression evaluates to \(1\)
+</li>
+<li>similar to exception handling
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">23</span> Types </h1></header>
+
+<section class="Types">
+<ul class="summary">
+<li>we can think of \(\text{callCC}\) with this type:
+    $$ callCC : ((\tau \to \sigma) \to \tau) \to \tau $$
+</li>
+<li>note how \(\sigma\) is never used—it can be anything including
+    \(\bot\)
+</li>
+<li>\(((\tau \to \sigma) \to \tau) \to \tau\) implies the law of the
+    excluded middle
+</li>
+<li>\(\text{callCC}\) turns our logic into a classical one!
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">24</span> Negation Again </h1></header>
+
+<section class="Negation-Again">
+<ul class="summary">
+<li>remember that \(\lnot x \equiv x \Rightarrow \bot\)
+</li>
+<li>in \(((\tau \to \sigma) \to \tau) \to \tau\), \(\sigma\) is not used
+</li>
+<li>this means \(\sigma\) can be \(\bot\) !
+    $$ ((\tau \to \bot) \to \tau) \to \tau $$
+    $$ (\lnot \tau \to \tau) \to \tau $$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">25</span> Peirce's Law </h1></header>
+
+<section class="Peirce's-Law">
+<ul class="summary">
+<li>\(((\tau \to \sigma) \to \tau) \to \tau\) as an axiom is
+    equivalent to the law of the excluded middle as an axiom
+</li>
+<li>\(\text{callCC}\) moves our language from a constructive logic to
+    a classical logic
+</li>
+<li><a href="http://math.stackexchange.com/a/447217/77230">a nice proof of this equivalence</a>
+</li>
+<li>side-note: apparently “Peirce” is pronounced more like “purse”
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">26</span> Continuation-Passing Style </h1></header>
+
+<section class="Continuation-Passing-Style">
+<ul class="summary">
+<li>we can emulate \(\text{callCC}\) by cleverly structuring our
+    program
+</li>
+<li>every continuation is explicitly represented as a callback
+</li>
+<li>this is <b>continuation-passing style</b> (CPS)
+</li>
+<li>used in node.js for concurrency (non-blocking operations)
+</li>
+<li>normal code can be systematically compiled to CPS
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">27</span> CPS Example </h1></header>
+
+<section class="CPS-Example">
+<p>  $$ add\ x\ y = x + y $$
+</p><ul class="summary">
+<li>CPS version:
+</li>
+</ul>
+
+<p>  $$ add\ x\ y\ k = k (x + y) $$
+</p><ul class="summary">
+<li>\(k\) is the continuation—a function to call after finishing
+<ul class="summary">
+<li>\(k\) is the conventional name for “callback” or “continuation”
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">28</span> CPS Example Usage </h1></header>
+
+<section class="CPS-Example-Usage">
+<p>  $$ add\ 1\ (add\ 2\ 3) $$
+</p><ul class="summary">
+<li>CPS-transformed:
+</li>
+</ul>
+
+<p>  $$ add\ 2\ 3\ (\lambda x. add\ 1\ x\ (\lambda y. y)) $$
+</p><ul class="summary">
+<li>functions never return—call continuation instead
+</li>
+<li>access result with a \(\lambda x. x\) continuation
+</li>
+<li>\(\text{callCC}\) just gives access to \(k\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">29</span> Double Negation Translation </h1></header>
+
+<section class="Double-Negation-Translation">
+<ul class="summary">
+<li>CPS means we can emulate \(\text{callCC}\)
+</li>
+<li>similarly, we can <i>embed</i> classical logic into constructive logic
+<ul class="summary">
+<li>called <b>double negation translation</b>
+</li>
+</ul>
+
+</li>
+<li>for ever provable proposition \(\phi\) in classical logic, we can
+    prove \(\lnot\lnot\phi\) in constructive logic
+<ul class="summary">
+<li>in constructive logic, \(\phi \equiv \lnot\lnot\phi\) does not
+      necessarily hold
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">30</span> Double Negation Translation Intuition </h1></header>
+
+<section class="Double-Negation-Translation-Intuition">
+<ul class="summary">
+<li>\(\lnot\lnot\phi\) is like proving “\(\phi\) does not lead to a
+    contradiction”
+</li>
+<li><i>not</i> a constructive proof for \(\phi\) because we have not
+    constructed an example of \(\phi\)
+</li>
+<li>a classical proof can be an example that “\(\phi\) does not lead to a
+    contradiction”
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">31</span> Double Negation and CPS </h1></header>
+
+<section class="Double-Negation-and-CPS">
+<ul class="summary">
+<li>CPS transform ≡ double negation
+</li>
+<li>remember: \(\lnot x \equiv (x \to \bot)\)
+</li>
+<li>for a constant (say \(3\)), the CPS version is:
+</li>
+</ul>
+
+<p>  $$ \lambda k. k (3) $$
+</p><ul class="summary">
+<li>we go from \(3 : \ty{int}\) to:
+</li>
+</ul>
+
+<p>  $$ ((\ty{int} \to \sigma) \to \sigma) $$
+</p><ul class="summary">
+<li>\(\sigma\) can be anything
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">32</span> Double Negation and CPS </h1></header>
+
+<section class="Double-Negation-and-CPS">
+<ul class="summary">
+<li>same trick as before: take \(\sigma\) to be \(\bot\):
+</li>
+</ul>
+
+<p>  $$ ((\ty{int} \to \bot) \to \bot) $$
+</p><ul class="summary">
+<li>now translate to \(\lnot\):
+</li>
+</ul>
+
+<p>  $$ (\lnot \ty{int} \to \bot) $$
+  $$ \lnot (\lnot \ty{int}) $$
+</p><ul class="summary">
+<li>since CPS doesn't usually use \(\bot\), it's a bit more general
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">33</span> Curry-Howard Conclusion </h1></header>
+
+<section class="Curry-Howard-Conclusion">
+<ul class="summary">
+<li>programming languages ≡ logic systems
+</li>
+<li>programs ≡ proofs
+</li>
+<li>functional ≡ intuitionistic
+</li>
+<li>imperative ≡ classical
+<ul class="summary">
+<li>“imperative” means exceptions, callCC or similar
+</li>
+</ul>
+
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,947 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Adding Types</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-12-07 04:17:29 PST"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Adding Types
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Untyped Lambda Calculus </h1></header>
+
+<section class="Untyped-Lambda-Calculus">
+<ul class="summary">
+<li>simple model of functions
+</li>
+<li>few parts:
+</li>
+</ul>
+
+<p>  $$\begin{align}
+       e ::&= x & \text{variable}\\
+           &|\quad \lambda x. e & \text{abstraction} \\
+           &|\quad e_1 e_2 & \text{application}
+      \end{align}$$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> Untyped Lambda Calculus </h1></header>
+
+<section class="Untyped-Lambda-Calculus">
+<ul class="summary">
+<li>simple evaluation
+</li>
+<li>just function application!
+</li>
+</ul>
+
+<p>  $$ \frac{(\lambda x. e) e'}{[e'/x]e} $$
+</p><ul class="summary">
+<li>replace \(x\) with the argument in the body
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> The Song that Never Ends </h1></header>
+
+<section class="The-Song-that-Never-Ends">
+<ul class="summary">
+<li>Lambda calculus is Turing-complete (Church-Turing thesis)
+</li>
+<li>infinite loops:
+</li>
+</ul>
+
+<p>  $$ (\lambda x. x x) (\lambda y. y y) \Rightarrow (\lambda y. y y)
+  (\lambda y. y y)$$
+</p><ul class="summary">
+<li>good for programming, bad for logic
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> Preventing Self-Application </h1></header>
+
+<section class="Preventing-Self-Application">
+<ul class="summary">
+<li>problem: self-application
+<ul class="summary">
+<li>\(xx\) leads to infinite loops
+</li>
+</ul>
+
+</li>
+<li>we need a rule to <b>prevent</b> self-application (and infinite loops
+    in general)
+<ul class="summary">
+<li>simple
+</li>
+<li>syntactic
+</li>
+<li>static
+</li>
+</ul>
+
+</li>
+<li><b>conservative</b> by necessity
+</li>
+</ul>
+
+
+
+
+$$ \newcommand{\t}[1]{\mathbf{#1}} $$
+$$ \newcommand{\ite}[3]{\text{if }#1\text{ then }#2\text{ else }#3} $$
+$$ \newcommand{\case}[5]{\text{case }#1\text{ of }#2 \to #3 \quad|\ #4 \to #5} $$
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> Why? </h1></header>
+
+<section class="Why?">
+<ul class="summary">
+<li>helps lambda calculus as a logic
+</li>
+<li>provides <b>simple</b> model of real type systems
+</li>
+<li>helps design new types and type systems
+</li>
+<li>usual advantages of static typing
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Base Types </h1></header>
+
+<section class="Base-Types">
+<ul class="summary">
+<li>start with some "base" types (like axioms)
+<ul class="summary">
+<li>ints, booleans&hellip; whatever
+</li>
+</ul>
+
+</li>
+<li>even just the \(\t{unit}\) type is fine
+</li>
+<li>base types have values:
+<ul class="summary">
+<li>\(()\) is of type \(\t{unit}\)
+</li>
+<li>\(1\) is of type \(\t{int}\)
+</li>
+</ul>
+
+</li>
+<li>ultimately, the exact base types don't matter
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Function Types </h1></header>
+
+<section class="Function-Types">
+<ul class="summary">
+<li>one type constructor: \(\to\) (like axiom schema)
+</li>
+<li>represents function types
+</li>
+<li>\(\t{unit} \to \t{unit}\)
+</li>
+<li>\(\t{int} \to \t{unit} \to \t{int}\)
+</li>
+<li>values are functions
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> Assigning Types </h1></header>
+
+<section class="Assigning-Types">
+<ul class="summary">
+<li>we need some way to give a type to an expression
+</li>
+<li><b>only</b> depends on the static syntax
+</li>
+<li><b>typing judgement</b>: \(x : \tau\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Context </h1></header>
+
+<section class="Context">
+<ul class="summary">
+<li><b>depends</b> on what's in scope (typing context): $$ \Gamma \vdash x :
+    \tau $$
+</li>
+<li>things in scope: "context", \(\Gamma\)
+</li>
+<li>set of typing judgements for <b>free variables</b>:$$\Gamma = \{x : \tau, y : \tau \to \tau, ... \}$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> New Syntax </h1></header>
+
+<section class="New-Syntax">
+<p>  $$\begin{align}
+       \tau ::&= \t{unit} & \text{unit type}\\
+           &|\quad \t{int} & \text{int type}\\
+           &|\quad \tau_1 \to \tau_2 & \text{function types}
+      \end{align}$$
+</p>
+<ul class="summary">
+<li>
+</li>
+</ul>
+
+<p>  $$\begin{align}
+      e ::&= () & \text{unit value}\\
+          &|\quad n & \text{integer}\\
+          &|\quad e_1 + e_2 & \text{arithmetic}\\
+          &|\quad x & \text{variable}\\
+          &|\quad \lambda x:\tau. e & \text{abstraction}\\
+          &|\quad e_1 e_2 & \text{application}
+      \end{align}$$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Typing Rules </h1></header>
+
+<section class="Typing-Rules">
+<ul class="summary">
+<li>we can assign types following a few "typing rules"
+</li>
+<li>idea: if we see expression "x", we know "y"
+</li>
+<li>just like implication in
+    logic $$ \frac{\text{condition}}{\text{result}} $$
+</li>
+<li>remember the context matters: \(\Gamma\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Base rules </h1></header>
+
+<section class="Base-rules">
+<ul class="summary">
+<li>note: <b>no</b> prerequisites!
+</li>
+</ul>
+
+<p>  $$ \frac{}{\Gamma \vdash n : \t{int}} $$
+  $$ \frac{}{\Gamma \vdash () : \t{unit}} $$
+</p><ul class="summary">
+<li><b>base cases</b> for recursion
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Main Rules </h1></header>
+
+<section class="Main-Rules">
+<ul class="summary">
+<li>contexts:
+</li>
+</ul>
+
+<p>  $$ \frac{x : \tau \in \Gamma}{\Gamma \vdash x : \tau} $$
+</p><ul class="summary">
+<li>function bodies:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma, x : \tau \vdash e : \tau'}{\Gamma \vdash (\lambda
+  x:\tau. e) : \tau \to \tau'} $$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Main Rules </h1></header>
+
+<section class="Main-Rules">
+<ul class="summary">
+<li>application:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e_1 : \tau \to \tau' \quad \Gamma \vdash e_2 : \tau}{\Gamma
+  \vdash e_1 e_2 : \tau'} $$
+</p><ul class="summary">
+<li><b>recursive cases</b> in the type system
+</li>
+<li>think of a function over syntactic terms
+<ul class="summary">
+<li>similar to evaluation!
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> Domain-Specific Rules </h1></header>
+
+<section class="Domain-Specific-Rules">
+<ul class="summary">
+<li>we add rules for our "primitive" operations
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e_1 : \t{int} \quad \Gamma \vdash e_2 :
+  \t{int}}{\Gamma \vdash e_1 + e_2 : \t{int}} $$
+</p><ul class="summary">
+<li>imagine other base types like booleans
+</li>
+</ul>
+
+<p>  $$\frac{\Gamma \vdash c : \t{bool} \quad \Gamma \vdash e_1 : \tau
+  \quad \Gamma \vdash e_2 : \tau}{\Gamma \vdash \ite{c}{e_1}{e_2} :
+  \tau} $$
+</p><ul class="summary">
+<li>easy to extend
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> No Polymorphsim </h1></header>
+
+<section class="No-Polymorphsim">
+<ul class="summary">
+<li>we do not have any notion of polymorphism
+</li>
+<li>function arguments <b>have</b> to be annotated
+</li>
+<li>untyped: \(\lambda x. x\)
+</li>
+<li>typed: 
+<ul class="summary">
+<li>\(\lambda x:unit. x\) 
+</li>
+<li>\(\lambda x:int. x\)
+</li>
+<li>\(\lambda x:int \to unit \to int. x\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">17</span> Numbers </h1></header>
+
+<section class="Numbers">
+<ul class="summary">
+<li>remember numbers as repeated application
+</li>
+<li>untyped:
+<ul class="summary">
+<li>0: \(\lambda f. \lambda x. x\)
+</li>
+<li>1: \(\lambda f. \lambda x. f x\)
+</li>
+<li>2: \(\lambda f. \lambda x. f (f x)\)
+</li>
+<li>3: \(\lambda f. \lambda x. f (f (f x))\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">18</span> Typed Numbers </h1></header>
+
+<section class="Typed-Numbers">
+<ul class="summary">
+<li>we can add types:
+<ul class="summary">
+<li>0: \(\lambda f : \t{unit} \to \t{unit}. \lambda x : \t{unit}. x\)
+</li>
+<li>1: \(\lambda f : \t{unit} \to \t{unit}. \lambda x : \t{unit}. f x\)
+</li>
+<li>2: \(\lambda f : \t{unit} \to \t{unit}. \lambda x : \t{unit}. f
+      (f x)\)
+</li>
+<li>3: \(\lambda f : \t{unit} \to \t{unit}. \lambda x : \t{unit}. f (f
+      (f x))\)
+</li>
+</ul>
+
+</li>
+<li>numbers: \((\t{unit} \to \t{unit}) \to \t{unit} \to \t{unit}\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">19</span> Pairs </h1></header>
+
+<section class="Pairs">
+<ul class="summary">
+<li>remember pair encoding:
+<ul class="summary">
+<li>cons: \(\lambda x. \lambda y. \lambda f. f x y\)
+</li>
+<li>first: \(\lambda x. \lambda y. x\)
+</li>
+<li>second: \(\lambda x. \lambda y. y\)
+</li>
+</ul>
+
+</li>
+<li>lets us build up data types, like lisp
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">20</span> Typed Pairs </h1></header>
+
+<section class="Typed-Pairs">
+<ul class="summary">
+<li>cons: $$ \lambda x : \tau. \lambda y : \tau . \lambda f :
+    \tau \to \tau \to \tau. f x y$$
+</li>
+<li>but we want pairs of <b>different</b> types!
+</li>
+<li>we should add pairs ("product types") to our system
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">21</span> Product Types </h1></header>
+
+<section class="Product-Types">
+<ul class="summary">
+<li>new type syntax: \(\tau_1 \times \tau_2\)
+</li>
+<li>like Haskell's <code>(a, b)</code> or OCaml's <code>a * b</code>
+</li>
+<li>constructor:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e_1 : \tau_1 \quad \Gamma \vdash e_2 :
+  \tau_2}{\Gamma \vdash (e_1, e_2) : \tau_1 \times \tau_2}$$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">22</span> Product Types </h1></header>
+
+<section class="Product-Types">
+<ul class="summary">
+<li>accessors (\(\text{first}\) and \(\text{second}\)):
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e : \tau_1 \times \tau_2}{\Gamma \vdash \text{first } e :
+  \tau_1} $$
+  $$ \frac{\Gamma \vdash e : \tau_1 \times \tau_2}{\Gamma \vdash \text{second } e :
+  \tau_2} $$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">23</span> Sum Types </h1></header>
+
+<section class="Sum-Types">
+<ul class="summary">
+<li>sum types: disjoint/tagged unions, variants
+</li>
+<li>like Haskell's <code>Either</code>
+</li>
+<li>new type syntax: \(\tau_1 + \tau_2\)
+</li>
+<li>construction:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e : \tau_1}{\Gamma \vdash \text{left } e :
+  \tau_1 + \tau_2} $$
+  $$ \frac{\Gamma \vdash e : \tau_2}{\Gamma \vdash \text{right } e :
+  \tau_1 + \tau_2} $$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">24</span> Sum Types </h1></header>
+
+<section class="Sum-Types">
+<ul class="summary">
+<li>matching
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma\ \vdash\ e : \tau_1 + \tau_2 \atop \Gamma,\ x : \tau_1
+  \ \vdash\  e_1 : \tau' \quad \Gamma,\ y : \tau_2 \ \vdash\  e_2 :
+  \tau'}{\Gamma \vdash (\case{e}{x}{e_1}{y}{e_2}) : \tau'}$$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">25</span> Algebraic Data Types </h1></header>
+
+<section class="Algebraic-Data-Types">
+<ul class="summary">
+<li>this basically gives us algebraic data types
+</li>
+<li>now we just need <b>recursive types</b> and <b>polymorphism</b>
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>
