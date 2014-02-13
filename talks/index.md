@@ -20,13 +20,13 @@ As a technical note, the slides are generated from [org-mode](http://orgmode.org
 
 ## SF Types, Theorems and Programming Languages
 
-I'm giving a series of talks introducing type theory at the [SF Types, Theorems and Programming Languages](http://www.meetup.com/SF-Types-Theorems-and-Programming-Languages/) meetup at [Mixrank](http://mixrank.com) HQ.
-
-So far, I've given three talks about the lambda calculus:
+I gave a series of talks introducing type theory at the [SF Types, Theorems and Programming Languages](http://www.meetup.com/SF-Types-Theorems-and-Programming-Languages/) meetup at [Mixrank](http://mixrank.com) HQ, going from the untyped λ-calculus to dependent types.
 
   * [Untyped Lambda Calculus](untyped-lambda-calculus.html) ([pdf](untyped-lambda-calculus.pdf))
   * [Simply Typed Lambda Calculus](stlc.html) ([pdf](stlc.pdf))
   * [Fun with Curry-Howard](curry-howard.html) ([pdf](curry-howard.pdf))
+  * [Polymorphism---System F](system-f.html) ([pdf](system-f.pdf))
+  * [Dependent Types](dependent-types.html) ([pdf](dependent-types.pdf))
   
 ## Haskell
 
