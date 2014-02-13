@@ -8,16 +8,12 @@ author: Tikhon Jelvis
 # Welcome
 
 <div class="announcement">
+Our paper on Chlorophyll, a synthesis-aided compiler, was accepted to [PLDI 2014](http://conferences.inf.ed.ac.uk/pldi2014/acceptedpapers.html)!.
+
 All of my slides are now available on my [talks](talks) page, including:
 
-  * [untyped λ-calculus](talks/untyped-lambda-calculus.html) ([pdf](talks/untyped-lambda-calculus.pdf))
-  * [simply typed λ-calculus](talks/stlc.html) ([pdf](talks/stlc.pdf))
-  * [Curry-Howard](talks/curry-howard.html) ([pdf](talks/curry-howard.pdf))
-
-I gave a talk about program synthesis at [Hac φ](http://www.haskell.org/haskellwiki/Hac_%CF%86):
-
-  * [Program synthesis](synthesis-slides.html) (a general overview)
-  
+  * [Polymorphism (System F)](talks/system-f.html) ([pdf](talks/system-f.pdf))
+  * [Dependent Types](talks/dependent-types.html) ([pdf](talks/dependent-types.pdf))
 </div>
 
 ![Me on the roof of the Casa Milà in Barcelona. For even more Guadí, you can barely see the Sagrada Família in the background.](img/me_at_casa_mila_med.jpg)

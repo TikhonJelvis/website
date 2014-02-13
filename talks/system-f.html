@@ -1,0 +1,897 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Polymorphism</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2014-02-13 02:50:30 PST"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Polymorphism
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+
+
+$$ \newcommand{\ty}[1]{\mathbf{#1}} $$
+
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Untyped λ-Calculus </h1></header>
+
+<section class="Untyped-λ-Calculus">
+<ul class="summary">
+<li>model computation with functions
+</li>
+<li>simple structure:
+</li>
+</ul>
+
+<p>  $$\begin{align}
+       e ::&= x & \text{variable}\\
+           &|\quad \lambda x. e & \text{abstraction} \\
+           &|\quad e_1 e_2 & \text{application}
+      \end{align}$$
+</p>
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> λ-Calculus Evaluation </h1></header>
+
+<section class="λ-Calculus-Evaluation">
+<ul class="summary">
+<li>key idea: application by substitution
+</li>
+</ul>
+
+<p>  $$
+  (\lambda x. e)s \Rightarrow [s/x]e
+  $$
+</p><ul class="summary">
+<li>\([s/x]e\) = “replace \(x\) with \(s\) in \(e\) ”
+</li>
+<li>handy mnemonic (thanks Sergei): multiplying by \(\frac{s}{x}\) and canceling
+</li>
+<li>remember to worry about “capturing”
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> Simple Types </h1></header>
+
+<section class="Simple-Types">
+<ul class="summary">
+<li>extend λ-calculus with <b>types</b>
+</li>
+<li>base types
+<ul class="summary">
+<li>\(\ty{unit}\), \(\ty{int}\)&hellip; etc
+</li>
+</ul>
+
+</li>
+<li>function types
+<ul class="summary">
+<li>\(\ty{int} \to \ty{int}\)
+</li>
+<li>\((\ty{unit} \to \ty{unit}) \to \ty{int} \to \ty{int}\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> Syntax: Terms and Types </h1></header>
+
+<section class="Syntax:-Terms-and-Types">
+<p>  $$\begin{align}
+       \tau ::&= \ty{unit} & \text{unit type}\\
+           &|\quad \tau_1 \to \tau_2 & \text{function types}\\
+      \newline
+
+      e ::&= () & \text{unit value}\\
+          &|\quad x & \text{variable}\\
+          &|\quad \lambda x:\tau. e & \text{abstraction}\\
+          &|\quad e_1 e_2 & \text{application}
+      \end{align}$$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> Typing Rules </h1></header>
+
+<section class="Typing-Rules">
+<ul class="summary">
+<li>functions:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma, x : \tau \vdash e : \tau'}{\Gamma \vdash (\lambda
+  x:\tau. e) : \tau \to \tau'} $$
+</p><ul class="summary">
+<li>application:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e_1 : \tau \to \tau' \quad \Gamma \vdash e_2 : \tau}{\Gamma
+  \vdash e_1 e_2 : \tau'} $$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Problem: Repetition </h1></header>
+
+<section class="Problem:-Repetition">
+<ul class="summary">
+<li>every type has <b>an</b> identity function: $$\lambda x : \tau. x$$
+</li>
+<li><b>different</b> for every possible \(\tau\)
+</li>
+</ul>
+
+<p>  $$id_{\ty{unit}}, id_{\ty{int}}, id_{\ty{int \to int}} \ldots$$
+</p><ul class="summary">
+<li>a single term can have <b>multiple</b> incompatible types
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Solution: System F </h1></header>
+
+<section class="Solution:-System-F">
+<ul class="summary">
+<li>add polymorphism to our types
+<ul class="summary">
+<li>types parameterized by other types
+</li>
+</ul>
+
+</li>
+<li>what is a “parameterized term”x?
+<ul class="summary">
+<li>λ abstraction (function)
+</li>
+</ul>
+
+</li>
+<li>so: function <b>for</b> types
+</li>
+<li>\(id\) would take a type \(\tau\) and give you \(id_\tau\) 
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> New Syntax </h1></header>
+
+<section class="New-Syntax">
+<p>  $$\begin{align}
+       \tau ::&= \ty{unit} & \text{unit type}\\
+           &|\quad \alpha & \text{type variable}\\
+           &|\quad \tau_1 \to \tau_2 & \text{function types}\\
+           &|\quad \forall\alpha.\tau & \text{type quantification}\\
+      \newline
+
+      e ::&= () & \text{unit value}\\
+          &|\quad x & \text{variable}\\
+          &|\quad \lambda x:\tau. e & \text{abstraction}\\
+          &|\quad e_1 e_2 & \text{application}\\
+          &|\quad \Lambda\alpha. e & \text{type abstraction}\\
+          &|\quad e_1[\tau] & \text{type application}
+      \end{align}$$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Type Variables </h1></header>
+
+<section class="Type-Variables">
+<ul class="summary">
+<li>behave mostly like value-level variables
+</li>
+<li>type variables can be <b>free</b> or <b>bound</b>
+<ul class="summary">
+<li>free variables are not defined inside expression
+</li>
+</ul>
+
+</li>
+<li><b>substitute</b> types for type variables:
+<ul class="summary">
+<li>\([\sigma/\alpha]\tau\) means “replace &alpha; with &sigma; in type &tau;”
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Evaluation </h1></header>
+
+<section class="Evaluation">
+<ul class="summary">
+<li>simply typed λ-calculus—just like untyped:
+</li>
+</ul>
+
+<p>  $$ (\lambda x : \tau. e)s \Rightarrow [s/x]e $$
+</p><ul class="summary">
+<li>one more rule, for type abstractions:
+</li>
+</ul>
+
+<p>  $$ (\Lambda\alpha. e)[\tau] \Rightarrow [\tau/\alpha]e $$
+</p><ul class="summary">
+<li><b>type-level</b> version of the first rule
+</li>
+<li>reduction is still <b>very simple</b>
+</li>
+</ul>
+
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Typing Rules </h1></header>
+
+<section class="Typing-Rules">
+<ul class="summary">
+<li>\(\Gamma\) now covers both type and term variables
+</li>
+<li>basic rules just like STLC
+</li>
+<li>new rules:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma, \alpha \vdash x : \tau}{\Gamma \vdash \Lambda\alpha. x :
+  \forall\alpha. \tau} $$
+  $$ \frac{\Gamma \vdash x : \forall\alpha. \tau}{\Gamma \vdash
+  x[\sigma] : ([\sigma/\alpha]\tau)} $$
+</p><ul class="summary">
+<li>compare to normal abstraction and application
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Running Example: id </h1></header>
+
+<section class="Running-Example:-id">
+<ul class="summary">
+<li>function:
+    $$ \begin{align}
+       &id : \forall\alpha. \alpha \to \alpha \\
+       &id = \Lambda\alpha.\lambda (x:\alpha). x \\
+       \end{align}$$
+</li>
+<li>reduction:
+    $$ \begin{align}
+                   & (\Lambda\alpha.\lambda (x:\alpha). x)[\ty{unit}] () \\
+       \Rightarrow & (\lambda (x:\ty{unit}). x) () \\
+       \Rightarrow & () \\
+       \end{align}$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Another Example: app </h1></header>
+
+<section class="Another-Example:-app">
+<ul class="summary">
+<li>Untyped term, impossible in STLC:
+    $$\lambda f. \lambda x. f x$$
+</li>
+<li>we can type function application:
+</li>
+</ul>
+
+<p>  $$ \begin{align}
+     &app : \forall\alpha. \forall\beta. (\alpha \to \beta) \to \alpha
+  \to \beta\\
+     &app = \Lambda\alpha. \Lambda\beta.\lambda (f : \alpha \to
+  \beta). \lambda (x : \alpha). f x
+     \end{align} $$
+</p><ul class="summary">
+<li>Haskell <code>$</code>, OCaml <code>&lt;|</code>: really just \(id\) with restricted type
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Interesting Example: self application </h1></header>
+
+<section class="Interesting-Example:-self-application">
+<ul class="summary">
+<li>We cannot even <b>express</b> self-application in STLC
+</li>
+</ul>
+
+<p>  $$ \lambda f. f f $$
+</p><ul class="summary">
+<li>but we <b>can</b> with polymorphism:
+</li>
+</ul>
+
+<p>  $$ \begin{align}
+     & self : (\forall\alpha. \alpha \to \alpha) \to (\forall
+  \beta. \beta \to \beta) \\
+     & self = \lambda (f : \forall\alpha. \alpha \to
+  \alpha). f[\forall\beta. \beta \to \beta] f
+     \end{align} $$
+</p><ul class="summary">
+<li>however, still no infinite loops
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> Data Structures </h1></header>
+
+<section class="Data-Structures">
+<ul class="summary">
+<li>consider untyped booeans:
+</li>
+</ul>
+
+<p>  $$ \begin{align}
+     true &= \lambda x. \lambda y. x \\
+     false &= \lambda x. \lambda y. y
+     \end{align} $$
+</p><ul class="summary">
+<li>typed version:
+</li>
+</ul>
+
+<p>  $$ \begin{align}
+     true, false &: \forall \alpha. \alpha \to \alpha \to \alpha \\
+     true &= \Lambda\alpha. \lambda (x : \alpha). \lambda (y : \alpha). x \\
+     false &= \Lambda\alpha. \lambda (x : \alpha). \lambda (y : \alpha). y
+     \end{align} $$
+</p><ul class="summary">
+<li>types prevent malformed “booleans”
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> Products </h1></header>
+
+<section class="Products">
+<ul class="summary">
+<li>easy in untyped λ; added to STLC explicitly:
+</li>
+</ul>
+
+<p>  $$ \begin{align}
+  \sigma \times \tau &: \forall\alpha. (\sigma \to \tau \to \alpha)
+  \to \alpha \\
+  \langle s, t\rangle &= \Lambda\alpha.\lambda (f : \sigma \to \tau
+  \to \alpha). f s t \\
+  \newline
+  fst &: \sigma \times \tau \to \sigma \\
+  fst &= \lambda (p : \sigma \times \tau). p[\sigma](\lambda s :
+  \sigma. \lambda t : \tau. s)
+  \end{align} $$
+</p><ul class="summary">
+<li>we can do sum types similarly
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">17</span> Type Inference </h1></header>
+
+<section class="Type-Inference">
+<ul class="summary">
+<li>this is a handy system
+</li>
+<li>unfortunately, <b>type inference is undecideable</b>
+</li>
+<li>we can make type inferrable with a simple restriction:
+<ul class="summary">
+<li><b>prenex form</b>: all quantifiers at the front
+</li>
+<li>types where all foralls are left of parentheses
+</li>
+</ul>
+
+</li>
+<li>Haskell, ML&hellip; etc do this
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">18</span> Hindley-Milner </h1></header>
+
+<section class="Hindley-Milner">
+<ul class="summary">
+<li>important insight: <b>most general type</b>
+</li>
+<li>every untyped term has a <b>unique</b> most general type
+</li>
+</ul>
+
+<p>  $$ \lambda x. x : \forall\alpha. \alpha \to \alpha $$
+</p><ul class="summary">
+<li>we can easily model this with logic programming
+<ul class="summary">
+<li>faster algorithms exist as well
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">19</span> Curry-Howard </h1></header>
+
+<section class="Curry-Howard">
+<ul class="summary">
+<li>System F maps to 2nd-order logic
+<ul class="summary">
+<li>quantifiers <b>only</b> over predicates
+</li>
+</ul>
+
+</li>
+<li>predicate logic with \(\forall\) but no “domains”
+<ul class="summary">
+<li>no external sets to quantify over
+</li>
+</ul>
+
+</li>
+<li>consider: \(\Lambda\) defines a function from types to values
+<ul class="summary">
+<li>but not vice-versa
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">20</span> Experimenting </h1></header>
+
+<section class="Experimenting">
+<ul class="summary">
+<li>Standard Haskell, ML&hellip; etc: prenex form
+</li>
+<li>Haskell with <code>RankNTypes</code>: everything we've covered
+<ul class="summary">
+<li>along with recursion and recursive types
+</li>
+</ul>
+
+</li>
+<li>OCaml can also do the equivalent of <code>RankNTypes</code> but awkwardly
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>

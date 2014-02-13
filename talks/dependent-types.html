@@ -1,0 +1,858 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Dependent Types</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2014-02-13 02:13:11 PST"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Dependent Types
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+
+
+$$ \newcommand{\ty}[1]{\mathbf{#1}} $$
+$$ \newcommand{\N}[0]{\mathbb{N}} $$
+$$ \newcommand{\kd}[0]{\ty{\star}} $$
+
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Untyped λ-calculus </h1></header>
+
+<section class="Untyped-λ-calculus">
+<ul class="summary">
+<li>terms: functions (λ), variables, application
+</li>
+</ul>
+
+<p>  $$\begin{align}
+       e ::&= x & \text{variable}\\
+           &|\quad \lambda x. e & \text{abstraction} \\
+           &|\quad e_1 e_2 & \text{application}
+      \end{align}$$
+</p><ul class="summary">
+<li>evaluation via substitution:
+</li>
+</ul>
+
+<p>  $$
+  (\lambda x. e)s \Rightarrow [s/x]e
+  $$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> Simply typed λ-calculus </h1></header>
+
+<section class="Simply-typed-λ-calculus">
+<ul class="summary">
+<li>extend untyped λ-calculus with “simple” types
+</li>
+<li>simple: atomic “base” types + functions
+<ul class="summary">
+<li>base: \(\ty{unit}\), \(\ty{int}, \ldots\)
+</li>
+<li>function: \(\ty{unit} \to \ty{unit}, \ldots\)
+</li>
+</ul>
+
+</li>
+<li>not Turing-complete any more
+<ul class="summary">
+<li>safety at the expense of expressiveness
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> Simply typed λ-calculus </h1></header>
+
+<section class="Simply-typed-λ-calculus">
+<ul class="summary">
+<li>new type-level syntax
+</li>
+</ul>
+
+<p>  $$\begin{align}
+       \tau ::&= \ty{unit} & \text{unit type}\\
+           &|\quad \tau_1 \to \tau_2 & \text{function types}\\
+      \newline
+
+      e ::&= () & \text{unit value}\\
+          &|\quad x & \text{variable}\\
+          &|\quad \lambda x:\tau. e & \text{abstraction}\\
+          &|\quad e_1 e_2 & \text{application}
+      \end{align}$$
+</p><ul class="summary">
+<li>evaluation is unchanged
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> System F </h1></header>
+
+<section class="System-F">
+<ul class="summary">
+<li>parametric polymorphism
+</li>
+<li>allow “families” of simply typed terms
+<ul class="summary">
+<li>polymorphic \(id\) is a family of \(id_{\ty{unit}}, id_{\ty{int}},
+      id_{\ty{int \to int}}, \ldots\)
+</li>
+</ul>
+
+</li>
+<li>a “family” is a function from types to values
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> System F </h1></header>
+
+<section class="System-F">
+<p>    $$\begin{align}
+       \tau ::&= \ty{unit} & \text{unit type}\\
+           &|\quad \alpha & \text{type variable}\\
+           &|\quad \tau_1 \to \tau_2 & \text{function types}\\
+           &|\quad \forall\alpha.\tau & \text{type quantification}\\
+      \newline
+
+      e ::&= () & \text{unit value}\\
+          &|\quad x & \text{variable}\\
+          &|\quad \lambda x:\tau. e & \text{abstraction}\\
+          &|\quad e_1 e_2 & \text{application}\\
+          &|\quad \Lambda\alpha. e & \text{type abstraction}\\
+          &|\quad e_1[\tau] & \text{type application}
+      \end{align}$$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Type abstractions </h1></header>
+
+<section class="Type-abstractions">
+<ul class="summary">
+<li>type functions: \(\Lambda\alpha. \tau\)
+</li>
+<li>qualified types: \(\forall\alpha. \tau\)
+</li>
+<li>type application: \(e_1[\tau]\)
+</li>
+<li>example:
+    $$ \begin{align}
+       &id : \forall\alpha. \alpha \to \alpha \\
+       &id = \Lambda\alpha.\lambda (x:\alpha). x \\
+       \end{align}$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Type abstractions </h1></header>
+
+<section class="Type-abstractions">
+<ul class="summary">
+<li>hey, these are like normal λs, but <b>simpler</b>
+</li>
+<li>functions: \(\lambda (x : \tau). e\)
+</li>
+<li>function types: \(\tau_1 \to \tau_2\)
+</li>
+<li>function application: \(e_1\ e_2\)
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> Unifying types and terms </h1></header>
+
+<section class="Unifying-types-and-terms">
+<ul class="summary">
+<li>let's combine these two <b>similar</b> constructs
+</li>
+<li><b>everything is a term</b>
+<ul class="summary">
+<li>values can appear in types
+</li>
+<li>no more clean type/value separation
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Why? </h1></header>
+
+<section class="Why?">
+<ul class="summary">
+<li>System F: repetition over different <b>types</b>
+<ul class="summary">
+<li>\(id_{\ty{unit}}, id_{\ty{int}}, id_{\ty{int \to int}}, \ldots\)    
+</li>
+</ul>
+
+</li>
+<li>consider other repetitive patterns:
+<ul class="summary">
+<li>\(\ty{int}, \ty{int \times int}, \ty{int \times int \times int},
+      \ldots\)
+</li>
+<li>\(\ty{vector}\ 1, \ty{vector}\  2, \ty{vector}\  3, \ldots\)
+</li>
+</ul>
+
+</li>
+<li>we would love to write 
+    $$ dot : \ty{vector}\ n \times \ty{vector}\ n \to int $$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Dependent types </h1></header>
+
+<section class="Dependent-types">
+<ul class="summary">
+<li>no type syntax: \(e\) and \(\tau\) are <b>expressions</b>
+</li>
+</ul>
+
+<p>  $$\begin{align}
+  e, \tau ::&= () & \text{unit value}\\
+   &|\quad \ty{unit} & \text{unit type}\\
+   &|\quad \ty{\star} & \text{type of types}\\
+   &|\quad x & \text{variable}\\
+   &|\quad \forall (x:\tau). \tau' & \text{dependent function}\\
+   &|\quad e_1\ e_2 & \text{application}\\
+   &|\quad \lambda (x:\tau). e & \text{abstraction}\\
+  \end{align}
+  $$
+</p><ul class="summary">
+<li>\(\forall (x:\tau). \tau'\) replaces function arrows (\(\to\))
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Typing rules: types of types </h1></header>
+
+<section class="Typing-rules:-types-of-types">
+<ul class="summary">
+<li>What type does \(\ty{\star}\) have?
+<ul class="summary">
+<li>simple (but dubious) answer: \(\ty{\star} : \ty{\star}\)
+</li>
+<li>more interesting: infinite hierarchy \(\ty{\star_1} :
+      \ty{\star_2} : \ty{\star_3} : \ldots\)
+</li>
+</ul>
+
+</li>
+<li>let's go with simplicity:
+    $$ \frac{}{\Gamma \vdash \ty{\star} : \ty{\star}} $$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Typing rules: dependent abstractions </h1></header>
+
+<section class="Typing-rules:-dependent-abstractions">
+<ul class="summary">
+<li>dependent abstractions are terms too:
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash \tau : \ty{\star}\quad \Gamma, x : \tau
+  \vdash \tau' : \ty{\star}}{\Gamma \vdash (\forall (x : \tau). \tau')
+  : \ty{\star}} $$
+</p><ul class="summary">
+<li>key idea: \(\tau'\) can <b>depend on</b> \(x\)
+</li>
+<li>\(\forall (x : \tau). \tau'\) is like a function type \(\tau \to
+    \tau'\) except also parametrized by a value \(x\)
+<ul class="summary">
+<li>alternative syntax: \((x : \tau) \to \tau'\)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Typing rules: application </h1></header>
+
+<section class="Typing-rules:-application">
+<ul class="summary">
+<li>remember: the new function type is a \(\forall\):
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e_1 : \forall (x : \tau). \tau' \quad \Gamma
+  \vdash e_2 : \tau}{\Gamma \vdash e_1\ e_2 : [e_2/x]\tau'} $$
+</p><ul class="summary">
+<li>substitution happening at the <b>type level</b>
+<ul class="summary">
+<li>basically like enabling the type system with evaluation
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Typing rules: type equivalence </h1></header>
+
+<section class="Typing-rules:-type-equivalence">
+<ul class="summary">
+<li>since types are terms, we need to evaluate them to check for
+    equivalence
+</li>
+<li>read \(e_1 \Downarrow e_2\) as “\(e_1\) evaluates to \(e_2\) ”
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma \vdash e : \tau_1 \quad \tau_1 \Downarrow \tau \quad
+  \tau_2 \Downarrow \tau}{\Gamma \vdash e : \tau_2} $$
+</p><ul class="summary">
+<li>consider: \(\ty{vector}\ 5\) vs \(\ty{vector}\ (2 + 3)\) vs \(\ty{vector}\ (3 + 2)\)
+</li>
+<li>again: evaluation in type checking
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> Typing rules: abstractions </h1></header>
+
+<section class="Typing-rules:-abstractions">
+<ul class="summary">
+<li>pretty straightforward: \(\to\) just becomes \(\forall\):
+</li>
+</ul>
+
+<p>  $$ \frac{\Gamma, x : \tau \vdash e : \tau'}{\Gamma \vdash (\lambda (x : \tau). e) : \forall (x : \tau). \tau'} $$
+</p><ul class="summary">
+<li>note: \(x\) can occur in body <b>and</b> type
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> Example: id </h1></header>
+
+<section class="Example:-id">
+<ul class="summary">
+<li>from System F:
+    $$ \begin{align}
+       &id : \forall\alpha. \alpha \to \alpha \\
+       &id = \Lambda\alpha.\lambda (x:\alpha). x \\
+       \end{align}$$
+</li>
+<li>with dependent types:
+    $$ \begin{align}
+       &id : \forall(\alpha : \ty{\star}). (\forall (x : \alpha). \alpha) \\
+       &id = \lambda (\alpha : \ty{\star}). (\lambda (x : \alpha). x) \\
+       \end{align}$$
+</li>
+<li>the System F \(\Lambda\) has become a normal \(\lambda\) !
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">17</span> Nicer notation </h1></header>
+
+<section class="Nicer-notation">
+<ul class="summary">
+<li>often, we just want normal functions
+<ul class="summary">
+<li><b>ignore</b> argument \(x\)
+</li>
+</ul>
+
+</li>
+<li>special syntax: \(\to\)
+</li>
+<li>consider \(id\): \(\forall (\alpha : \kd). \alpha \to \alpha\)
+</li>
+<li>no extra name (\(x\)) introduced
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">18</span> Example: vectors </h1></header>
+
+<section class="Example:-vectors">
+<ul class="summary">
+<li>assume built-in numbers: \(\N : \ty{\star}\) and \(n : \N\)
+</li>
+<li>vectors indexed by length: $$\forall (\alpha : \ty{\star}). \forall
+    (n : \N). \ty{vec}\ \alpha\ n$$
+</li>
+<li>constructors:
+</li>
+</ul>
+
+<p>  $$ \begin{align}
+  &Nil : \forall (\alpha : \kd). \ty{vec}\ \alpha\ 0\\
+  &Cons : \forall (\alpha : \kd). \forall (n : \N). \alpha \to\\
+  & \ty{vec}\ \alpha\ n \to \ty{vec}\ \alpha\ (n + 1) \\
+  \end{align}
+  $$
+
+</p></section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">19</span> Example: zero vector </h1></header>
+
+<section class="Example:-zero-vector">
+<ul class="summary">
+<li>we can have sized vectors in Haskell
+<ul class="summary">
+<li>numbers at the type level—redundant
+</li>
+</ul>
+
+</li>
+<li>however, Haskell can't do this:
+</li>
+</ul>
+
+<p>  $$ zero : \forall(n : \N). \ty{vec}\ \ty{int}\ n $$
+</p><ul class="summary">
+<li>creates a vector of length \(n\), full of \(0\) s
+</li>
+<li>argument \(n\) is part of result type!
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>
