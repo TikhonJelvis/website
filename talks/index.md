@@ -37,7 +37,7 @@ I've given a few talks at Haskell hackathons. First, there were two lightning ta
 
 I also gave a longer talk at [Hac φ 2013](http://www.haskell.org/haskellwiki/Hac_%CF%86):
 
-  * [Program synthesis](synthesis-slides.html) (a general overview)
+  * [Program synthesis](synthesis-slides.html) ([pdf](synthesis-slides.pdf)) (a general overview)
 
 ## FRP 
 
