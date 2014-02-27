@@ -15,17 +15,15 @@
 #header > div {
     margin-left : auto;
     margin-right : auto;
-    width : 6.9em;
 }
 
 /* This is the rectangle that is behind the header's banner. */
 #headerBackground {
-    position : absolute;
     background-color : #90A9CB;
     height : 50px;
-    top : 28pt;
-    width : 100%;
     z-index : -1;
+    margin-top : 28pt;
+    margin-left : 32%;
 }
 
 #header span {
