@@ -2,31 +2,15 @@
 {-# LANGUAGE NamedFieldPuns            #-}
 {-# LANGUAGE OverloadedStrings         #-}
 
-import           Prelude              hiding (id)
-
-import           Control.Arrow        (arr, (&&&), (>>>), (>>^))
-import           Control.Category     (id)
-import           Control.Monad        (filterM)
-
-import           Data.Char            (toLower)
-import           Data.Function        (on)
-import           Data.Functor         ((<$>))
-import           Data.List            (isPrefixOf, nubBy)
 import qualified Data.Map             as Map
 import           Data.Monoid          ((<>))
 
-import           System.Directory     (doesDirectoryExist, doesFileExist, getDirectoryContents)
-import           System.FilePath      ((</>))
 import qualified System.FilePath      as F
 
-import qualified Text.HTML.TagSoup    as TS
-import           Text.Pandoc.Shared   as P
+import qualified Text.Pandoc.Options  as P
 import           Text.Printf          (printf)
 
 import           Hakyll
-
-(&)   = flip ($)
-(<&>) = flip (<$>)
 
 main = hakyll $ do
   match "templates/*" $ do
@@ -46,13 +30,11 @@ main = hakyll $ do
 
   match (deep "*.md") $ do
     route   $ setExtension "html"
-    compile $ do
-      page     <- pandocCompiler
-      template <- loadBody "templates/default.html"
-      applyTemplate template (defaultContext <> title) page
-      -- >>= pageRenderPandocWith defaultHakyllParserState pandocOptions
-      -- >>= applyTemplateCompiler "templates/default.html"
-      -- >>= relativizeCompiler
+    -- compile . join $ apply <$>  <*> pandocCompiler
+    compile $
+          pandocCompilerWith defaultHakyllReaderOptions pandocOptions
+      >>= loadAndApplyTemplate "templates/default.html" (defaultContext <> title)
+      >>= relativizeUrls
 
 title = field "title" $ \ item -> do
   metadata <- getMetadata (itemIdentifier item)
@@ -60,14 +42,13 @@ title = field "title" $ \ item -> do
     Just title -> printf "%s | jelv.is" title
     Nothing    -> "jelv.is"
 
--- pandocOptions = defaultHakyllWriterOptions {
---   P.writerHTMLMathMethod = P.MathJax ""
--- }
+pandocOptions = defaultHakyllWriterOptions {
+  P.writerHTMLMathMethod = P.MathJax ""
+}
 
-removeDir = undefined
--- removeDir dir = customRoute $ remove .  identifierPath
---   where remove file = F.joinPath . filter (/= target) $ F.splitPath file
---         target = F.addTrailingPathSeparator dir
+removeDir dir = customRoute $ remove . toFilePath
+  where remove file = F.joinPath . filter (/= target) $ F.splitPath file
+        target      = F.addTrailingPathSeparator dir
 
 deep = undefined
 -- deep pat = predicate $ \ i -> (matches (parseGlob pat) i) ||
