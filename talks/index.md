@@ -13,7 +13,9 @@ The slides work directly in the browser with JavaScript. Use the arrows to navig
 
 Unfortunately, the slides do not work correctly in FireFox. I'll fix it, any day now...
 
-As a technical note, the slides are generated from [org-mode](http://orgmode.org), using a modified version of  [org-html5presentation.el](https://gist.github.com/kinjo/509761). I haven't released the modifications, but they're mostly just changing the colors and typefaces. Also, unlike the regular script, my version breaks in FireFox :P. The equations are rendered with [MathJax](http://mathjax.org), which is a really awesome library. 
+As a technical note, the slides are generated from [org-mode](http://orgmode.org), using a modified version of  [org-html5presentation.el](https://gist.github.com/kinjo/509761). Both the modified `.el` script and the org files for talks are up on [github](https://github.com/TikhonJelvis/talks).
+
+Unlike the regular script, my version breaks in FireFox :P. The equations are rendered with [MathJax](http://mathjax.org), which is a really awesome library. 
 
 </div>
 <div class="content">
