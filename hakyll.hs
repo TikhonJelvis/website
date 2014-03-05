@@ -2,6 +2,7 @@
 {-# LANGUAGE NamedFieldPuns            #-}
 {-# LANGUAGE OverloadedStrings         #-}
 
+import           Data.String          (fromString)
 import qualified Data.Map             as Map
 import           Data.Monoid          ((<>))
 
@@ -16,7 +17,7 @@ main = hakyll $ do
   match "templates/*" $ do
     compile templateCompiler
 
-  match (deep "misc/**") $ do
+  match (deep "misc") $ do
     route $ removeDir "misc"
     compile copyFileCompiler
 
@@ -24,13 +25,12 @@ main = hakyll $ do
     route   idRoute
     compile copyFileCompiler
 
-  match (deep "css/**") $ do
+  match (deep "css") $ do
     route   idRoute
     compile compressCssCompiler
 
-  match (deep "*.md") $ do
+  match ("*.md" .||. "**/*.md") $ do
     route   $ setExtension "html"
-    -- compile . join $ apply <$>  <*> pandocCompiler
     compile $
           pandocCompilerWith defaultHakyllReaderOptions pandocOptions
       >>= loadAndApplyTemplate "templates/default.html" (defaultContext <> title)
@@ -50,45 +50,10 @@ removeDir dir = customRoute $ remove . toFilePath
   where remove file = F.joinPath . filter (/= target) $ F.splitPath file
         target      = F.addTrailingPathSeparator dir
 
-deep = undefined
+deep :: String -> Pattern
+deep name = pat "%s/*" .||. pat "**/%s/*"
+  where pat spec = fromString $ printf spec name
 -- deep pat = predicate $ \ i -> (matches (parseGlob pat) i) ||
 --                               (matches (parseGlob $ "**/" ++ pat) i)
 
-alternates = undefined
--- alternates pats = predicate . foldl go (const False) $ map deep pats
---   where go prevs pat = \ inp -> prevs inp || matches pat inp
-
--- addIncludes = getIncludes &&& id >>^ trySetField "imports" "" . setFields
---   where getIncludes = getIdentifier >>> unsafeCompiler (readIncludes . includePath)
---         includePath (Identifier {identifierPath}) =
---           F.dropFileName identifierPath </> "include"
---         readIncludes path =
---           do exists   <- doesDirectoryExist path
---              allFiles <- if exists
---                          then map (path </>) <$> getDirectoryContents path
---                          else return []
---              files    <- filterM doesFileExist allFiles
---              contents <- mapM readFile files
---              return . nubBy ((==) `on` fst) $ zip (key <$> files) contents
---         setFields (fields, page) = foldr (.) id (map (uncurry setField) fields) page
---         key = F.dropExtension . F.takeFileName
-
--- include file page = setField key (pageBody file) page
---   where key = F.dropExtension . F.takeFileName $ getField "path" file
-
-        -- Fixed the weird self-closing tags issue:
--- relativizeCompiler = getRoute &&& id >>^ uncurry relativize
---   where relativize Nothing  = id
---         relativize (Just r) = fmap (fixUrls $ toSiteRoot r)
---         fixUrls root = mapUrls rel
---           where isRel x = "/" `isPrefixOf` x && not ("//" `isPrefixOf` x)
---                 rel x = if isRel x then root ++ x else x
-
--- mapUrls f = render . map tag . TS.parseTags
---   where tag (TS.TagOpen s a) = TS.TagOpen s $ map attr a
---         tag x                = x
---         attr (k, v) = (k, if k `elem` ["src", "href"] then f v else v)
---         render = TS.renderTagsOptions TS.renderOptions {
---           TS.optRawTag = (`elem` ["script", "style"]) . map toLower,
---           TS.optMinimize = (`elem` ["link", "meta", "img", "br"]) . map toLower
---         }
+alternates = foldr1 (.||.)
