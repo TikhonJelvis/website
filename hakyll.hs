@@ -6,7 +6,8 @@ import           Data.String          (fromString)
 import qualified Data.Map             as Map
 import           Data.Monoid          ((<>))
 
-import qualified System.FilePath      as F
+import qualified System.Directory     as Dir
+import qualified System.FilePath      as Path
 
 import qualified Text.Pandoc.Options  as P
 import           Text.Printf          (printf)
@@ -21,7 +22,8 @@ main = hakyll $ do
     route $ removeDir "misc"
     compile copyFileCompiler
 
-  match (alternates ["img/**", "js/**", "images/**", "fonts/**", "*.html"]) $ do
+  let supportFiles = alternates $ map deep ["img", "js", "images", "fonts"]
+  match (supportFiles .||. "*.html" .||. "**/*.html") $ do
     route   idRoute
     compile copyFileCompiler
 
@@ -33,7 +35,7 @@ main = hakyll $ do
     route   $ setExtension "html"
     compile $
           pandocCompilerWith defaultHakyllReaderOptions pandocOptions
-      >>= loadAndApplyTemplate "templates/default.html" (defaultContext <> title)
+      >>= loadAndApplyTemplate "templates/default.html" (defaultContext <> title <> includes)
       >>= relativizeUrls
 
 title = field "title" $ \ item -> do
@@ -42,18 +44,22 @@ title = field "title" $ \ item -> do
     Just title -> printf "%s | jelv.is" title
     Nothing    -> "jelv.is"
 
+includes = field "imports" . const $ unsafeCompiler loadIncludes
+  where loadIncludes = do exists <- Dir.doesFileExist "include/imports.html"
+                          if exists then readFile "include/imports.html"
+                                    else return ""
+  
+
 pandocOptions = defaultHakyllWriterOptions {
   P.writerHTMLMathMethod = P.MathJax ""
 }
 
 removeDir dir = customRoute $ remove . toFilePath
-  where remove file = F.joinPath . filter (/= target) $ F.splitPath file
-        target      = F.addTrailingPathSeparator dir
+  where remove file = Path.joinPath . filter (/= target) $ Path.splitPath file
+        target      = Path.addTrailingPathSeparator dir
 
 deep :: String -> Pattern
 deep name = pat "%s/*" .||. pat "**/%s/*"
   where pat spec = fromString $ printf spec name
--- deep pat = predicate $ \ i -> (matches (parseGlob pat) i) ||
---                               (matches (parseGlob $ "**/" ++ pat) i)
 
 alternates = foldr1 (.||.)
