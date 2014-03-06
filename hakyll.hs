@@ -22,7 +22,7 @@ main = hakyll $ do
     route $ removeDir "misc"
     compile copyFileCompiler
 
-  let supportFiles = alternates $ map deep ["img", "js", "images", "fonts"]
+  let supportFiles = alternates $ map deep ["img", "js", "fonts", "images"]
   match (supportFiles .||. "*.html" .||. "**/*.html") $ do
     route   idRoute
     compile copyFileCompiler
@@ -59,7 +59,7 @@ removeDir dir = customRoute $ remove . toFilePath
         target      = Path.addTrailingPathSeparator dir
 
 deep :: String -> Pattern
-deep name = pat "%s/*" .||. pat "**/%s/*"
+deep name = pat "%s/**" .||. pat "**/%s/**"
   where pat spec = fromString $ printf spec name
 
 alternates = foldr1 (.||.)
