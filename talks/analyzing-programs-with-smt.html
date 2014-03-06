@@ -1,0 +1,1185 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>Analyzing Programs with SMT Solvers</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2014-03-06 15:06:50 PST"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      Analyzing Programs with SMT Solvers
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> SAT, SMT, SBV&hellip; oh my </h1></header>
+
+<section class="SAT,-SMT,-SBV&hellip;-oh-my">
+<ul class="summary">
+<li>acronyms are fun
+<ul class="summary">
+<li>nested ones doubly so
+</li>
+</ul>
+
+</li>
+<li><b>SAT</b>: Boolean satisfiability problem
+<ul class="summary">
+<li>classic NP-complete problem
+</li>
+</ul>
+
+</li>
+<li><b>SMT</b>: SAT modulo theories
+</li>
+<li><b>SBV</b>: SMT-based verification
+<ul class="summary">
+<li>Haskell library by Levent Erkok
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> I can't get no&hellip; </h1></header>
+
+<section class="I-can't-get-no&hellip;">
+<ul class="summary">
+<li>SAT problem: find <b>satisfying assignment</b> for <b>Boolean formula</b>
+</li>
+<li><b>Boolean formula</b>: a bunch of true/false variables with \(\land\),
+    \(\lor\) and \(\lnot\):
+    $$ (a \lor \lnot b) \land (\lnot a \lor c \lor d \lor \lnot e)
+    \land (b \lor \lnot d) $$
+</li>
+<li><b>satisfying assignment</b>: values for variables such that the
+    whole formula is true
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> It's not easy </h1></header>
+
+<section class="It's-not-easy">
+<ul class="summary">
+<li>NP-complete
+</li>
+<li>naïve solution: backtracking
+</li>
+<li>best solution: backtracking
+</li>
+<li>huh?
+</li>
+<li>solvers are fast for <b>real world</b> instances
+<ul class="summary">
+<li>recent improvements \(\Rightarrow\) fast enough for <i>some</i> practical purposes
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> A theory of everything </h1></header>
+
+<section class="A-theory-of-everything">
+<ul class="summary">
+<li>SMT: extend SAT with <b>theories</b>
+</li>
+<li><b>theory</b>: new type of variable&mdash;not Boolean
+<ul class="summary">
+<li>bitvectors (0001010101)
+</li>
+<li><i>unbounded</i> integers (ℤ)
+</li>
+<li><i>unbounded</i> arrays
+</li>
+<li>algebraic numbers (almost like ℝ)
+</li>
+<li>floating-point numbers (not entirely unlike ℝ)
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> What can I do with&hellip;? </h1></header>
+
+<section class="What-can-I-do-with&hellip;?">
+<ul class="summary">
+<li>formula still has to be a Boolean
+</li>
+<li>new types \(\Rightarrow\) new constraints, operations
+</li>
+<li>pretty much what you'd expect:
+    $$ (x^2 + y^2 = 25) \land (3x + 4y = 0) $$
+</li>
+<li>solves to: $$x = 4, y = -3$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Bit by bit </h1></header>
+
+<section class="Bit-by-bit">
+<ul class="summary">
+<li>not just arithmetic
+</li>
+<li>“flow” control:
+<ul class="summary">
+<li><b>ite</b>: if-then-else
+</li>
+</ul>
+
+</li>
+<li>different theories have:
+<ul class="summary">
+<li>bitwise operations
+</li>
+<li>signed <i>and</i> unsigned operations
+</li>
+<li>array indexing
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Still not satisfied </h1></header>
+
+<section class="Still-not-satisfied">
+<ul class="summary">
+<li>sometimes, we cannot solve a formula
+</li>
+</ul>
+
+<p>  $$ (x^2 + y^2 = 42) \land (3x + 4y = 0) $$
+</p><ul class="summary">
+<li><b>unsatifiable</b>
+</li>
+<li>this works even over <i>unbounded integers</i>!
+</li>
+<li>however, the solver can also
+<ul class="summary">
+<li>take too long
+</li>
+<li>return <code>Unknown</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> Quantification </h1></header>
+
+<section class="Quantification">
+<ul class="summary">
+<li>more explicit equation from before:
+    $$ \exists x. \exists y. (x^2 + y^2 = 25) \land (3x + 4y = 0) $$
+</li>
+<li>compare to:
+    $$ \forall x. \forall y. (x^2 + y^2 = 25) \land (3x + 4y = 0) $$
+</li>
+<li>Unsatisfiable; can find <b>counterexample</b>:
+    $$x = 23, y = 0$$
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Again but in <del>English</del> Haskell </h1></header>
+
+<section class="Again-but-in-<del>English</del>-Haskell">
+<ul class="summary">
+<li>SBV: Haskell DSL for specifying formulas
+</li>
+<li>mostly ASCII-ifies what we've seen before:
+</li>
+</ul>
+
+
+
+
+<pre class="example">x^2 + y^2 .== 25 &amp;&amp;&amp; 3 * x + 4 * y .== 0
+</pre>
+
+<ul class="summary">
+<li>reuses <code>Num</code> and <code>Bits</code> but not <code>Eq</code> or <code>Ord</code> 
+</li>
+<li>has own class for Boolean-like things
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Everything is better with types </h1></header>
+
+<section class="Everything-is-better-with-types">
+<ul class="summary">
+<li><b>symbolic</b> versions of normal Haskell types
+<ul class="summary">
+<li><code>SInteger</code> for <code>Integer</code>
+</li>
+<li><code>SWord32</code> for <code>Word32</code>; unsigned bitvectors
+</li>
+<li><code>SInt32</code> for <code>Int32</code>; signed bitvectors
+</li>
+<li><code>SBool</code> for <code>Bool</code>
+</li>
+<li><code>SArray</code> for <i>unbounded</i> arrays
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> Running </h1></header>
+
+<section class="Running">
+<ul class="summary">
+<li>formulas as Haskell functions:
+
+
+
+<pre class="example">formula :: SInteger -&gt; SInteger -&gt; SBool
+formula x y = 
+  x^2 + y^2 .== 25 &amp;&amp;&amp; 3 * x + 4 * y .== 0
+</pre>
+
+</li>
+<li>run with quantified variables:
+
+
+
+<pre class="example">λ&gt; sat . forSome ["x", "y"] formula
+</pre>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Everything is better with <del>types</del> monads </h1></header>
+
+<section class="Everything-is-better-with-<del>types</del>-monads">
+<ul class="summary">
+<li>handy monad for composing formulas
+</li>
+<li>better way to manage variables
+
+
+
+<pre class="example">formula = 
+  do x :: SInteger &lt;- exists "x"
+     y :: SInteger &lt;- exists "y"
+     constrain $ x^2 + y^2 .== 25
+     return $ 3 * x + 4 * y .== 0
+</pre>
+
+</li>
+<li>note: <code>ScopedTypeVariables</code>
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Modelling programs </h1></header>
+
+<section class="Modelling-programs">
+<ul class="summary">
+<li>extend to three sets of variables:
+    $$ \phi(input, program, output) $$
+</li>
+<li>fix \(input, program\): interpreter
+</li>
+<li>fix \(program, output\): reverse interpreter
+</li>
+<li>fix \(input, output\): synthesizer
+</li>
+<li>also: check arbitrary invariants
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Step by step </h1></header>
+
+<section class="Step-by-step">
+<ul class="summary">
+<li>encode program state with <b>single static assignment</b> SSA
+</li>
+<li>transform <code>x = x + y</code> to:
+
+
+
+<pre class="example">constrain $ x_2 .== x_1 + y_1
+</pre>
+
+</li>
+<li><code>x_1</code>, <code>y_1</code>&hellip;etc: existentially quantified
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> Operational Semantics </h1></header>
+
+<section class="Operational-Semantics">
+<ul class="summary">
+<li>operational semantics \(\Rightarrow\) constraints
+</li>
+<li>interpreter \(\Rightarrow\) formula compiler
+</li>
+<li>let's consider very simple language: IMP
+<ul class="summary">
+<li>all variables 32 bit ints
+</li>
+<li>small number of imperative constructs
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> Expressions </h1></header>
+
+<section class="Expressions">
+<ul class="summary">
+<li>arithmetic just gets encoded as arithmetic!
+</li>
+<li><code>x + 1</code> becomes&hellip; <code>x_n + 1</code>
+<ul class="summary">
+<li>keep track of the “current” step # <code>n</code>
+</li>
+</ul>
+
+</li>
+<li>operations are <i>signed</i>, so we use <code>SInt32</code>
+</li>
+<li>remember: this is the theory of <b>bitvectors</b>
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">17</span> Assignment </h1></header>
+
+<section class="Assignment">
+<ul class="summary">
+<li>for assignment (<code>x = x + y</code>), we just use SSA
+
+
+
+<pre class="example">constrain $ x_&lt;n + 1&gt; .== x_n + y_n
+</pre>
+
+</li>
+<li>note how expression <code>x + y</code> got compiled
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">18</span> Conditions </h1></header>
+
+<section class="Conditions">
+<ul class="summary">
+<li>IMP just has if-then-else
+</li>
+<li>gets compiled to <code>ite</code>
+</li>
+<li><code>if x &gt; 5 then y = 1 else y = 2</code>:
+
+
+
+<pre class="example">constrain $ ite (x_n .&gt; 5) 
+                (y_&lt;n + 1&gt; .== 1)
+                (y_&lt;n + 1&gt; .== 2)
+</pre>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">19</span> Sequencing </h1></header>
+
+<section class="Sequencing">
+<ul class="summary">
+<li>one statement follows another
+</li>
+<li>only trick: remember to increment <code>n</code>
+</li>
+<li><code>x = x + y; x = x * 2</code>
+
+
+
+<pre class="example">constrain $ x_2 .== x_1 + y_1
+constrain $ x_3 .== x_2 * 2
+</pre>
+
+</li>
+<li>basically works out to <code>&gt;&gt;</code> 
+<ul class="summary">
+<li>but remember <code>n</code>!
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">20</span> Loops </h1></header>
+
+<section class="Loops">
+<ul class="summary">
+<li>this is the trickiest part
+</li>
+<li>SMT solver <b>cannot</b> handle recursion
+</li>
+<li>must <b>finitize</b> loops
+<ul class="summary">
+<li>unroll some arbitrary number of times
+</li>
+<li>fail if that is not enough
+</li>
+</ul>
+
+</li>
+<li>later: rerun formula multiple times, unrolling more and more
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">21</span> Loops </h1></header>
+
+<section class="Loops">
+<ul class="summary">
+<li><code>while x &lt; 5 do x = x + 1</code> unrolls to:
+</li>
+<li><code>if x &lt; 5 then x = x + 1; &lt;while&gt; else skip</code>
+</li>
+<li>after we reach our max depth, <code>&lt;while&gt;</code> becomes <code>false</code>
+</li>
+<li>convert nested if-statements as before
+</li>
+<li>result: long, ugly formula full of <code>ite</code>'s
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">22</span> Now what? </h1></header>
+
+<section class="Now-what?">
+<ul class="summary">
+<li>we can run our code (slowly)
+</li>
+<li>we can run our code <i>backwards</i>
+</li>
+<li>we can check invariants over our program
+</li>
+<li>we can verify two functions are equivalent
+</li>
+<li>we can synthesize programs
+</li>
+<li>whatever else you can imagine
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">23</span> Running </h1></header>
+
+<section class="Running">
+<ul class="summary">
+<li>forwards; solve for outputs:
+
+
+
+<pre class="example">constrain $ x_0 .== 10
+constrain $ y_0 .== 20
+</pre>
+
+</li>
+<li>backwards; solve for inputs:
+
+
+
+<pre class="example">constrain $ x_20 .== 10
+constrain $ y_20 .== 20
+</pre>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">24</span> Invariants </h1></header>
+
+<section class="Invariants">
+<ul class="summary">
+<li>easy to encode invariants
+</li>
+<li>for example "x is always positive":
+
+
+
+<pre class="example">constrain $ x_1 .&gt; 0 
+        &amp;&amp;&amp; x_2 .&gt; 0 
+        &amp;&amp;&amp; x_3 .&gt; 0 ...
+</pre>
+
+</li>
+<li>universally quantify inputs:
+
+
+
+<pre class="example">x :: SWord32 &lt;- forall "x"
+</pre>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">25</span> Verification </h1></header>
+
+<section class="Verification">
+<ul class="summary">
+<li>search for inputs where programs <b>disagree</b>
+</li>
+<li>assert outputs are <i>not</i> equal
+
+
+
+<pre class="example">constrain $ p1_x_20 ./= p2_x_20
+constrain $ p1_y_20 ./= p2_y_20
+</pre>
+
+</li>
+<li>existentially quantify inputs
+</li>
+<li>unsatisfiable = verified
+</li>
+<li>satisfiable = counterexample
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">26</span> Synthesis </h1></header>
+
+<section class="Synthesis">
+<ul class="summary">
+<li>add variables for each part of the program
+</li>
+<li>select what to do with <code>ite</code>
+</li>
+<li>fix inputs and outputs
+</li>
+<li>also solve for literals (<code>1</code>, <code>2</code>, <code>3</code>&hellip;)
+</li>
+<li>this gives you a program correct only over your fixed inputs and outputs
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">27</span> CEGIS </h1></header>
+
+<section class="CEGIS">
+<ul class="summary">
+<li>start with random input/output pair
+</li>
+<li>synthesize
+</li>
+<li>verify result
+<ul class="summary">
+<li>if correct: we're done
+</li>
+<li>if wrong: verifier returns new input
+<ul class="summary">
+<li>repeat
+</li>
+</ul>
+
+</li>
+</ul>
+
+</li>
+<li>each new input is a new corner case!
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">28</span> Sketching </h1></header>
+
+<section class="Sketching">
+<ul class="summary">
+<li>some things are easy for synthesizer
+</li>
+<li>some things are easy for humans
+</li>
+<li>programmer specifies code with <b>holes</b>:
+
+
+
+<pre class="example">while ?? do
+  x = ??
+  y = ??
+  z = x + y
+return z
+</pre>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">29</span> Fun ideas </h1></header>
+
+<section class="Fun-ideas">
+<ul class="summary">
+<li>good fit for <b>low-level</b> code (ie assembly)
+</li>
+<li>use techniques to optimize Haskell
+<ul class="summary">
+<li>maybe take advantage of algebraic laws?
+</li>
+</ul>
+
+</li>
+<li>implement simple verified language
+<ul class="summary">
+<li>check out ImProve on Hackage
+</li>
+</ul>
+
+</li>
+<li>design interactive tools
+<ul class="summary">
+<li>intelligent debugging
+</li>
+<li>maybe use for education?
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">30</span> Credit </h1></header>
+
+<section class="Credit">
+<ul class="summary">
+<li><a href="http://hackage.haskell.org/package/sbv">sbv</a> package by Levent Erkok
+</li>
+<li>synthesis ideas mostly from:
+<ul class="summary">
+<li><a href="http://www.cs.berkeley.edu/~bodik/">Ras Bodik</a> at the Berkeley ParLab
+</li>
+<li>especially <a href="http://www.cs.berkeley.edu/~bodik/cs294/fa12/Lectures/L1/L1-overview-notes.pdf">slides</a> from his class on synthesis
+</li>
+</ul>
+
+</li>
+<li><a href="http://z3.codeplex.com/">z3 SMT Solver</a> from Microsoft Research
+<ul class="summary">
+<li>most popular SMT solver
+</li>
+<li>very versatile
+</li>
+<li>commercially unfriendly license (<b>not</b> open source)
+</li>
+</ul>
+
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>
