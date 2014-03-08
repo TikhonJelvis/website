@@ -1,6 +1,8 @@
+#!/usr/bin/env runhaskell
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE NamedFieldPuns            #-}
 {-# LANGUAGE OverloadedStrings         #-}
+{-# LANGUAGE ViewPatterns              #-}
 
 import           Data.String          (fromString)
 import qualified Data.Map             as Map
@@ -8,6 +10,7 @@ import           Data.Monoid          ((<>))
 
 import qualified System.Directory     as Dir
 import qualified System.FilePath      as Path
+import           System.FilePath      ((</>))
 
 import qualified Text.Pandoc.Options  as P
 import           Text.Printf          (printf)
@@ -35,8 +38,9 @@ main = hakyll $ do
     route   $ setExtension "html"
     compile $
           pandocCompilerWith defaultHakyllReaderOptions pandocOptions
-      >>= loadAndApplyTemplate "templates/default.html" (defaultContext <> title <> includes)
+      >>= loadAndApplyTemplate "templates/default.html" context
       >>= relativizeUrls
+      where context = defaultContext <> title <> includes
 
 title = field "title" $ \ item -> do
   metadata <- getMetadata (itemIdentifier item)
@@ -44,10 +48,11 @@ title = field "title" $ \ item -> do
     Just title -> printf "%s | jelv.is" title
     Nothing    -> "jelv.is"
 
-includes = field "imports" . const $ unsafeCompiler loadIncludes
-  where loadIncludes = do exists <- Dir.doesFileExist "include/imports.html"
-                          if exists then readFile "include/imports.html"
-                                    else return ""
+includes = field "imports" $ \ item -> unsafeCompiler $ do
+  let dir = Path.takeDirectory . toFilePath $ itemIdentifier item
+  exists <- Dir.doesFileExist $ dir </> "include" </> "imports.html"
+  if exists then readFile $ dir </> "include" </> "imports.html"
+            else return ""
   
 
 pandocOptions = defaultHakyllWriterOptions {
