@@ -4,9 +4,13 @@
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE ViewPatterns              #-}
 
-import           Data.String          (fromString)
+import           Control.Monad        (forM_)
+
+import           Data.Functor         ((<$>))
+import qualified Data.List            as List
 import qualified Data.Map             as Map
-import           Data.Monoid          ((<>))
+import           Data.Monoid          ((<>), mconcat)
+import           Data.String          (fromString)
 
 import qualified System.Directory     as Dir
 import qualified System.FilePath      as Path
@@ -37,22 +41,44 @@ main = hakyll $ do
   match ("*.md" .||. "**/*.md") $ do
     route   $ setExtension "html"
     compile $
-          pandocCompilerWith defaultHakyllReaderOptions pandocOptions
-      >>= loadAndApplyTemplate "templates/default.html" context
-      >>= relativizeUrls
-      where context = defaultContext <> title <> includes
-
+      do includes <- setIncludes =<< getUnderlying
+         getResourceString
+           >>= applyAsTemplate includes 
+           >>= return . runPandoc
+           >>= loadAndApplyTemplate "templates/default.html" context
+           >>= relativizeUrls
+      where context = defaultContext <> title <> imports
+            runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
+  
 title = field "title" $ \ item -> do
   metadata <- getMetadata (itemIdentifier item)
   return $ case Map.lookup "title" metadata of
     Just title -> printf "%s | jelv.is" title
     Nothing    -> "jelv.is"
 
-includes = field "imports" $ \ item -> unsafeCompiler $ do
+imports = include "imports.html"
+
+setIncludes (Path.takeDirectory . toFilePath -> dir) = mconcat . map include <$> files
+  where files = unsafeCompiler $ do
+          exists <- Dir.doesDirectoryExist $ dir </> "include"
+          if exists then do
+            printf "including contents of %s\n" dir
+            files <- clean <$> Dir.getDirectoryContents (dir </> "include")
+            forM_ files putStrLn
+            putStrLn "--------------------"
+            return files
+            else do
+            printf "%s does not exist!\n" dir
+            return []
+        clean = List.delete "." . List.delete ".." . filter ((/= '~') . last)
+
+include file = field name $ \ item -> unsafeCompiler $ do
+  printf "Including %s as %s\n" file name
   let dir = Path.takeDirectory . toFilePath $ itemIdentifier item
-  exists <- Dir.doesFileExist $ dir </> "include" </> "imports.html"
-  if exists then readFile $ dir </> "include" </> "imports.html"
+  exists <- Dir.doesFileExist $ dir </> "include" </> file
+  if exists then readFile $ dir </> "include" </> file
             else return ""
+  where name = Path.takeBaseName file
   
 
 pandocOptions = defaultHakyllWriterOptions {
