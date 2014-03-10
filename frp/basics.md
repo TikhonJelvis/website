@@ -55,27 +55,25 @@ Just as behaviors can be thought of as functions from time, streams of events ca
 
 Now lets just set up our widgets. At the very top of our file, we need to import a few modules:
     
-    import Graphics.UI.WX hiding (Event)
-    import Reactive.Banana
-    import Reactive.Banana.WX
-    import Life.Game
+```haskell
+$basics-imports$
+```
     
 `Life.Game` is the module containing the rules of life which I [provided](Game.hs). It should be inside a folder called `Life` inside your source directory.
 
 We are going to have a relatively simple setup: a single window containing a button and a panel, as well as a timer to tie everything together. The timer does not have a physical presence---it just sends out an event at a regular interval.
 
-    main = start $ do
-      mw          <- frame     [text := "Life", resizeable := False]
-      lifeTimer   <- timer  mw [interval := 50]
-      lifePanel   <- panel  mw [bgcolor := white]
-      pauseButton <- button mw [text := "▶"]
+```haskell
+$basics-main$
+```
 
 The window is created using `frame` and called `mw`. The rest of the widgets are created in `mw`. Everything is inside a `do` statement which will also contain most of the rest of the code. The `start` function actually runs the window.
 
 We also need to specify how to lay the widgets out. We can do this using `set` (still inside the `do` statement):
 
-      set mw  [layout := column 2 [minsize (sz 40 25)   $ widget pauseButton,
-                                   minsize (sz 800 800) $ widget lifePanel]]
+```haskell
+$basics-set$
+```
 
 All this is doing is putting the button and the window in a column, one on top of the other.
 

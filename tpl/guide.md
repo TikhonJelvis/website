@@ -123,19 +123,19 @@ If you declare a function taking *no* arguments, it isn't immediately clear how 
 
 In fact, you call a function like that just by referencing it. This means that a function of no arguments acts like a deferred expression rather than normal function. Also, from the perspective of the caller, you cannot tell a function of no arguments from a normal value.
 
-For convenience, you can declare a function like this (or, equivalently, defer a statement) using a `$`. So, given:
+For convenience, you can declare a function like this (or, equivalently, defer a statement) using a `$$`. So, given:
 
-    x := $(y + z)
+    x := $$(y + z)
 
 `x` will be the sum of the *current* value of `y` and `z` each time you reference it. This makes basic reactive programming very easy, and lets you control when a statement gets executed.
 
-Functions can also control which of their parameters to execute. If you use `$` on a function's parameter, it will not get evaluated when the function is called. So:
+Functions can also control which of their parameters to execute. If you use `$$` on a function's parameter, it will not get evaluated when the function is called. So:
 
-    f a $b := a
+    f a $$b := a
 
 will *never* evaluate `b`. If you call `f a (print "blarg")` nothing will be printed.
 
-This also works on patterns (like `f $[a, b]`).
+This also works on patterns (like `f $$[a, b]`).
 
 ## Custom Scope
 
@@ -147,14 +147,14 @@ Now `g` is the same function as `f` except that `x` will be equal to `11` inside
 
 If `with` is given a deferred statement, that statement is executed immediately. So:
 
-    with ["x" -> 11] $(x^2)
+    with ["x" -> 11] $$(x^2)
 
 will return 121.
 
 If you pass `with` a deferred variable name to bind to, it unpacks this. So:
 
-    name := $x
-    with [name -> 11] $(x^11)
+    name := $$x
+    with [name -> 11] $$(x^11)
 
 is the same as the previous example (121). This is useful for control structures like the `for .. in` loop.
 

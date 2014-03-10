@@ -28,12 +28,12 @@ The first feature is laziness. In TPL, you can defer an expression so that it do
 
 As an example, in `x := 1 + y`, `1 + y` gets evaluated and that value is given to `x`; if we defer it with `x := λ → 1 + y`, `x` will be a function. So `1 + y` will only get evaluated when you *use* `x`. However, since the syntax for just looking up a variable and calling a function with no arguments is the same, the caller does not need to know whether `x` is deferred or not.
 
-This approach is simple, but has two problems. For one, the `λ → ...` syntax is ugly. For two, we cannot reference `x` without calling it, which could be useful. Happily, we can solve both of these problems in one go: we add some syntax to defer an expression. Now, instead of `λ → 1 + y`, we can write `$(1 + y)`; if we want to reference `x` without calling it, we just wrap it again: `$x`. This has very little syntactic and conceptual overhead while giving you a lot of control over when an expression gets evaluated.
+This approach is simple, but has two problems. For one, the `λ → ...` syntax is ugly. For two, we cannot reference `x` without calling it, which could be useful. Happily, we can solve both of these problems in one go: we add some syntax to defer an expression. Now, instead of `λ → 1 + y`, we can write `$$(1 + y)`; if we want to reference `x` without calling it, we just wrap it again: `$$x`. This has very little syntactic and conceptual overhead while giving you a lot of control over when an expression gets evaluated.
 
 Since the expression will get evaluated *every* time `x` is used, this also gives you a very lightweight way to do simple reactive programming. In particular, imagine this:
 
     x := 1
-    y := $(2 * x)
+    y := $$(2 * x)
     y -- y is 2
     x <- 10
     y -- y is 20
@@ -44,11 +44,11 @@ This can also be used by frameworks. For example, a variable `mousePosition` cou
 
 Apart from being able to defer an expression, we can also control when a function's arguments get evaluated. This is also a very useful feature---we can now implement functions like short-circuiting and. In other languages (mainly Lisps), a similar effect can be had with macros. While macros can do significantly more than just controlling evaluation order, I believe my approach is simpler. It is also nice that such functions are just that---functions. They behave just like normal functions except that they do not evaluate certain arguments unless they have to.
 
-The syntax for this is simple: we use a `$` in front of the parameter's name. So the following `const` function would never evaluate its second argument:
+The syntax for this is simple: we use a `$$` in front of the parameter's name. So the following `const` function would never evaluate its second argument:
 
-    const x $y := x
+    const x $$y := x
     
-Conceptually, calling this function `const 1 (x + y)` is the same as calling a normal function and deferring the lazy argument: `const 1 $(x + y)`. This is why the `$` syntax is used. Internally, the argument's value is just deferred before being passed into the function.
+Conceptually, calling this function `const 1 (x + y)` is the same as calling a normal function and deferring the lazy argument: `const 1 $$(x + y)`. This is why the `$$` syntax is used. Internally, the argument's value is just deferred before being passed into the function.
 
 ### Objects
 
@@ -75,11 +75,11 @@ All these features can be put together to fulfill my original goal: you can writ
       print (i + temp)
     )
     
-To make defining things like this possible, we need to take advantage of some built-in functions: `exprToString`, `with`, `set` and `get`. The first just takes an deferred expression like `$x` and returns it as a string (`"x"` in this case). `with` replaces a closures environment with the given object. `set` sets a key in an object using a string as the name. `get` lets you look up local variables via a string name, which allows you to access special values like `*context*` which is the current scope of the *caller*.
+To make defining things like this possible, we need to take advantage of some built-in functions: `exprToString`, `with`, `set` and `get`. The first just takes an deferred expression like `$$x` and returns it as a string (`"x"` in this case). `with` replaces a closures environment with the given object. `set` sets a key in an object using a string as the name. `get` lets you look up local variables via a string name, which allows you to access special values like `*context*` which is the current scope of the *caller*.
 
 So here is how the definition of the for-loop looks:
 
-    for $x $in ls $body := (
+    for $$x $$in ls $$body := (
       context := get "*context*"
       map (λ item → with (context.set (exprToString x) item) body) ls
       null
