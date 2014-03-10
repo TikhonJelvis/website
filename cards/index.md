@@ -4,16 +4,16 @@ author: Tikhon Jelvis
 ---
 
 <div id="games">
-  <div class="controls">
-    <ul>
-      <li id="Klondike-control" class="active"> <a href="#"> Klondike </a> </li>
-      <li id="War-control"> <a href="#"> War </a> </li>
-    </ul>
-  </div>
-  <div id="Klondike">
-  </div>
-  <div id="War">
-  </div>
+<div class="controls">
+<ul>
+ <li id="Klondike-control" class="active"> <a href="#"> Klondike </a> </li>
+<li id="War-control"> <a href="#"> War </a> </li>
+</ul>
+</div>
+<div id="Klondike">
+</div>
+<div id="War">
+</div>
 </div>
 
 <div class="content">
@@ -30,7 +30,7 @@ We ended up getting 2nd place at the hackathon and winning Kindles, which was ni
 
 <div class="hideable">
 
-The Klonide source:  [<a href="#" class="hide-control"> show </a>]
+The Klonide source:  [<a href="#" class="hide-control">show</a>]
 
 <div class="hide" style="display:none">
 

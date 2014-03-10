@@ -1,23 +1,23 @@
-{-# LANGUAGE NamedFieldPuns    #-}
-{-# LANGUAGE OverloadedStrings #-}
+#!/usr/bin/env runhaskell
+{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE NamedFieldPuns            #-}
+{-# LANGUAGE OverloadedStrings         #-}
+{-# LANGUAGE ViewPatterns              #-}
 
-import           Prelude              hiding (id)
+import           Control.Monad        (forM_)
 
-import           Control.Arrow        (arr, (&&&), (>>>), (>>^))
-import           Control.Category     (id)
-import           Control.Monad        (filterM)
-
-import           Data.Char            (toLower)
-import           Data.Function        (on)
 import           Data.Functor         ((<$>))
-import           Data.List            (isPrefixOf, nubBy)
+import qualified Data.List            as List
+import qualified Data.Map             as Map
+import           Data.Monoid          ((<>), mconcat)
+import           Data.String          (fromString)
 
-import           System.Directory     (doesDirectoryExist, doesFileExist, getDirectoryContents)
+import qualified System.Directory     as Dir
+import qualified System.FilePath      as Path
 import           System.FilePath      ((</>))
-import qualified System.FilePath      as F
 
-import qualified Text.HTML.TagSoup    as TS
-import           Text.Pandoc.Shared   as P
+import qualified Text.Pandoc.Options  as P
+import           Text.Printf          (printf)
 
 import           Hakyll
 
@@ -25,72 +25,72 @@ main = hakyll $ do
   match "templates/*" $ do
     compile templateCompiler
 
-  match (deep "misc/**") $ do
+  match (deep "misc") $ do
     route $ removeDir "misc"
     compile copyFileCompiler
 
-  match (alternates ["img/**", "js/**", "images/**", "fonts/**", "*.html"]) $ do
+  let supportFiles = alternates $ map deep ["img", "js", "fonts", "images"]
+  match (supportFiles .||. "*.html" .||. "**/*.html") $ do
     route   idRoute
     compile copyFileCompiler
 
-  match (deep "css/**") $ do
+  match (deep "css") $ do
     route   idRoute
     compile compressCssCompiler
 
-  match (deep "*.md") $ do
+  match ("*.md" .||. "**/*.md") $ do
     route   $ setExtension "html"
-    compile $ readPageCompiler
-      >>> addIncludes >>> addDefaultFields
-      >>> arr (changeField "title" (++ " | jelv.is") . applySelf)
-      >>> pageRenderPandocWith defaultHakyllParserState pandocOptions
-      >>> applyTemplateCompiler "templates/default.html"
-      >>> relativizeCompiler
+    compile $
+      do includes <- setIncludes =<< getUnderlying
+         getResourceString
+           >>= applyAsTemplate includes 
+           >>= return . runPandoc
+           >>= loadAndApplyTemplate "templates/default.html" context
+           >>= relativizeUrls
+      where context = defaultContext <> title <> imports
+            runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
+  
+title = field "title" $ \ item -> do
+  metadata <- getMetadata (itemIdentifier item)
+  return $ case Map.lookup "title" metadata of
+    Just title -> printf "%s | jelv.is" title
+    Nothing    -> "jelv.is"
+
+imports = include "imports.html"
+
+setIncludes (Path.takeDirectory . toFilePath -> dir) = mconcat . map include <$> files
+  where files = unsafeCompiler $ do
+          exists <- Dir.doesDirectoryExist $ dir </> "include"
+          if exists then do
+            printf "including contents of %s\n" dir
+            files <- clean <$> Dir.getDirectoryContents (dir </> "include")
+            forM_ files putStrLn
+            putStrLn "--------------------"
+            return files
+            else do
+            printf "%s does not exist!\n" dir
+            return []
+        clean = List.delete "." . List.delete ".." . filter ((/= '~') . last)
+
+include file = field name $ \ item -> unsafeCompiler $ do
+  printf "Including %s as %s\n" file name
+  let dir = Path.takeDirectory . toFilePath $ itemIdentifier item
+  exists <- Dir.doesFileExist $ dir </> "include" </> file
+  if exists then readFile $ dir </> "include" </> file
+            else return ""
+  where name = Path.takeBaseName file
+  
 
 pandocOptions = defaultHakyllWriterOptions {
   P.writerHTMLMathMethod = P.MathJax ""
 }
 
-removeDir dir = customRoute $ remove .  identifierPath
-  where remove file = F.joinPath . filter (/= target) $ F.splitPath file
-        target = F.addTrailingPathSeparator dir
+removeDir dir = customRoute $ remove . toFilePath
+  where remove file = Path.joinPath . filter (/= target) $ Path.splitPath file
+        target      = Path.addTrailingPathSeparator dir
 
-deep pat = predicate $ \ i -> (matches (parseGlob pat) i) ||
-                              (matches (parseGlob $ "**/" ++ pat) i)
+deep :: String -> Pattern
+deep name = pat "%s/**" .||. pat "**/%s/**"
+  where pat spec = fromString $ printf spec name
 
-alternates pats = predicate . foldl go (const False) $ map deep pats
-  where go prevs pat = \ inp -> prevs inp || matches pat inp
-
-addIncludes = getIncludes &&& id >>^ trySetField "imports" "" . setFields
-  where getIncludes = getIdentifier >>> unsafeCompiler (readIncludes . includePath)
-        includePath (Identifier {identifierPath}) =
-          F.dropFileName identifierPath </> "include"
-        readIncludes path =
-          do exists   <- doesDirectoryExist path
-             allFiles <- if exists
-                         then map (path </>) <$> getDirectoryContents path
-                         else return []
-             files    <- filterM doesFileExist allFiles
-             contents <- mapM readFile files
-             return . nubBy ((==) `on` fst) $ zip (key <$> files) contents
-        setFields (fields, page) = foldr (.) id (map (uncurry setField) fields) page
-        key = F.dropExtension . F.takeFileName
-
-include file page = setField key (pageBody file) page
-  where key = F.dropExtension . F.takeFileName $ getField "path" file
-
-        -- Fixed the weird self-closing tags issue:
-relativizeCompiler = getRoute &&& id >>^ uncurry relativize
-  where relativize Nothing  = id
-        relativize (Just r) = fmap (fixUrls $ toSiteRoot r)
-        fixUrls root = mapUrls rel
-          where isRel x = "/" `isPrefixOf` x && not ("//" `isPrefixOf` x)
-                rel x = if isRel x then root ++ x else x
-
-mapUrls f = render . map tag . TS.parseTags
-  where tag (TS.TagOpen s a) = TS.TagOpen s $ map attr a
-        tag x                = x
-        attr (k, v) = (k, if k `elem` ["src", "href"] then f v else v)
-        render = TS.renderTagsOptions TS.renderOptions {
-          TS.optRawTag = (`elem` ["script", "style"]) . map toLower,
-          TS.optMinimize = (`elem` ["link", "meta", "img", "br"]) . map toLower
-        }
+alternates = foldr1 (.||.)
