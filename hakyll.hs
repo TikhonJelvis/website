@@ -6,7 +6,6 @@
 
 import           Data.Functor         ((<$>))
 import qualified Data.List            as List
-import qualified Data.Map             as Map
 import           Data.Monoid          ((<>), mconcat)
 import           Data.String          (fromString)
 
@@ -46,19 +45,14 @@ main = hakyll $ do
     compile $
       do includes <- setIncludes =<< getUnderlying
          getResourceString
-           >>= applyAsTemplate (includes <> title) 
+           >>= applyAsTemplate includes
            <&> runPandoc
            >>= loadAndApplyTemplate "templates/default.html" context
            >>= relativizeUrls
-      where context = defaultContext <> title <> imports
+      where context = defaultContext <> imports
             runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
 
-title, imports :: Context a
-title = field "title" $ \ item -> do
-  metadata <- getMetadata (itemIdentifier item)
-  return $ case Map.lookup "title" metadata of
-    Just text -> printf "%s | jelv.is" text
-    Nothing   -> "jelv.is"
+imports :: Context a
 imports = include "imports.html"
 
 setIncludes :: Identifier -> Compiler (Context a)
