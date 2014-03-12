@@ -4,8 +4,6 @@
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE ViewPatterns              #-}
 
-import           Control.Monad        (forM_)
-
 import           Data.Functor         ((<$>))
 import qualified Data.List            as List
 import qualified Data.Map             as Map
@@ -21,6 +19,11 @@ import           Text.Printf          (printf)
 
 import           Hakyll
 
+infixl 1 <&>
+(<&>) :: Functor f => f a -> (a -> b) -> f b
+(<&>) = flip (<$>)
+
+main :: IO ()
 main = hakyll $ do
   match "templates/*" $ do
     compile templateCompiler
@@ -44,34 +47,30 @@ main = hakyll $ do
       do includes <- setIncludes =<< getUnderlying
          getResourceString
            >>= applyAsTemplate includes 
-           >>= return . runPandoc
+           <&> runPandoc
            >>= loadAndApplyTemplate "templates/default.html" context
            >>= relativizeUrls
       where context = defaultContext <> title <> imports
             runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
-  
+
+title, imports :: Context a
 title = field "title" $ \ item -> do
   metadata <- getMetadata (itemIdentifier item)
   return $ case Map.lookup "title" metadata of
-    Just title -> printf "%s | jelv.is" title
-    Nothing    -> "jelv.is"
-
+    Just text -> printf "%s | jelv.is" text
+    Nothing   -> "jelv.is"
 imports = include "imports.html"
 
+setIncludes :: Identifier -> Compiler (Context a)
 setIncludes (Path.takeDirectory . toFilePath -> dir) = mconcat . map include <$> files
   where files = unsafeCompiler $ do
           exists <- Dir.doesDirectoryExist $ dir </> "include"
-          if exists then do
-            printf "including contents of %s\n" dir
-            files <- clean <$> Dir.getDirectoryContents (dir </> "include")
-            forM_ files putStrLn
-            putStrLn "--------------------"
-            return files
-            else do
-            printf "%s does not exist!\n" dir
-            return []
+          if exists
+            then clean <$> Dir.getDirectoryContents (dir </> "include")
+            else return []
         clean = List.delete "." . List.delete ".." . filter ((/= '~') . last)
 
+include :: String -> Context a
 include file = field name $ \ item -> unsafeCompiler $ do
   printf "Including %s as %s\n" file name
   let dir = Path.takeDirectory . toFilePath $ itemIdentifier item
@@ -79,12 +78,13 @@ include file = field name $ \ item -> unsafeCompiler $ do
   if exists then readFile $ dir </> "include" </> file
             else return ""
   where name = Path.takeBaseName file
-  
 
+pandocOptions :: P.WriterOptions
 pandocOptions = defaultHakyllWriterOptions {
   P.writerHTMLMathMethod = P.MathJax ""
 }
 
+removeDir :: String -> Routes
 removeDir dir = customRoute $ remove . toFilePath
   where remove file = Path.joinPath . filter (/= target) $ Path.splitPath file
         target      = Path.addTrailingPathSeparator dir
@@ -93,4 +93,5 @@ deep :: String -> Pattern
 deep name = pat "%s/**" .||. pat "**/%s/**"
   where pat spec = fromString $ printf spec name
 
+alternates :: [Pattern] -> Pattern
 alternates = foldr1 (.||.)
