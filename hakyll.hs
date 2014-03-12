@@ -27,6 +27,22 @@ main = hakyll $ do
   match "templates/*" $ do
     compile templateCompiler
 
+  match "blog/*/*.md" $ do
+    route $ setExtension "html"
+    compile postCompiler
+
+  match "blog/index.html" $ do
+    route   $ setExtension "html"
+    compile $ do
+      loadPosts <- loadAllSnapshots "blog/*/*.md" "content"
+      let blogContext = listField "posts" postContext (return loadPosts) <>
+                        constField "title" "Blog" <>
+                        context
+      getResourceString
+        >>= applyAsTemplate blogContext
+        >>= loadAndApplyTemplate "templates/default.html" blogContext
+        >>= relativizeUrls
+
   match (deep "misc") $ do
     route $ removeDir "misc"
     compile copyFileCompiler
@@ -39,21 +55,30 @@ main = hakyll $ do
   match (deep "css") $ do
     route   idRoute
     compile compressCssCompiler
-
+      
   match ("*.md" .||. "**/*.md") $ do
-    route   $ setExtension "html"
-    compile $
-      do includes <- setIncludes =<< getUnderlying
-         getResourceString
-           >>= applyAsTemplate includes
-           <&> runPandoc
-           >>= loadAndApplyTemplate "templates/default.html" context
-           >>= relativizeUrls
-      where context = defaultContext <> imports
-            runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
+    route $ setExtension "html"
+    compile postCompiler
+ 
+postCompiler :: Compiler (Item String)
+postCompiler = do
+  includes <- setIncludes =<< getUnderlying
+  getResourceString
+    >>= applyAsTemplate includes
+    <&> runPandoc
+    >>= saveSnapshot "content"
+    >>= loadAndApplyTemplate "templates/default.html" context
+    >>= relativizeUrls
 
-imports :: Context a
-imports = include "imports.html"
+runPandoc :: Item String -> Item String
+runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
+
+postContext :: Context String
+postContext = mapContext Path.takeDirectory (urlField "url")
+           <> context
+
+context :: Context String
+context = defaultContext <> include "imports.html"
 
 setIncludes :: Identifier -> Compiler (Context a)
 setIncludes (Path.takeDirectory . toFilePath -> dir) = mconcat . map include <$> files
