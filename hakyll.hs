@@ -46,7 +46,7 @@ main = hakyll $ do
     compile $
       do includes <- setIncludes =<< getUnderlying
          getResourceString
-           >>= applyAsTemplate includes 
+           >>= applyAsTemplate (includes <> title) 
            <&> runPandoc
            >>= loadAndApplyTemplate "templates/default.html" context
            >>= relativizeUrls

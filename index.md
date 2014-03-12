@@ -12,7 +12,11 @@ Our paper on Chlorophyll, a synthesis-aided compiler, was accepted to [PLDI 2014
 
 <div> </div>
 
-All of my slides are now available on my [talks](talks) page, including:
+I recently gave a talk at the Haskell Hackers meetup:
+
+  * [Analyzing Programs with SMT Solvers](talks/analyzing-programs-with-smt.html)
+
+All of my older slides are now available on my [talks](talks) page, including:
 
   * [Polymorphism---System F](talks/system-f.html) ([pdf](talks/system-f.pdf))
   * [Dependent Types](talks/dependent-types.html) ([pdf](talks/dependent-types.pdf))
