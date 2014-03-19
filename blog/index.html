@@ -1,12 +1,12 @@
 <div class="content">
   <h1> Blog </h1>
+</div>
 
-  <ul class="blog">
     $for(posts)$
-    <li>
-      $title$
-      <a href="$url$">[read more]</a>
-    </li>
+    <div class="content">
+      <a href="$url$"><h1>$title$</h1></a>
+      $teaser$
+      <p><a href="$url$">[read more]</a></p>
+    </div>
     $endfor$
   </ul>
-</div>

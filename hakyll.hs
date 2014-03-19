@@ -29,13 +29,17 @@ main = hakyll $ do
 
   match "blog/*/*.md" $ do
     route $ setExtension "html"
-    compile postCompiler
+    compile $ getResourceString
+      <&> runPandoc
+      >>= saveSnapshot "content"
+      >>= loadAndApplyTemplate "templates/blog-post.md" context
+      >>= defaultPage
 
   match "blog/index.html" $ do
     route   $ setExtension "html"
     compile $ do
-      loadPosts <- loadAllSnapshots "blog/*/*.md" "content"
-      let blogContext = listField "posts" postContext (return loadPosts) <>
+      posts <- loadAllSnapshots "blog/*/*.md" "content"
+      let blogContext = listField "posts" postContext (return posts) <>
                         constField "title" "Blog" <>
                         context
       getResourceString
@@ -58,15 +62,13 @@ main = hakyll $ do
       
   match ("*.md" .||. "**/*.md") $ do
     route $ setExtension "html"
-    compile postCompiler
+    compile $ getResourceString >>= defaultPage
  
-postCompiler :: Compiler (Item String)
-postCompiler = do
+defaultPage :: Item String -> Compiler (Item String)
+defaultPage content = do
   includes <- setIncludes =<< getUnderlying
-  getResourceString
-    >>= applyAsTemplate includes
+  applyAsTemplate includes content
     <&> runPandoc
-    >>= saveSnapshot "content"
     >>= loadAndApplyTemplate "templates/default.html" context
     >>= relativizeUrls
 
@@ -75,6 +77,7 @@ runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
 
 postContext :: Context String
 postContext = mapContext Path.takeDirectory (urlField "url")
+           <> teaserField "teaser" "content"
            <> context
 
 context :: Context String
