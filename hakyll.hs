@@ -47,6 +47,9 @@ main = hakyll $ do
         >>= loadAndApplyTemplate "templates/default.html" blogContext
         >>= relativizeUrls
 
+  match "drafts/*" $
+    compile templateCompiler  -- TODO: we actually just want to ignore drafs
+
   match (deep "misc") $ do
     route $ removeDir "misc"
     compile copyFileCompiler
