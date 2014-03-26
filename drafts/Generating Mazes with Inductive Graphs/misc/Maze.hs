@@ -2,7 +2,7 @@
 {-# LANGUAGE ParallelListComp    #-}
 {-# LANGUAGE RankNTypes          #-}
 {-# LANGUAGE ViewPatterns        #-}
-module Mazes where
+module Maze where
 
 import           Control.Applicative               ((<$>), (<*>))
 import qualified Control.Monad.Random              as Random
@@ -14,38 +14,56 @@ import           Data.Graph.Inductive              (DynGraph, Graph, match)
 import           Data.Graph.Inductive.PatriciaTree (Gr)
 import qualified Data.List                         as List
 
-type Maze = Gr Cell ()
+import           Debug.Trace                       (trace, traceShow)
 
-type Cell = (Int, Int)
+type Maze = Gr Pos Direction
+
+type Pos = (Int, Int)
+
+data Direction = Horizontal | Vertical deriving (Show, Eq)
+
+-- | A cell and its edges: first outgoing then incoming.
+type Cell = (Pos, [Direction], [Direction])
+
+-- | Extract the walls from a maze graph.
+cells :: Maze -> [Cell]
+cells maze = toWalls <$> Graph.nodes maze
+  where toWalls node =
+          let out = dir <$> Graph.out maze node
+              inn = dir <$> Graph.inn maze node
+          in
+           case Graph.lab maze node of
+            Just cell -> (cell, out, inn)
+            Nothing   -> error "Malformed graph!"
+        dir (_, _, d) = d
 
 -- | Generate a graph representing an n × m grid. The nodes are
 -- labelled with their (x, y) position.
 grid :: Int -> Int -> Maze
 grid width height = Graph.mkGraph nodes edges
-  where nodes = zip [0..] $ (,) <$> [0..width - 1] <*> [0..height - 1]
-        edges = [(n, n', ()) | (n,_) <- nodes, (n',_) <- nodes, n - n' `elem` [1, width]]
+  where nodes = zip [0..] [(x, y) | (y, x) <- map (`divMod` width) [0..width * height - 1]]
+        edges = [(n, n', Vertical) | (n,_) <- nodes, (n',_) <- nodes, n - n' == 1 && n `mod` width /= 0]
+             ++ [(n, n', Horizontal) | (n,_) <- nodes, (n',_) <- nodes, n - n' == width]
 
 -- | Generate a depth-first traversal of the given graph.
 dfs :: Graph g => [Graph.Node] -> g a b -> [Graph.Node]
 dfs [] _                           = []
 dfs _ g | Graph.isEmpty g          = []
-dfs (v:vs) (match v -> (Just c, g)) = v : dfs next g
-  where next = Graph.suc' c ++ vs
+dfs (v:vs) (match v -> (Just c, g)) = v : dfs (Graph.suc' c ++ vs) g
 dfs (_:vs) g                       = dfs vs g
 
 -- | Generate a maze by traversing a graph and deleting any edges we
 --   follow. The remaining edges then form the "walls" of the maze.
-maze :: MonadRandom m => Int -> Int -> m Maze
-maze width height = execStateT (go (Graph.nodes cells) cells) cells
+maze :: (Functor m, MonadRandom m) => Int -> Int -> m Maze
+maze width height = execStateT (go [(0, 0)] cells) cells
   where cells = grid width height
-
-        go ls g | null ls || Graph.isEmpty g = return []
-        go (v:vs) (match v -> (Just c, g))   = do
-          (n:ns) <- shuffle $ Graph.suc' c
-          modify $ Graph.delEdge (v, n) . Graph.delEdge (n, v)
-          rest   <- go (n : ns ++ vs) g
-          return $ v : rest
-        go (_:vs) g                         = go vs g
+        go [] _                           = return []
+        go ls g | Graph.isEmpty g         = return []
+        go ((v, parent):vs) (match v -> (Just c, g)) = do
+          next <- shuffle $ zip (Graph.neighbors' c) (repeat v)
+          modify $ Graph.delEdges [(v, parent), (parent, v)]
+          (v :) <$> go (next ++ vs) g
+        go (_:vs) g = go vs g
 
 -- | Choose a random element out of a list.
 choose :: (MonadRandom m) => [a] -> m (a, [a])
