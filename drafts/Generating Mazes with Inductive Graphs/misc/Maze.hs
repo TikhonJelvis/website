@@ -16,27 +16,30 @@ import           Data.Graph.Inductive              (DynGraph, Graph, match, (&))
 import           Data.Graph.Inductive.PatriciaTree (Gr)
 import qualified Data.List                         as List
 
+import qualified Diagrams.Prelude                  as Diagrams
+import           Diagrams.Prelude                  (Diagram, Renderable, Path, R2)
+
 import           Debug.Trace                       (trace, traceShow)
 
 data Shape = Square deriving (Show, Eq)
 
-type Maze = Gr Shape (Direction, Bool)
+type Maze = Gr (Int, Int) (Direction, Bool)
 
-type Pos = (Int, Int)
+data Direction = Horizontal | Vertical deriving (Show, Eq)
 
-newtype Direction = Direction Rational deriving (Eq, Num)
-
-instance Show Direction where show (Direction d) = show d
-
-data Wall = Wall Direction Bool deriving (Show, Eq)
+walls :: Maze -> [((Int, Int), Direction)]
+walls maze = [(pos, dir) |
+              (n, _, (dir, active)) <- Graph.labEdges maze,
+              let Just pos = Graph.lab maze n,
+              active]
 
 -- | Generate a graph representing an n × m grid. The nodes are
 -- labelled with their (x, y) position.
 grid :: Int -> Int -> Maze
 grid width height = Graph.mkGraph nodes edges
-  where nodes = zip [0..height * width - 1] $ repeat Square
-        edges = [(n, n', (180, True)) | (n,_) <- nodes, (n',_) <- nodes, n - n' == 1 && n `mod` width /= 0]
-             ++ [(n, n', (90, True)) | (n,_) <- nodes, (n',_) <- nodes, n - n' == width]
+  where nodes = [(node, (x, y)) | node <- [0..height * width - 1], let (y, x) = node `divMod` width]
+        edges = [(n, n', (Vertical, True)) | (n,_) <- nodes, (n',_) <- nodes, n - n' == 1 && n `mod` width /= 0]
+             ++ [(n, n', (Horizontal, True)) | (n,_) <- nodes, (n',_) <- nodes, n - n' == width]
 
 -- | Generate a depth-first traversal of the given graph.
 dfs [] _                           = []
