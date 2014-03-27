@@ -23,17 +23,15 @@ type Pos = (Int, Int)
 data Direction = Horizontal | Vertical deriving (Show, Eq)
 
 -- | A cell and its edges: first outgoing then incoming.
-type Cell = (Pos, [Direction], [Direction])
+type Cell = (Pos, [Direction])
 
 -- | Extract the walls from a maze graph.
 cells :: Maze -> [Cell]
 cells maze = toWalls <$> Graph.nodes maze
   where toWalls node =
-          let out = dir <$> Graph.out maze node
-              inn = dir <$> Graph.inn maze node
-          in
+          let walls = dir <$> Graph.out maze node in
            case Graph.lab maze node of
-            Just cell -> (cell, out, inn)
+            Just cell -> (cell, walls)
             Nothing   -> error "Malformed graph!"
         dir (_, _, d) = d
 
@@ -57,16 +55,15 @@ dfs (_:vs) g                       = dfs vs g
 maze :: (Functor m, MonadRandom m) => Int -> Int -> m Maze
 maze width height = execStateT (go [(0, 0)] cells) cells
   where cells = grid width height
-        go [] _                           = return []
-        go ls g | Graph.isEmpty g         = return []
+        go [] _                           = return ()
+        go ls g | Graph.isEmpty g         = return ()
         go ((v, parent):vs) (match v -> (Just c, g)) = do
           next <- shuffle $ zip (Graph.neighbors' c) (repeat v)
           modify $ Graph.delEdges [(v, parent), (parent, v)]
-          (v :) <$> go (next ++ vs) g
+          go (next ++ vs) g
         go (_:vs) g = go vs g
 
 -- | Choose a random element out of a list.
-choose :: (MonadRandom m) => [a] -> m (a, [a])
 choose [] = error "Cannot choose from empty list!"
 choose ls = do
   i <- getRandomR (0, length ls - 1)
@@ -78,5 +75,4 @@ choose ls = do
 shuffle [] = return []
 shuffle ls = do
   (x, xs) <- choose ls
-  xs'     <- shuffle xs
-  return $ x : xs'
+  (x :) <$> shuffle xs
