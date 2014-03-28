@@ -106,6 +106,10 @@ a > img {
     margin-top : 0;
 }
 
+.content strong {
+    font-weight : bold;
+}
+
 /* This is the div that holds images and their captions. */
 .content div.figure {
     position : relative;
