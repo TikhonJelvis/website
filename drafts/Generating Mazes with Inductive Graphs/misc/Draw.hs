@@ -26,10 +26,10 @@ data Config = Config { step :: Int
                      }
 
 defaults :: Config
-defaults = Config { step = 40
+defaults = Config { step = 10
                   , wall = 2
-                  , width = 400
-                  , height = 400
+                  , width = 404
+                  , height = 404
                   }
 
 rectangle :: (Integral n) => n -> n -> n -> n -> Render ()
@@ -37,12 +37,15 @@ rectangle x y width height =
   Cairo.rectangle (fromIntegral x) (fromIntegral y) (fromIntegral width) (fromIntegral height)
 
 renderMaze :: Config -> Maze -> Render ()
-renderMaze Config {..} maze = forM_ (walls maze) $ \ ((x, y), dir) -> do
-  Cairo.setSourceRGB 1 1 0
+renderMaze Config {..} maze = do
+  Cairo.setSourceRGB 0.3 0.6 1
   Cairo.setLineWidth 5
 
-  case dir of
-    Horizontal -> rectangle (x * step) (y * step) step wall >> Cairo.fill
+  rectangle 0 0 width height
+  Cairo.stroke
+
+  forM_ (walls maze) $ \ ((x, y), dir) -> case dir of
+    Horizontal -> rectangle (x * step) (y * step) (step + wall) wall >> Cairo.fill
     Vertical   -> rectangle (x * step) (y * step) wall (step + wall) >> Cairo.fill
 
 mazePNG :: Config -> FilePath -> Maze -> IO ()
