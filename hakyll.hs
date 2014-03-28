@@ -27,7 +27,7 @@ main = hakyll $ do
   match "templates/*" $ do
     compile templateCompiler
 
-  match "blog/*/*.md" $ do
+  match ("blog/*/*.md" .||. "drafts/*/*.md") $ do
     route $ setExtension "html"
     compile $ getResourceString
       <&> runPandoc
@@ -46,9 +46,6 @@ main = hakyll $ do
         >>= applyAsTemplate blogContext
         >>= loadAndApplyTemplate "templates/default.html" blogContext
         >>= relativizeUrls
-
-  match "drafts/*" $
-    compile templateCompiler  -- TODO: we actually just want to ignore drafs
 
   match (deep "misc") $ do
     route $ removeDir "misc"
