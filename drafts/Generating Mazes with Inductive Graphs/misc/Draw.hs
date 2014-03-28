@@ -38,7 +38,7 @@ rectangle x y width height =
 
 renderMaze :: Config -> Maze -> Render ()
 renderMaze Config {..} maze = do
-  Cairo.setSourceRGB 0.3 0.6 1
+  Cairo.setSourceRGB 0.02 0.24 0.54
   Cairo.setLineWidth 5
 
   rectangle 0 0 width height
