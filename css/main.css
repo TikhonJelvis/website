@@ -173,7 +173,7 @@ a > img {
     color : #738CAD;
 }
 
-.content div.announcement ul, .content ul {
+.content div.announcement ul, .content ul, .content ol {
     margin-left : 17%;
     list-style : none;
 }

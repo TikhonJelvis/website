@@ -21,7 +21,7 @@ pre.sourceCode {
 }
 
 pre.sourceCode span.kw { color: #092F8A; }
-pre.sourceCode span.dt { color: #660099; }
+pre.sourceCode span.dt { color: #442288; }
 pre.sourceCode span.dv { color: black; }
 pre.sourceCode span.bn { color: black; }
 pre.sourceCode span.fl { color: black; }
@@ -30,6 +30,6 @@ pre.sourceCode span.st { color: black; }
 pre.sourceCode span.co { color: #383838; font-style: italic; }
 pre.sourceCode span.ot { color: #0028AA; }
 pre.sourceCode span.al { color: red; }
-pre.sourceCode span.fu { color: #660099; }
+pre.sourceCode span.fu { color: #092F8A; }
 pre.sourceCode span.re { }
 pre.sourceCode span.er { color: red; }
