@@ -19,4 +19,4 @@ grid width height = Graph.mkGraph nodes edges
                  (n,_) <- nodes,
                  (n',_) <- nodes,
                  n - n' == width ]
-        wall n = let (y, x) = n `divMod` width in (x, y)
+        wall n = let (y, x) = n `divMod` width in Wall (x, y)

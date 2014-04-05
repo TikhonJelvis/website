@@ -16,7 +16,7 @@ import           Data.Graph.Inductive (Gr, Node, (&), match, matchAny)
 
 -- | An unordered map that relabels all the nodes in the graph.
 mapNodes :: (n -> n') -> Gr n e -> Gr n' e
-mapNodes f g | Graph.isEmpty g = Graph.empty
+mapNodes _ g | Graph.isEmpty g = Graph.empty
 mapNodes f (matchAny -> ((in', node, label, out), g)) =
   (in', node, f label, out) & mapNodes f g
 
