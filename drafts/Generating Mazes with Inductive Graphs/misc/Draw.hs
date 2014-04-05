@@ -17,7 +17,7 @@ import           Data.Graph.Inductive     (DynGraph, Graph, match, (&))
 import qualified Graphics.Rendering.Cairo as Cairo
 import           Graphics.Rendering.Cairo (Render)
 
-import           Maze
+import           MazeOld
 
 data Config = Config { step :: Int
                      , wall :: Int
