@@ -110,6 +110,10 @@ a > img {
     font-weight : bold;
 }
 
+.content em {
+    font-style : italic;
+}
+
 /* This is the div that holds images and their captions. */
 .content div.figure {
     position : relative;
