@@ -26,7 +26,7 @@ dfs :: Gr n e -> [Node]
 dfs (matchAny -> ((_, start, _, _), graph)) = go [start] graph
   where go [] _                           = []
         go _ g | Graph.isEmpty g          = []
-        go (n:ns) (match n -> (Just c, g)) = n : go (Graph.suc' c ++ ns) g
+        go (n:ns) (match n -> (Just c, g)) = n : go (Graph.neighbors' c ++ ns) g
         go (_:ns) g                       = go ns g
 
 -- | A modified version of dfs that returns a list of edges followed
@@ -37,7 +37,7 @@ edfs (matchAny -> ((_, start, _, _), graph)) =
   where go [] _                                = []
         go _ g | Graph.isEmpty g               = []
         go ((p, n):ns) (match n -> (Just c, g)) =
-          (p, n) : go (map (n,) (Graph.suc' c) ++ ns) g
+          (p, n) : go (map (n,) (Graph.neighbors' c) ++ ns) g
         go (_:ns) g                            = go ns g
 
 -- | A version of edfs where the order neighbors are visited is
@@ -48,7 +48,7 @@ edfsR (matchAny -> ((_, start, _, _), graph)) =
   where go [] _                                = return []
         go _ g | Graph.isEmpty g               = return []
         go ((p, n):ns) (match n -> (Just c, g)) = do
-          edges <- shuffle $ map (n,) (Graph.suc' c)
+          edges <- shuffle $ map (n,) (Graph.neighbors' c)
           liftM ((p, n) :) $ go (edges ++ ns) g
         go (_:ns) g                            = go ns g
 

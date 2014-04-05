@@ -169,7 +169,9 @@ Since we used `matchAny`, the exact order we map over the graph is not defined! 
 
 ## DFS
 
-Our maze algorithm is going to be a randomized depth-first search. We can first write a simple, non-random DFS and then go from that to our maze algorithm. This is actually going to be pretty similar to `mapNodes` except that we're going to build up a list of visited nodes as we go along instead of building a new graph. It is also a *directed* traversal unlike the undirected map.
+Our maze algorithm is going to be a randomized depth-first search. We can first write a simple, non-random DFS and then go from that to our maze algorithm. That's one of my favorite ways to implement more difficult algorithms: start with something really simple and iterate.
+                
+The basic DFS is actually pretty similar to `mapNodes` except that we're going to build up a list of visited nodes as we go along instead of building a new graph. It's also a *directed* traversal unlike the *undirected* map.
 
 The first version of our DFS will take a graph and traverse it starting from an arbitrary node, returning a list of the nodes visited in order. Here's the code:
 
@@ -178,19 +180,19 @@ dfs :: Gr a b -> [Node]
 dfs (matchAny -> ((_, start, _, _), graph) = go [start] graph
   where go [] _                            = []
         go _ g | Graph.isEmpty g           = []
-        go (n:ns) (match v -> (Just c, g)) = n : go (suc' c ++ ns) g
+        go (n:ns) (match v -> (Just c, g)) = n : go (neighbors' c ++ ns) g
         go (_:ns)                          = go ns g
 ```
 
-All of the interesting logic is in the helper `go` function. It takes two arguments: a list, which is the stack of nodes to visit and the remainder of the graph.
+The interesting logic is in the helper `go` function. It takes two arguments: a list, which is the stack of nodes to visit, and the remainder of the graph.
 
 The first two lines of `go` are the base cases. If we either don't have any more nodes on the stack or we've run out of nodes in the graph, we're done.
 
-The recursive case is more interesting. First, we get the node we want to visit (`n`) from our stack. Then, we use that to *direct* our match with the `match n` function. If this succeeds, we add `n` to our result list and push every successor node of `n` to the stack. If the match failed, it means we visited that node already, so we just ignore it and recurse on the rest of the stack.
+The recursive cases are more interesting. First, we get the node we want to visit (`n`) from our stack. Then, we use that to *direct* our match with the `match n` function. If this succeeds, we add `n` to our result list and push every neighbor of `n` to the stack. If the match failed, it means we visited that node already, so we just ignore it and recurse on the rest of the stack.
 
-We find the successors of a node using the `suc'` function which returns the successor nodes of a particular context. In `fgl`, functions named with a `'` typically act on contexts like this.
+We find the neighbors of a node using the `neighbors'` function which gets the neighbors of a context. In `fgl`, functions named with a `'` typically act on contexts.
 
-The important idea here is that we don't need to explicitly keep track of which nodes we've visited since, after we visit a node for the first time, we always recurse on the remainder of the graph that does not contain it. This is common to a whole bunch of different graph algorithms, which makes this a very useful pattern.
+The important idea here is that we don't need to explicitly keep track of which nodes we've visited---after we visit a node, we always recurse on the rest of the graph which does not contain it. This sort of behavior is common to a bunch of different graph algorithms making this a very useful pattern.
 
 ## EDFS
 
@@ -207,16 +209,16 @@ I cheated a bit here: to make the starting condition nicer, I push an extra edge
 
 ```haskell
 go ((p, n):ns) (match n -> (Just c, g)) =
-          (p, n) : go (map (n,) (suc' c) ++ ns) g
+          (p, n) : go (map (n,) (neighbors' c) ++ ns) g
 ```
 
-We still get the successor nodes, but now we turn them into an edge from the current node. The `map (n,)` syntax takes advantage of the [`TupleSections`][tuple-sections] extension.
+We still get the neighboring nodes, but now we turn them into an edge from the current node. The `map (n,)` syntax requires the [`TupleSections`][tuple-sections] extension.
 
 [tuple-sections]: http://www.haskell.org/ghc/docs/7.0.3/html/users_guide/syntax-extns.html#tuple-sections
 
 ## Randomness
 
-The final change to our `dfs` code to generate a maze is to add randomness. All we really want to do is shuffle the list of successors before putting it on the stack. We're going to use the `MonadRandom` class, which is compatible with a bunch of other monads like `IO`. I used a naïve O(n²) shuffle:
+The final change we need to generate a maze is adding randomness. We want to shuffle the list of neighbors before putting it on the stack. We're going to use the `MonadRandom` class, which is compatible with a bunch of other monads like `IO`. I used a naïve O(n²) shuffle:
 
 ```haskell
 shuffle :: MonadRandom m => [a] -> m [a]
@@ -231,12 +233,12 @@ edfsR (matchAny -> ((_, start, _, _), graph)) =
   where go [] _                                 = return []
         go _ g | Graph.isEmpty g                = return []
         go ((p, n):ns) (match n -> (Just c, g)) = do
-          edges <- shuffle $$ map (n,) (suc' c)
+          edges <- shuffle $$ map (n,) (neighbors' c)
           liftM ((p, n) :) $$ go (edges ++ ns) g
         go (_:ns) g                             = go ns g
 ```
 
-The differences are largely simple and very type-directed: you have to add some calls to `return` and `liftM`, but you get some nice type errors that tell you *where* you need them. The only other change is using `shuffle`, which is straightforward with do-notation.
+The differences are largely simple and very type-directed: you have to add some calls to `return` and `liftM`, but you get some nice type errors that tell you *where* to add them. The only other change is using `shuffle` which is straightforward with do-notation.
 
 For something that's supposed to be awkward in functional programming, I think the code is actually pretty neat and easy to follow!
 
