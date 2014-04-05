@@ -143,6 +143,10 @@ a > img {
     margin-right : 10%;
 }
 
+.content .figure code {
+    background-color : #90A9CB;
+}
+
 /* A div for special announcements: */
 .content div.announcement {
     position : relative;
@@ -199,7 +203,7 @@ a > img {
     font-size : 15px;
 }
 
-.content code {
+.content code, .content .code {
     padding : 1px 6px;
     border-radius : 6px;
 }
