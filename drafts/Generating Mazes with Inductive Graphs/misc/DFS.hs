@@ -26,7 +26,8 @@ dfs :: Gr n e -> [Node]
 dfs (matchAny -> ((_, start, _, _), graph)) = go [start] graph
   where go [] _                           = []
         go _ g | Graph.isEmpty g          = []
-        go (n:ns) (match n -> (Just c, g)) = n : go (Graph.neighbors' c ++ ns) g
+        go (n:ns) (match n -> (Just c, g)) =
+          n : go (Graph.neighbors' c ++ ns) g
         go (_:ns) g                       = go ns g
 
 -- | A modified version of dfs that returns a list of edges followed

@@ -4,7 +4,7 @@
 {-# LANGUAGE RankNTypes                 #-}
 {-# LANGUAGE TupleSections              #-}
 {-# LANGUAGE ViewPatterns               #-}
-module Maze where
+module MazeOld where
 
 import           Control.Applicative               ((<$>), (<*>))
 import qualified Control.Monad.Random              as Random

@@ -48,8 +48,8 @@ renderMaze Config {..} maze = do
     Horizontal -> rectangle (x * step) (y * step) (step + wall) wall >> Cairo.fill
     Vertical   -> rectangle (x * step) (y * step) wall (step + wall) >> Cairo.fill
 
-mazePNG :: Config -> FilePath -> Maze -> IO ()
-mazePNG config@Config {..} file maze =
+mazePng :: Config -> FilePath -> Maze -> IO ()
+mazePng config@Config {..} file maze =
   Cairo.withImageSurface Cairo.FormatARGB32 width height $ \ surface -> do
     Cairo.renderWith surface $ renderMaze config maze
     Cairo.surfaceWriteToPNG surface file
