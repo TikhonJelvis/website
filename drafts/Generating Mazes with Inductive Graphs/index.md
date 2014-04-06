@@ -29,7 +29,7 @@ There are multiple algorithms we can use to generate such a tree. Let's focus on
   6. otherwise, repeat from your new cell
 
 <div class="figure">
-  <img src="grid.png" alt="A grid with all the walls enabled." />
+  <img src="maze-grid.png" alt="A grid with all the walls enabled." />
   <img src="small-maze.png" alt="A maze built by deleting walls in the grid." />
   <p> Our algorithm starts with a grid and produces a maze by deleting walls. </p>
 </div>
@@ -180,7 +180,8 @@ dfs :: Gr a b -> [Node]
 dfs (matchAny -> ((_, start, _, _), graph) = go [start] graph
   where go [] _                            = []
         go _ g | Graph.isEmpty g           = []
-        go (n:ns) (match v -> (Just c, g)) = n : go (neighbors' c ++ ns) g
+        go (n:ns) (match v -> (Just c, g)) =
+          n : go (Graph.neighbors' c ++ ns) g
         go (_:ns)                          = go ns g
 ```
 
@@ -209,7 +210,7 @@ I cheated a bit here: to make the starting condition nicer, I push an extra edge
 
 ```haskell
 go ((p, n):ns) (match n -> (Just c, g)) =
-          (p, n) : go (map (n,) (neighbors' c) ++ ns) g
+          (p, n) : go (map (n,) (Graph.neighbors' c) ++ ns) g
 ```
 
 We still get the neighboring nodes, but now we turn them into an edge from the current node. The `map (n,)` syntax requires the [`TupleSections`][tuple-sections] extension.
@@ -218,7 +219,7 @@ We still get the neighboring nodes, but now we turn them into an edge from the c
 
 ## Randomness
 
-The final change we need to generate a maze is adding randomness. We want to shuffle the list of neighbors before putting it on the stack. We're going to use the `MonadRandom` class, which is compatible with a bunch of other monads like `IO`. I used a naïve O(n²) shuffle:
+The final change we need to generate a maze is adding randomness. We want to shuffle the list of neighbors before putting it on the stack. We're going to use the `MonadRandom` class, which is compatible with a bunch of other monads like `IO`. I wrote a naïve O(n²) shuffle:
 
 ```haskell
 shuffle :: MonadRandom m => [a] -> m [a]
@@ -233,7 +234,7 @@ edfsR (matchAny -> ((_, start, _, _), graph)) =
   where go [] _                                 = return []
         go _ g | Graph.isEmpty g                = return []
         go ((p, n):ns) (match n -> (Just c, g)) = do
-          edges <- shuffle $$ map (n,) (neighbors' c)
+          edges <- shuffle $$ map (n,) (Graph.neighbors' c)
           liftM ((p, n) :) $$ go (edges ++ ns) g
         go (_:ns) g                             = go ns g
 ```
@@ -247,23 +248,22 @@ For something that's supposed to be awkward in functional programming, I think t
 
 # Mazes
 
-Right now, we have a random DFS that gives us a list of edges. This is basically the whole maze generation algorithm in a nutshell. However, it's difficult to go from a set of edges to drawing a maze. The final piece of the puzzle is labeling the edges in a way that's convenient to draw as well as generating the graph for the initial grid.
+We have a random DFS that gives us a list of edges---the core of the maze generation algorithm. However, it's difficult to go from a set of edges to drawing a maze. The final pieces of the puzzle are labeling the edges in a way that's convenient to draw and generating the graph for the initial grid.
 
-This is the first place where we're going to use edge labels. Each edge represents a wall and we want enough information to draw the wall. To do this we need to know the walls *location* and its *orientation* (either horizontal and vertical). For simplicity, we will walls by the location of the cell either below or to the right of the wall. Here's our label type:
+This is the first place where we're going to use edge labels. Each edge represents a wall and we need enough information to draw it. We need to know the walls *location* and its *orientation* (either horizontal and vertical). For simplicity, we will locate the walls by the location of the cell either below or to the right of the wall as appropriate for its direction. Here are the relevant types:
 
 ```haskell
 data Orientation = Horizontal | Vertical deriving (Show, Eq)
 
 data Wall = Wall (Int, Int) Orientation deriving (Show, Eq)
 
-type Maze = Gr () Wall -- () means no node labels needed
+type Grid = Gr () Wall -- () means no node labels needed
 ```
 
-Now we just need to make a graph representing the grid we start with. After that, we just pass it into our `edfsR` and get a list of walls *not* to draw. We just draw the walls for all the other edges an we're set!
-
-We can assemble the graph with the `mkGraph` function which takes a list of nodes and a list of edges. Remember that we want to label each edge with its location and orientation. There's likely a better way to do it, but for now I take advantage of the fact that `Node` is just an alias for `Int`:
+Next, we need to build the starting graph: a maze with every single wall present. We can assemble it with the `mkGraph` function which takes a list of nodes and a list of edges. We want to label each edge with its location and orientation. There's likely a better way to do all this, but for now I take advantage of the fact that `Node` is just an alias for `Int`:
 
 ```haskell
+grid :: Int -> Int -> Grid
 grid width height = Graph.mkGraph nodes edges
   where nodes = [(node, ()) | node <- [0..width * height - 1]]
         edges = [(n, n', wall n Vertical) |
@@ -277,3 +277,14 @@ grid width height = Graph.mkGraph nodes edges
         wall n = let (y, x) = n `divMod` width in Wall (x, y)
 ```
 
+![A 3 × 3 grid. The edges are labeled with an (x, y) position and either `Horizontal` (—) or `Vertical` (|).](grid.png)
+
+Running `edfsR` over a starting maze will give us the list of walls that were *knocked down*---they're the ones we don't want to draw. We can easily go from this to the compliment list of walls *to* draw using the list different operator `\\\\` from `Data.List`:
+
+```haskell
+maze :: MonadRandom m => Int -> Int -> m [Graph.Edge]
+maze width height = liftM (Graph.edges graph \\) $$ edfsR graph
+  where graph = grid width height
+```
+
+This produces a list of edges to draw from the graph. To actually draw them, we would start by looking their labels up in the grid.
