@@ -114,7 +114,7 @@ With [`ViewPatterns`][views] we can actually use `matchAny` directly inside a pa
 ```haskell
 ghead :: Graph -> Node
 ghead graph | Graph.isEmpty graph             = error "Empty graph!"
-ghead (matchAny -> ((_, node, _, _,), graph)) = node
+ghead (matchAny -> ((_, node, _, _), graph)) = node
 ```
 
 Of course, it's different from normal `head` in that the exact node it returns is arbitrary and implementation defined. To overcome this, we can direct our graph traversal by trying to match against a *specific* node with the `match` function:
@@ -173,11 +173,11 @@ Our maze algorithm is going to be a randomized depth-first search. We can first 
                 
 The basic DFS is actually pretty similar to `mapNodes` except that we're going to build up a list of visited nodes as we go along instead of building a new graph. It's also a *directed* traversal unlike the *undirected* map.
 
-The first version of our DFS will take a graph and traverse it starting from an arbitrary node, returning a list of the nodes visited in order. Here's the code:
+The first version of our DFS will take a graph and traverse it starting from a given node, returning a list of the nodes visited in order. Here's the code:
 
 ```haskell
-dfs :: Gr a b -> [Node]
-dfs (matchAny -> ((_, start, _, _), graph) = go [start] graph
+dfs :: Graph.Node -> Gr a b -> [Node]
+dfs start graph = go [start] graph
   where go [] _                            = []
         go _ g | Graph.isEmpty g           = []
         go (n:ns) (match v -> (Just c, g)) =
@@ -185,7 +185,7 @@ dfs (matchAny -> ((_, start, _, _), graph) = go [start] graph
         go (_:ns)                          = go ns g
 ```
 
-The interesting logic is in the helper `go` function. It takes two arguments: a list, which is the stack of nodes to visit, and the remainder of the graph.
+The core logic is in the helper `go` function. It takes two arguments: a list, which is the stack of nodes to visit, and the remainder of the graph. 
 
 The first two lines of `go` are the base cases. If we either don't have any more nodes on the stack or we've run out of nodes in the graph, we're done.
 
@@ -195,6 +195,8 @@ We find the neighbors of a node using the `neighbors'` function which gets the n
 
 The important idea here is that we don't need to explicitly keep track of which nodes we've visited---after we visit a node, we always recurse on the rest of the graph which does not contain it. This sort of behavior is common to a bunch of different graph algorithms making this a very useful pattern.
 
+Often---like for generating mazes---we don't care about which node to start from. This is where `ghead` comes in useful since it selects an arbitrary node for us! The only thing to consider is that `ghead` will fail on an empty graph.
+
 ## EDFS
 
 `dfs` gives us a list of nodes in the order that they were visited. But for mazes, we really care about the *edges* we followed rather than just the nodes. So lets modify our `dfs` into an `edfs` which returns a list of edges rather than a list of nodes. In `fgl`, an edge is just a tuple of two nodes: `(Node, Node)`.
@@ -202,8 +204,7 @@ The important idea here is that we don't need to explicitly keep track of which 
 The modifications from our original `dfs` are actually quite slight: we keep a stack of edges instead of a stack of nodes. This requires modifying our starting condition:
 
 ```haskell
-edfs (matchAny -> ((_, start, _, _), graph)) =
-          drop 1 $$ go [(start, start)] graph
+edfs start graph = drop 1 $$ go [(start, start)] graph
 ```
 
 I cheated a bit here: to make the starting condition nicer, I push an extra edge onto the stack and then discard it with the `drop 1`. The other change was for the recursive case, where we push edges onto the stack instead of nodes:
@@ -225,12 +226,11 @@ The final change we need to generate a maze is adding randomness. We want to shu
 shuffle :: MonadRandom m => [a] -> m [a]
 ```
 
-Given this, we just need to modify `edfs` to use it which requires lifting everything into the monad:
+Given this, we just need to modify `edfs` to use it which requires lifting everything into the monad. 
 
 ```haskell
-edfsR :: MonadRandom m => Gr n e -> m [(Node, Node)]
-edfsR (matchAny -> ((_, start, _, _), graph)) =
-      liftM (drop 1) $$ go [(start, start)] graph
+edfsR :: MonadRandom m => Graph.Node -> Gr n e -> m [(Node, Node)]
+edfsR start graph = liftM (drop 1) $$ go [(start, start)] graph
   where go [] _                                 = return []
         go _ g | Graph.isEmpty g                = return []
         go ((p, n):ns) (match n -> (Just c, g)) = do
@@ -242,6 +242,8 @@ edfsR (matchAny -> ((_, start, _, _), graph)) =
 The differences are largely simple and very type-directed: you have to add some calls to `return` and `liftM`, but you get some nice type errors that tell you *where* to add them. The only other change is using `shuffle` which is straightforward with do-notation.
 
 For something that's supposed to be awkward in functional programming, I think the code is actually pretty neat and easy to follow!
+
+Since we used the `MonadRandom` class, we can use `edfsR` with any type that provides randomness capabilities. This includes `IO`, so we can use it directly from `GHCi`, which is quite nice. We could also run it in a purely deterministic way by passing a seed in as an argument if we wanted.
 
 </div>
 <div class="content">
