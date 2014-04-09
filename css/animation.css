@@ -1,0 +1,14 @@
+/* CSS Document */
+.animation li {
+    display : none;
+
+    margin-left : auto;
+    margin-right :auto;
+
+    width : 100%;
+    text-align : center;
+}
+
+ul.animation li:before {
+    content : none;
+}

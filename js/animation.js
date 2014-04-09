@@ -2,24 +2,26 @@
  *  play/pause and step through them. I figure it will be useful for
  *  illustrating algorithms and the like.
  *
- *  All the frames of the animation should have the 'frame' class and
- *  probably be positioned on top of each other. Only one will be
- *  shown at a time; it's probably good for most of the to start with
- *  `display : none'.
+ *  All the frames of the animation should have the 'animation-frame'
+ *  class and probably be positioned on top of each other. Only one
+ *  will be shown at a time; it's probably good for most of the to
+ *  start with `display : none'.
  *
  *  The config parameter can specify whether to start playing by
  *  default and the speed to switch frames:
  *
  *  config : { playing : bool, speed : int }
  */
-function Animation(animation, config) {
+function animate(content, config) {
+  var $ = jQuery;
+
   // config paramters:
   config = config || {};
   var playing = config.playing || false,
       speed   = config.speed   || 420;
 
-  var container = $(animation),
-      frames    = container.children(".frame"),
+  var container = $(content),
+      frames    = container.find(".animation li"),
       currFrame = 0,
       interval  = null;
 
@@ -27,7 +29,7 @@ function Animation(animation, config) {
   frames.first().show();
 
   // Control widgets: step, play/pause... etc
-  var controls = $("<form class='animation-controls'>"),
+  var controls = $("<div class='animation-controls'>"),
       back     = $("<button>⇤</button>"),
       forward  = $("<button>⇥</button>"),
       play     = $("<button>▶</button>");
@@ -37,6 +39,7 @@ function Animation(animation, config) {
   container.append(controls);
 
   back.click(stepBackward);
+  play.click(togglePlaying);
   forward.click(stepForward);
    
   function stepForward() {
