@@ -195,6 +195,66 @@ We find the neighbors of a node using the `neighbors'` function which gets the n
 
 The important idea here is that we don't need to explicitly keep track of which nodes we've visited---after we visit a node, we always recurse on the rest of the graph which does not contain it. This sort of behavior is common to a bunch of different graph algorithms making this a very useful pattern.
 
+Here's a quick demo of `dfs` running over the example graph from earlier. Note how we don't need to keep track of which nodes we've visited because we always recurse on the part of the graph that only has unvisited nodes.
+
+<div id="dfs-animation" class="figure">
+<ul class="animation">
+  <li>
+    <img src="dfs-frames/frame1.png" alt="A dfs over the example graph."/>
+  stack: `[7, 6]`
+
+  result: `[3]`
+
+  </li>
+  <li>
+    <img src="dfs-frames/frame2.png" alt="A dfs over the example graph."/>
+  stack: `[4, 2, 6]`
+
+  result: `[3, 7]`
+
+  </li>
+  <li>
+    <img src="dfs-frames/frame3.png" alt="A dfs over the example graph."/>
+  stack: `[1, 2, 6]`
+
+  result: `[3, 7, 4]`
+
+  </li>
+  <li>
+    <img src="dfs-frames/frame4.png" alt="A dfs over the example graph."/>
+  stack: `[6, 5, 2, 6]`
+
+  result: `[3, 7, 4, 1]`
+
+  </li>
+  <li>
+    <img src="dfs-frames/frame5.png" alt="A dfs over the example graph."/>
+  stack: `[2, 5, 2, 6]`
+
+  result: `[3, 7, 4, 1, 6]`
+
+  </li>
+  <li>
+    <img src="dfs-frames/frame6.png" alt="A dfs over the example graph."/>
+  stack: `[5, 5, 2, 6]`
+
+  result: `[3, 7, 4, 1, 6, 2]`
+
+  </li>
+  <li>
+    <img src="dfs-frames/frame7.png" alt="A dfs over the example graph."/>
+  stack: `[5, 2, 6]`
+
+  result: `[3, 7, 4, 1, 6, 2, 5]`
+
+  </li>
+</ul>
+
+  <script language="javascript">
+    animate("#dfs-animation");
+  </script>
+</div>
+
 Often---like for generating mazes---we don't care about which node to start from. This is where `ghead` comes in useful since it selects an arbitrary node for us! The only thing to consider is that `ghead` will fail on an empty graph.
 
 ## EDFS
@@ -285,8 +345,11 @@ Running `edfsR` over a starting maze will give us the list of walls that were *k
 
 ```haskell
 maze :: MonadRandom m => Int -> Int -> m [Graph.Edge]
-maze width height = liftM (Graph.edges graph \\) $$ edfsR graph
+maze width height =
+  liftM (Graph.edges graph \\) $$ edfsR (ghead graph) graph
   where graph = grid width height
 ```
 
-This produces a list of edges to draw from the graph. To actually draw them, we would start by looking their labels up in the grid.
+Since a grid is always going to have nodes, we can use `ghead` safely. 
+
+This produces a list of edges to draw from the graph. To actually draw them, we would start by looking their labels up in the grid and then use the position and orientation to figure out the walls' absolute positions.
