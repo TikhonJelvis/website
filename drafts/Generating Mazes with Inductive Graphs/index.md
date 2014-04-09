@@ -93,31 +93,41 @@ We could decompose this graph into the node `1`, its context and the rest of the
 
 ![`(Context [4,5,6] 1 []) :& graph` our graph decomposed into the node `1`, its edges to `4`, `5` and `6` as well as the rest of the graph.](match1.png)
 
-We can't use this definition directly as that equivalent graphs could be built up in different ways---the order we attach contexts does not matter. For example, we could just as easily decompose the same example graph into node `2` and the rest:
+However, we could just as easily decompose the same example graph into node `2` and the rest:
 
 ![`(Context [5,6,7] 2 []) :& graph` another equally valid way to decompose the same graph.](match2.png)
 
-So instead the actual graph type is *abstract*, and we can just *view* it using contexts like above. Unlike normal pattern matching, viewing an abstract type is *not* necessarily the inverse of constructing it.
+This means we can't use this algebraic definition directly. So instead the actual graph type is *abstract*, and we can just *view* it using contexts, like above. Unlike normal pattern matching, viewing an abstract type is *not* necessarily the inverse of constructing it.
 
-We accomplish this by using a matching function that takes a graph and returns a context decomposition like above. Since there is no "natural" first node to return, the simplest matching function `matchAny` returns an *arbitrary* (implementation defined) decomposition:
+We accomplish this by using a matching function that takes a graph and returns a context decomposition. Since there is no "natural" first node to return, the simplest matching function `matchAny` returns an *arbitrary* (implementation defined) decomposition:
                                     
 ```haskell
 matchAny :: Graph -> (Context, Graph)
 ```
 
-In `fgl`, `Context` is just a tuple with four elements: incoming edges, the node, the node label and outgoing edges. This is what functions like `matchAny` return.
+In `fgl`, `Context` is just a tuple with four elements: incoming edges, the node, the node label and outgoing edges.
 
-With [`ViewPatterns`][views] we can actually use `matchAny` directly inside a pattern with nice syntax. Here's the moral equivalent of `head` for graphs:
+The simplest way to use `matchAny` is with a `case` expression. Here's the moral equivalent of `head` for graphs:
+```haskell
+ghead :: Graph -> Graph.Node
+ghead graph | Graph.isEmpty graph = error "Empty graph!"
+ghead graph = case matchAny graph of
+    ((_, node, _, _), graph) -> node
+```
+
+Pattern matching like this is a bit awkward. Happily, we can get much nicer syntax using [`ViewPatterns`][views], which allow us to call functions inside a pattern. Here's a prettier version of `ghead` which does exactly the same thing:
 
 [views]: https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/pattern-and-guard-extensions#viewpatterns
 
 ```haskell
 ghead :: Graph -> Node
-ghead graph | Graph.isEmpty graph             = error "Empty graph!"
+ghead graph | Graph.isEmpty graph            = error "Empty graph!"
 ghead (matchAny -> ((_, node, _, _), graph)) = node
 ```
 
-Of course, it's different from normal `head` in that the exact node it returns is arbitrary and implementation defined. To overcome this, we can direct our graph traversal by trying to match against a *specific* node with the `match` function:
+All my code from now on will use `ViewPatterns` because they just lead to much nicer, more compact and more readable code.
+
+`ghead` is different from normal `head` in that the exact node it returns is arbitrary and implementation defined. To overcome this, we can direct our graph traversal by trying to match against a *specific* node with the `match` function:
 
 ```haskell
 match :: Node -> Graph -> (Maybe Context, Graph)
@@ -265,7 +275,7 @@ The modifications from our original `dfs` are actually quite slight: we keep a s
 
 ```haskell
 edfs start (match start -> (Just ctx, graph)) =
-  normalize $ go (lNeighbors' ctx) graph
+  normalize $$ go (lNeighbors' ctx) graph
 ```
 Since we're storing edges on our stack, we can't just put the start node directly on there. Instead, we just match on it and start with its edges on the stack.
 
