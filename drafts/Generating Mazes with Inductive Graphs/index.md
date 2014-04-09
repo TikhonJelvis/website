@@ -264,10 +264,14 @@ Often---like for generating mazes---we don't care about which node to start from
 The modifications from our original `dfs` are actually quite slight: we keep a stack of edges instead of a stack of nodes. This requires modifying our starting condition:
 
 ```haskell
-edfs start graph = drop 1 $$ go [(start, start)] graph
+edfs start (match start -> (Just ctx, graph)) =
+  normalize $ go (lNeighbors' ctx) graph
 ```
+Since we're storing edges on our stack, we can't just put the start node directly on there. Instead, we just match on it and start with its edges on the stack.
 
-I cheated a bit here: to make the starting condition nicer, I push an extra edge onto the stack and then discard it with the `drop 1`. The other change was for the recursive case, where we push edges onto the stack instead of nodes:
+Since we're treating edges as if they were undirected, normalize ensures that the end result always orders the edges with the larger node first, swapping the nodes in each edge if necessary.
+
+The other change was for the recursive case, where we push edges onto the stack instead of nodes:
 
 ```haskell
 go ((p, n):ns) (match n -> (Just c, g)) =
@@ -290,7 +294,8 @@ Given this, we just need to modify `edfs` to use it which requires lifting every
 
 ```haskell
 edfsR :: MonadRandom m => Graph.Node -> Gr n e -> m [(Node, Node)]
-edfsR start graph = liftM (drop 1) $$ go [(start, start)] graph
+edfsR start (match start -> (Just ctx, graph)) =
+  liftM normalize $$ go (lNeighbors' ctx) graph
   where go [] _                                 = return []
         go _ g | Graph.isEmpty g                = return []
         go ((p, n):ns) (match n -> (Just c, g)) = do
@@ -352,4 +357,4 @@ maze width height =
 
 Since a grid is always going to have nodes, we can use `ghead` safely. 
 
-This produces a list of edges to draw from the graph. To actually draw them, we would start by looking their labels up in the grid and then use the position and orientation to figure out the walls' absolute positions.
+This produces a list of edges to draw from the graph. To actually draw them, we would start by looking their labels up in the grid and then use the position and orientation to figure out the walls' absolute positions. (My actual implementation keeps track of edge labels as it does the DFS.)
