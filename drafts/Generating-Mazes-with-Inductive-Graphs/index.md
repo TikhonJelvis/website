@@ -9,11 +9,14 @@ Making random mazes is actually a really good programming exercise: it's relativ
 
 So lets look at how to implement a maze generator in Haskell using **inductive graphs** for our graph traversal. Inductive graphs are provided by Haskell's "Functional Graph Library" [`fgl`][fgl].
 
-[fgl]: http://hackage.haskell.org/package/fgl
+All of the code associated with this post is up on [GitHub][code] so you can load it into GHCi and follow along. It's also a good starting point if you want to hack together your own mazes later on. It's all under a BSD3 license, so you can use it however you like.
 
 Here's what we're aiming for:
 
 ![A simple maze built from a grid.](simple-maze.png)
+
+[fgl]: http://hackage.haskell.org/package/fgl
+[code]: https://github.com/TikhonJelvis/inductive-mazes
 
 ## The Algorithm
 
@@ -97,7 +100,7 @@ However, we could just as easily decompose the same example graph into node `2` 
 
 ![`(Context [5,6,7] 2 []) :& graph` another equally valid way to decompose the same graph.](match2.png)
 
-This means we can't use this algebraic definition directly. So instead the actual graph type is *abstract*, and we can just *view* it using contexts, like above. Unlike normal pattern matching, viewing an abstract type is *not* necessarily the inverse of constructing it.
+This means we can't use this algebraic definition directly. Instead the actual graph type is *abstract* and we just *view* it using contexts, like above. Unlike normal pattern matching, viewing an abstract type is *not* necessarily the inverse of constructing it.
 
 We accomplish this by using a matching function that takes a graph and returns a context decomposition. Since there is no "natural" first node to return, the simplest matching function `matchAny` returns an *arbitrary* (implementation defined) decomposition:
                                     
@@ -115,7 +118,7 @@ ghead graph = case matchAny graph of
     ((_, node, _, _), graph) -> node
 ```
 
-Pattern matching like this is a bit awkward. Happily, we can get much nicer syntax using [`ViewPatterns`][views], which allow us to call functions inside a pattern. Here's a prettier version of `ghead` which does exactly the same thing:
+Pattern matching with `case` like this is a bit awkward. Happily, we can get much nicer syntax using [`ViewPatterns`][views], which allow us to call functions inside a pattern. Here's a prettier version of `ghead` which does exactly the same thing:
 
 [views]: https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions/pattern-and-guard-extensions#viewpatterns
 
@@ -125,9 +128,9 @@ ghead graph | Graph.isEmpty graph            = error "Empty graph!"
 ghead (matchAny -> ((_, node, _, _), graph)) = node
 ```
 
-All my code from now on will use `ViewPatterns` because they just lead to much nicer, more compact and more readable code.
+All my functions from now on will use `ViewPatterns` because they lead to nicer, more compact and more readable code.
 
-`ghead` is different from normal `head` in that the exact node it returns is arbitrary and implementation defined. To overcome this, we can direct our graph traversal by trying to match against a *specific* node with the `match` function:
+Since the exact node that `matchAny` returns is implementation defined, it's often inconvenient. We can overcome this using `match`, which matches a *specific* node.
 
 ```haskell
 match :: Node -> Graph -> (Maybe Context, Graph)
@@ -146,7 +149,7 @@ This makes it easy to do *directed* traversals of the graph: we can "travel" to 
 
 # A Real Example
 
-All functions in `fgl` are actually specified against a [`Graph`][graph-class] typeclasses rather than a concrete implementation. This typeclass mechanism is great since it allows multiple implementations of inductive graphs. Unfortunately, it also breaks type inference in ways that are sometimes hard to track down so, for simplicity, we'll just the implementation type provided: `Gr`. `Gr n e` is a graph that has nodes labeled with `n` and edges labeled with `e`.
+All functions in `fgl` are actually specified against a [`Graph`][graph-class] typeclasses rather than a concrete implementation. This typeclass mechanism is great since it allows multiple implementations of inductive graphs. Unfortunately, it also breaks type inference in ways that are sometimes hard to track down so, for simplicity, we'll just use the provided implementation: `Gr`. `Gr n e` is a graph that has nodes labeled with `n` and edges labeled with `e`.
 
 [graph-class]: http://hackage.haskell.org/package/fgl-5.4.2.4/docs/Data-Graph-Inductive-Graph.html#t:Graph
 
@@ -265,40 +268,43 @@ Here's a quick demo of `dfs` running over the example graph from earlier. Note h
   </script>
 </div>
 
-Often---like for generating mazes---we don't care about which node to start from. This is where `ghead` comes in useful since it selects an arbitrary node for us! The only thing to consider is that `ghead` will fail on an empty graph.
+Often---like for generating mazes---we don't care about which node to start from. This is where `ghead` comes in since it selects an arbitrary node for us! The only thing to consider is that `ghead` will fail on an empty graph.
 
 ## EDFS
 
-`dfs` gives us a list of nodes in the order that they were visited. But for mazes, we really care about the *edges* we followed rather than just the nodes. So lets modify our `dfs` into an `edfs` which returns a list of edges rather than a list of nodes. In `fgl`, an edge is just a tuple of two nodes: `(Node, Node)`.
+`dfs` gives us nodes in the order that they were visited. But for mazes, we really care about the *edges* we followed rather than just nodes. So lets modify our `dfs` into an `edfs` which returns a list of edges rather than a list of nodes. In `fgl`, an edge is just a tuple of two nodes: `(Node, Node)`.
 
 The modifications from our original `dfs` are actually quite slight: we keep a stack of edges instead of a stack of nodes. This requires modifying our starting condition:
 
 ```haskell
 edfs start (match start -> (Just ctx, graph)) =
-  normalize $$ go (lNeighbors' ctx) graph
+  normalize $$ go (neighborEdges' ctx) graph
 ```
-Since we're storing edges on our stack, we can't just put the start node directly on there. Instead, we just match on it and start with its edges on the stack.
 
-Since we're treating edges as if they were undirected, normalize ensures that the end result always orders the edges with the larger node first, swapping the nodes in each edge if necessary.
+Since we're storing edges on our stack, we can't just put the start node directly on there. Instead, we just match on it and start with its edges on the stack. 
+
+We need the extra call to `normalize` because we're treating our edges as if they were undirected and we need to make sure that the two nodes that define an edge always appear in the same order. It just goes through the edges and swaps the nodes if they're in the wrong order.
 
 The other change was for the recursive case, where we push edges onto the stack instead of nodes:
 
 ```haskell
-go ((p, n):ns) (match n -> (Just c, g)) =
-          (p, n) : go (map (n,) (Graph.neighbors' c) ++ ns) g
+go ((p, n) : ns) (match n -> (Just c, g)) =
+    (p, n) : go (neighborEdges' c ++ ns) g
 ```
 
-We still get the neighboring nodes, but now we turn them into an edge from the current node. The `map (n,)` syntax requires the [`TupleSections`][tuple-sections] extension.
+`neighborEdges` is just a helper function that returns all the incoming and outgoing edges from a context. (In the actual code, I called it [`lNeighbors`][lNeighbors] because it actually returns labeled edges.
 
-[tuple-sections]: http://www.haskell.org/ghc/docs/7.0.3/html/users_guide/syntax-extns.html#tuple-sections
+[lNeighbors]: https://github.com/TikhonJelvis/inductive-mazes/blob/master/src/DFS.hs#L51
 
 ## Randomness
 
-The final change we need to generate a maze is adding randomness. We want to shuffle the list of neighbors before putting it on the stack. We're going to use the `MonadRandom` class, which is compatible with a bunch of other monads like `IO`. I wrote a naïve O(n²) shuffle:
+The final change we need to generate a maze is adding randomness. We want to shuffle the list of neighboring edges before putting it on the stack. We're going to use the `MonadRandom` class, which is compatible with a bunch of other monads like `IO`. I wrote a naïve O(n²) [shuffle][shuffle]:
 
 ```haskell
 shuffle :: MonadRandom m => [a] -> m [a]
 ```
+
+[shuffle]: https://github.com/TikhonJelvis/inductive-mazes/blob/master/src/DFS.hs#L77
 
 Given this, we just need to modify `edfs` to use it which requires lifting everything into the monad. 
 
@@ -309,7 +315,7 @@ edfsR start (match start -> (Just ctx, graph)) =
   where go [] _                                 = return []
         go _ g | Graph.isEmpty g                = return []
         go ((p, n):ns) (match n -> (Just c, g)) = do
-          edges <- shuffle $$ map (n,) (Graph.neighbors' c)
+          edges <- shuffle $$ neighborEdges' c
           liftM ((p, n) :) $$ go (edges ++ ns) g
         go (_:ns) g                             = go ns g
 ```
@@ -318,7 +324,7 @@ The differences are largely simple and very type-directed: you have to add some 
 
 For something that's supposed to be awkward in functional programming, I think the code is actually pretty neat and easy to follow!
 
-Since we used the `MonadRandom` class, we can use `edfsR` with any type that provides randomness capabilities. This includes `IO`, so we can use it directly from `GHCi`, which is quite nice. We could also run it in a purely deterministic way by passing a seed in as an argument if we wanted.
+Since we used the `MonadRandom` class, we can use `edfsR` with any type that provides randomness capabilities. This includes `IO`, so we can use it directly from `GHCi`, which is quite nice. We could also run it in a purely deterministic way by providing a seed if we wanted.
 
 </div>
 <div class="content">
@@ -368,3 +374,48 @@ maze width height =
 Since a grid is always going to have nodes, we can use `ghead` safely. 
 
 This produces a list of edges to draw from the graph. To actually draw them, we would start by looking their labels up in the grid and then use the position and orientation to figure out the walls' absolute positions. (My actual implementation keeps track of edge labels as it does the DFS.)
+
+All of the drawing code is in [Draw.hs][Draw.hs] and uses [cairo][cairo] for the actual drawing. Cairo is a C library that provides something very similar to an HTML Canvas but for GtK; it can also output images. If you just want to play around with the mazes, you can draw one to a png with:
+
+```haskell
+genPng defaults "my-maze.png" 40 40
+```
+
+![A large 40 × 40 maze with all the default drawing settings.](my-maze.png)
+
+[Draw.hs]: https://github.com/TikhonJelvis/inductive-mazes/blob/master/src/Draw.hs
+[cairo]: http://hackage.haskell.org/package/cairo
+
+</div>
+<div class="content">
+
+# More Fun
+
+We now have a basic maze generating system using inductive graphs and randomness. If you want to play around with the code a bit, there are two interesting ways to extend this code: generating mazes from other shapes and using different graph algorithms.
+
+## Other Shapes
+
+Our system always assumes that mazes are generated from a grid of cells. However, the actual graph code doesn't care about this at all! The grid-specific parts are just the starting graph (ie `grid 40 40`) and the drawing code.
+
+A fun challenge is to look at what mazes over other sorts of graphs look like. Try writing a maze generator based on tiled hexagons, polar rectangles or even arbitrary (maybe random?) plane tilings. Or try to generate mazes in 3D!
+
+## Other Algorithms
+
+Apart from modifying the graph, we can also modify our traversal. Play around with the DFS code: for example, you can substitute in a biased `shuffle` and get other shapes of mazes. If you make the shuffle more likely to choose horizontal walls than vertical ones, you will get a maze with longer vertical passages and shorter horizontal ones. How else can you change the DFS?
+
+Randomized DFS is a nice algorithm for generating mazes because it's simple and produces aesthetically pleasant mazes. But it's not the only possible algorithm. You could take some other algorithms that produce spanning trees and randomize those.
+
+One particular trick is to take an algorithm for generating *minimum* spanning trees, and apply it to a graph with random edge weights. The two common minimum spanning tree algorithms are [Prim's algorithm][prim] and [Kruskal's algorithm][kruskal]---implementing those is a good Haskell exercise and will produce subtly different looking mazes. Take a look through [Minimum Spanning Tree Algorithms][mst] on Wikipedia for more inspiration.
+
+[prim]: http://en.wikipedia.org/wiki/Prim%27s_algorithm
+[kruskal]: http://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+[mst]: http://en.wikipedia.org/wiki/Minimum_spanning_tree#Algorithms
+
+</div>
+<div class="content">
+
+I hope that whole explanation was clear. If it wasn't, free free to email me at [tikhon@jelv.is](mailto:tikhon@jelv.is). You can also always ask on #haskell IRC: even if I'm not on, chances are somebody helpful is. We're friendly! I'll probably also add blog comments at some point, once I figure out the best way to do it. (Is Disqus good? I'm looking at different alternatives right now.)
+
+I think this code is a great example showing that, once you've learned how, many tasks in functional programming are easier than they seem at first. Starting from the right abstractions, working with graphs or randomness need not be difficult, even in a purely functional language like Haskell.
+
+Ultimately, this is a good exercise both for becoming a better Haskell programmer and for realizing just how *versatile* the language can be.
