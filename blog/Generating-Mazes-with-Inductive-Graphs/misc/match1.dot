@@ -1,0 +1,22 @@
+digraph fgl {
+	margin = "0"
+	page = "4"
+	size = "4"
+	ratio = "fill"
+        1 
+	2 [style="filled" color="white" fillcolor="white" fontcolor="white"]
+        3
+        4
+        5
+        6
+        7 
+        6 -> 1 
+        5 -> 1 
+        4 -> 1 
+        5 -> 2 [color="white"]
+        6 -> 3
+        6 -> 2 [color="white"]
+        7 -> 4
+        7 -> 3
+        7 -> 2 [color="white"]
+}
