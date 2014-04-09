@@ -13,9 +13,9 @@ You can now get the code off [Github](https://github.com/TikhonJelvis/simulation
 
 This is a Java program that simulates collisions between polygons. I wrote this for physics during my junior year in high school. The project involved more than just writing a program---we also had to write a paper and perform some physical experiments. 
 
-I worked with a team of three other students for this project. However, only [Jacob Taylor](http://stanford.edu/~jacobt) helped with the programming; the others worked on things like the physics experiment and presentation.
+I worked with a team of three other students for this project. However, only [Jessica Taylor](http://jessic.at) helped with the programming; the others worked on things like the physics experiment and presentation.
 
-Jacob primarily worked on the actual physics, using Newton's method to approximate the change at each step and even deriving how torque worked from basic principles (We hadn't covered torque at all in class.)
+Jessica primarily worked on the actual physics, using Newton's method to approximate the change at each step and even deriving how torque worked from basic principles (We hadn't covered torque at all in class.)
 
 I worked on the user interface and putting everything together. To make the design more module, I used the observer pattern---everything has to be a pattern in Java, after all.
 
