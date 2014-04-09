@@ -1,22 +1,26 @@
 ---
 title: Generating Mazes with Inductive Graphs
 author: Tikhon Jelvis
+published: 2014-04-09 16:45:11.904268
+modified: 2014-04-09 16:50:18.42236
 ---
 
 A few years ago---back in high school---I spent a little while writing programs to automatically generate mazes. It was a fun exercise and helped me come to grips with recursion: the first time I implemented it (in Java), I couldn't get the recursive version to work properly so ended up using a `while` loop with an explicit stack! I later wrote a [version in JavaScript](/maze) too; you can play around with it and read the code on [GitHub](https://github.com/TikhonJelvis/maze).
 
 Making random mazes is actually a really good programming exercise: it's relatively simple, produces cool pictures and does a good job of covering graph algorithms. It's especially interesting for functional programming because it relies on **graphs** and **randomness**, two things generally viewed as tricky in a functional style.
 
-So lets look at how to implement a maze generator in Haskell using **inductive graphs** for our graph traversal. Inductive graphs are provided by Haskell's "Functional Graph Library" [`fgl`][fgl].
+So lets look at how to implement a maze generator in Haskell using **inductive graphs** for our graph traversal. Here's what we're aiming for:
 
-All of the code associated with this post is up on [GitHub][code] so you can load it into GHCi and follow along. It's also a good starting point if you want to hack together your own mazes later on. It's all under a BSD3 license, so you can use it however you like.
-
-Here's what we're aiming for:
-
-![A simple maze built from a grid.](simple-maze.png)
+![A simple maze built from a grid.](/blog/Generating-Mazes-with-Inductive-Graphs/simple-maze.png)
 
 [fgl]: http://hackage.haskell.org/package/fgl
 [code]: https://github.com/TikhonJelvis/inductive-mazes
+
+<!--more-->
+
+Inductive graphs are provided by Haskell's "Functional Graph Library" [`fgl`][fgl].
+
+All of the code associated with this post is up on [GitHub][code] so you can load it into GHCi and follow along. It's also a good starting point if you want to hack together your own mazes later on. It's all under a BSD3 license, so you can use it however you like.
 
 ## The Algorithm
 
@@ -419,3 +423,4 @@ I hope that whole explanation was clear. If it wasn't, free free to email me at 
 I think this code is a great example showing that, once you've learned how, many tasks in functional programming are easier than they seem at first. Starting from the right abstractions, working with graphs or randomness need not be difficult, even in a purely functional language like Haskell.
 
 Ultimately, this is a good exercise both for becoming a better Haskell programmer and for realizing just how *versatile* the language can be.
+
