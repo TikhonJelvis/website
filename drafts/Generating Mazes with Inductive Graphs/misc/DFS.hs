@@ -12,7 +12,7 @@ import           Control.Monad        (liftM)
 import           Control.Monad.Random (getRandomR, MonadRandom)
 
 import qualified Data.Graph.Inductive as Graph
-import           Data.Graph.Inductive (Gr, Node, (&), match, matchAny)
+import           Data.Graph.Inductive (Gr, (&), match, matchAny)
 
 -- | Return an arbitrary node from the graph. Fails on empty graphs.
 ghead :: Gr a b -> Graph.Node
@@ -27,7 +27,7 @@ mapNodes f (matchAny -> ((in', node, label, out), g)) =
 
 -- | The simplest depth-first search which returns a list of the nodes
 --   visited, in order. 
-dfs :: Graph.Node -> Gr n e -> [Node]
+dfs :: Graph.Node -> Gr n e -> [Graph.Node]
 dfs start graph = go [start] graph
   where go [] _                           = []
         go _ g | Graph.isEmpty g          = []
@@ -37,7 +37,7 @@ dfs start graph = go [start] graph
 
 -- | A modified version of dfs that returns a list of edges followed
 --   rather than just nodes.
-edfs :: Graph.Node -> Gr n e -> [(Node, Node)]
+edfs :: Graph.Node -> Gr n e -> [Graph.Edge]
 edfs start graph = drop 1 $ go [(start, start)] graph
   where go [] _                                = []
         go _ g | Graph.isEmpty g               = []
@@ -47,7 +47,7 @@ edfs start graph = drop 1 $ go [(start, start)] graph
 
 -- | A version of edfs where the order neighbors are visited is
 --   random.
-edfsR :: MonadRandom m => Graph.Node -> Gr n e -> m [(Node, Node)]
+edfsR :: MonadRandom m => Graph.Node -> Gr n e -> m [Graph.Edge]
 edfsR start graph = liftM (drop 1) $ go [(start, start)] graph
   where go [] _                                = return []
         go _ g | Graph.isEmpty g               = return []
