@@ -1,17 +1,38 @@
+{-# LANGUAGE TupleSections   #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE QuasiQuotes     #-}
 {-# LANGUAGE ViewPatterns    #-}
 module Viz where
+
+import           Control.Monad        (foldM)
+import           Control.Monad.Writer (execWriter, tell)
 
 import qualified Data.Graph.Inductive as Graph
 import           Data.Graph.Inductive (Gr, match, matchAny)
 
 import           Data.String.Interpolation (str)
 
+import           DFS
+
+-- | The small example graph I used for the diagrams in my blog post.
 example :: Gr () ()
 example = Graph.mkGraph nodes edges
   where nodes = [(x, ()) | x <- [1..7]]
         edges = [(x, y, ()) | x <- [1..7], y <- [1..7], x /= y, x - y `elem` [3..5]]
+
+-- | The larger example graph I used for lightning talk slides.
+example' :: Gr () ()
+example' = Graph.mkGraph nodes edges
+  where nodes = map (,()) [1..10]
+        edges = [ (6, 1, ()), (5, 1, ()), (4, 1, ())
+                , (7, 2, ()), (6, 2, ()), (5, 2, ())
+                , (7, 3, ()), (6, 3, ()), (8, 3, ())
+                , (7, 4, ()), (10, 4, ())
+                , (8, 5, ()), (9, 5, ())
+                , (9, 6, ())
+                , (10, 9, ())
+                , (8, 10, ())
+                ]
 
 blue = "#0b4faa"
 
@@ -31,7 +52,7 @@ nodeStyle n node full rest
 
 edgeStyle :: Graph.Edge -> Graph.Node -> Gr a b -> Gr a b -> String
 edgeStyle (a, b) node full rest
-  | a == node || b == node    = [str|[color="$blue$"]|]
+  | (a == node && bothN b full rest) || (b == node && bothN a full rest) = [str|[color="$blue$"]|]
   | bothE (a, b) full rest = ""
   | otherwise              = [str|[color="white"]|]
 
@@ -52,7 +73,7 @@ anyViz full (matchAny -> (ctx, graph)) = decomposition full ctx graph
 
 nViz full n (match n -> (Just ctx, graph)) = decomposition full ctx graph
 
-normal graph = [str|
+unlabeled graph = [str|
 digraph fgl {
 	margin = "0"
 	page = "4"
@@ -60,7 +81,14 @@ digraph fgl {
 	ratio = "fill"
 	#node in Graph.nodes graph:$:node$|
         # 
-        #(a, b, l) in Graph.labEdges graph:$:a$ -> $:b$ [label="$:l$"]|
+        #(a, b, l) in Graph.labEdges graph:$:a$ -> $:b$ |
         #
 }                
 |]
+
+vizDfs :: (Show a, Show b) => Gr a b -> [String]
+vizDfs full = execWriter . foldM (flip go) full $ dfs (ghead full) full
+  where go node (match node -> (Just ctx, graph)) = do
+          tell [decomposition full ctx graph]
+          return graph
+        go _ graph = return graph
