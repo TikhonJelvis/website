@@ -197,7 +197,7 @@ dfs :: Graph.Node -> Gr a b -> [Node]
 dfs start graph = go [start] graph
   where go [] _                            = []
         go _ g | Graph.isEmpty g           = []
-        go (n:ns) (match v -> (Just c, g)) =
+        go (n:ns) (match n -> (Just c, g)) =
           n : go (Graph.neighbors' c ++ ns) g
         go (_:ns)                          = go ns g
 ```
