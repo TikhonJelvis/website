@@ -27,6 +27,10 @@ main = hakyll $ do
   match "templates/*" $ do
     compile templateCompiler
 
+  match (deep "misc") $ do
+    route $ removeDir "misc"
+    compile copyFileCompiler
+
   match ("blog/*/*.md" .||. "drafts/*/*.md") $ do
     route $ setExtension "html"
     compile $ getResourceString
@@ -56,10 +60,6 @@ main = hakyll $ do
 
   create ["blog/atom.xml"] $ feed renderAtom
   create ["blog/rss.xml"]  $ feed renderRss
-    
-  match (deep "misc") $ do
-    route $ removeDir "misc"
-    compile copyFileCompiler
 
   let supportFiles = alternates $ map deep ["img", "js", "fonts", "images"]
   match (supportFiles .||. "*.html" .||. "**/*.html") $ do

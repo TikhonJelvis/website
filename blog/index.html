@@ -1,6 +1,9 @@
-<!-- <div class="content"> -->
-<!--   <h1> Blog </h1> -->
-<!-- </div> -->
+<div class="content" id="blog-header">
+  <h1> Blog </h1>
+  <ul>
+    <li> <a href="rss.xml"> <img src="feed.png" alt="RSS Feed Icon" /> RSS </a></li>
+    <li> <a href="atom.xml"> <img src="feed.png" alt="Atom Feed Icon" /> Atom </a></li>
+</div>
 
     $for(posts)$
     <div class="content">
@@ -9,4 +12,4 @@
       <p>[<a href="$url$">read more</a>]</p>
     </div>
     $endfor$
-  </ul>
+
