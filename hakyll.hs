@@ -38,7 +38,7 @@ main = hakyll $ do
   match "blog/index.html" $ do
     route   $ setExtension "html"
     compile $ do
-      posts <- loadAllSnapshots "blog/*/*.md" "content"
+      posts <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
       let blogContext = listField "posts" postContext (return posts) <>
                         constField "title" "Blog" <>
                         context
@@ -47,6 +47,16 @@ main = hakyll $ do
         >>= loadAndApplyTemplate "templates/default.html" blogContext
         >>= relativizeUrls
 
+  let feed render = do
+        route idRoute
+        compile $ do
+          let feedContext = postContext <> bodyField "description"
+          posts <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
+          render blogFeedConfig feedContext posts        
+
+  create ["blog/atom.xml"] $ feed renderAtom
+  create ["blog/rss.xml"]  $ feed renderRss
+    
   match (deep "misc") $ do
     route $ removeDir "misc"
     compile copyFileCompiler
@@ -64,6 +74,15 @@ main = hakyll $ do
     route $ setExtension "html"
     compile $ getResourceString >>= defaultPage
  
+blogFeedConfig :: FeedConfiguration
+blogFeedConfig = FeedConfiguration
+    { feedTitle       = "blog | jelv.is" -- TODO: come up with better title!
+    , feedDescription = "My technical blog containing articles about programming languages, functional programming and general CS."
+    , feedAuthorName  = "Tikhon Jelvis"
+    , feedAuthorEmail = "tikhon@jelv.is"
+    , feedRoot        = "http://jelv.is"
+    }
+
 defaultPage :: Item String -> Compiler (Item String)
 defaultPage content = do
   includes <- setIncludes =<< getUnderlying

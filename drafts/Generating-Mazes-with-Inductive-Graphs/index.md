@@ -1,10 +1,8 @@
 ---
 title: Generating Mazes with Inductive Graphs
 author: Tikhon Jelvis
-published: 2014-04-09 16:45:11.904268
-modified: 2014-04-09 17:53:06.202236
-modified: 2014-04-09 18:14:33.775072
-modified: 2014-04-09 18:39:53.952378
+published: 2014-04-09 16:45:11
+modified: 2014-04-09 18:39:53
 ---
 
 A few years ago---back in high school---I spent a little while writing programs to automatically generate mazes. It was a fun exercise and helped me come to grips with recursion: the first time I implemented it (in Java), I couldn't get the recursive version to work properly so ended up using a `while` loop with an explicit stack! 
