@@ -13,7 +13,7 @@ import           Control.Concurrent        (threadDelay)
 import           Control.Monad             (when)
 
 import           Data.Functor              ((<$))
-import           Data.List                 (isPrefixOf)
+import           Data.List                 (intercalate, isPrefixOf)
 import           Data.String.Interpolation (str)
 import qualified Data.Time                 as Time
 import           Data.Time                 (LocalTime)
@@ -66,7 +66,7 @@ addTimeVar name time file =
   [str|---
 #l in header:$l$|
 #
-$name$: $:time$
+$name$: $timestamp time$
 #l in rest:$l$|
 #
 
@@ -75,27 +75,32 @@ $name$: $:time$
                           dropWhile (not . isPrefixOf "---") . drop 1 $ lines file)
         varLine        = [str|$name$: $:time$|]
 
+timestamp :: LocalTime -> String
+timestamp = takeWhile (/= '.') .  show
+
 escape :: String -> String
 escape str = str >>= \case '\'' -> "'\\''"; s -> [s]
 
 run :: Settings -> IO ()
 run Settings {..} = do
   Dir.setCurrentDirectory "/home/tikhon/Public/website/drafts"
-  exists <- Dir.doesDirectoryExist name
+  let dirName = intercalate "-" $ words name
+  putStrLn $ "Dir name: " ++ dirName
+  exists <- Dir.doesDirectoryExist dirName
   if | not publish && not exists -> do
-    Dir.createDirectory name
+    Dir.createDirectory dirName
     printf "Creating post %s\n" name
-    Dir.setCurrentDirectory name
+    Dir.setCurrentDirectory dirName
     writeFile "index.md" $ index name
 
      | not publish && exists -> 
     putStrLn "Draft already exists! Not doing anything."
      
      | publish && exists -> do
-    published <- Dir.doesDirectoryExist $ ".." </> "blog" </> name
+    published <- Dir.doesDirectoryExist $ ".." </> "blog" </> dirName
     let var = if published then "modified" else "published"
     putStrLn $ "Publishing " ++ name
-    Dir.setCurrentDirectory name
+    Dir.setCurrentDirectory dirName
 
     zone <- Time.getCurrentTimeZone
     time <- Time.getCurrentTime
@@ -104,7 +109,7 @@ run Settings {..} = do
     Strict.readFile "index.md"
       >>= writeFile "index.md" . addTimeVar var local
     
-    () <$ runCommand [str|cp -r '../$escape name$' ../../blog/|]
+    () <$ runCommand [str|cp -r '../$escape dirName$' ../../blog/|]
 
      | publish && not exists -> 
     error "Cannot publish draft that doesn't exist!"
