@@ -8,7 +8,7 @@ author: Tikhon Jelvis
 # Welcome
 
 <div class="announcement">
-Our paper on Chlorophyll, a synthesis-aided compiler, was accepted to [PLDI 2014](http://conferences.inf.ed.ac.uk/pldi2014/acceptedpapers.html)!
+[Our paper on Chlorophyll](chlorophyll.pdf), a synthesis-aided compiler, was accepted to [PLDI 2014](http://conferences.inf.ed.ac.uk/pldi2014/acceptedpapers.html)!
 
 <div> </div>
 
