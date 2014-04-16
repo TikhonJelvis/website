@@ -36,8 +36,8 @@ a > img {
     color : black;
     background-color : #90A9CB;
 
-    /* font-family : Junction, Helvetica, Arial, sans-serif; */
-    font-family : Helvetica, Arial, sans-serif;
+    font-family : Junction, Helvetica, Arial, sans-serif;
+    /* font-family : Helvetica, Arial, sans-serif; */
 
     margin-top : 4pt;
     margin-left : auto;
@@ -66,8 +66,8 @@ a > img {
     text-align : center;
     color : #0b4faa;
     font-weight : normal;
-    /* font-family : Aller, Verdana, Arial, Helvetica, sans-serif; */
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
+    /* font-family : Verdana, Arial, Helvetica, sans-serif; */
     margin-top : 15px;
     margin-bottom : 15px;
 }
@@ -177,8 +177,8 @@ a > img {
     top : -55px;
     z-index : -1;
 
-    /* font-family : Aller, Verdana, Arial, Helvetica, sans-serif; */
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
+    /* font-family : Verdana, Arial, Helvetica, sans-serif; */
     font-weight : bold;
     font-size : 600%;
 
@@ -202,13 +202,13 @@ a > img {
     
 /* Special kinds of text: code, ui elements...etc */
 .content .uiElement {
-    /* font-family : "DejaVu Sans Mono", lucida console, monospace; */
-    font-family : lucida console, monospace;
+    font-family : "DejaVu Sans Mono", lucida console, monospace;
+    /* font-family : lucida console, monospace; */
 }
 
 .content code, .content pre, .content .code {
-    /* font-family : "DejaVu Sans Mono", lucida console, monospace; */
-    font-family : lucida console, monospace;
+    font-family : "DejaVu Sans Mono", lucida console, monospace;
+    /* font-family : lucida console, monospace; */
     background : #8099BB;
     font-size : 15px;
 }
@@ -233,8 +233,8 @@ a > img {
 }
 
 .content dt {
-    /* font-family : Aller, Verdana, Arial, Helvetica, sans-serif; */
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
+    /* font-family : Verdana, Arial, Helvetica, sans-serif; */
     margin-top : 10px;
     margin-left : 1em;
 }

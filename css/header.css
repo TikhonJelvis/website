@@ -28,8 +28,8 @@
 
 #header span {
     position : relative;
-    /* font-family : Aller, Verdana, sans-serif; */
-    font-family : Verdana, sans-serif;
+    font-family : Aller, Verdana, sans-serif;
+    /* font-family : Verdana, sans-serif; */
     color : #0b4faa;
 }
 

@@ -43,8 +43,8 @@
     border-left : 3px solid #0B4FAA;
     font-weight : normal;
     font-size : 20pt;
-    /* font-family : Aller, Verdana, Arial, Helvetica, sans-serif; */
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
+    /* font-family : Verdana, Arial, Helvetica, sans-serif; */
 }
 
 .navigation li:first-letter {
@@ -64,8 +64,8 @@
     position : relative;
     top : -2px;
     font-weight : 900;
-    /* font-family : megrim, Verdana, Arial, Helvetica, sans-serif; */
-    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-family : megrim, Verdana, Arial, Helvetica, sans-serif;
+    /* font-family : Verdana, Arial, Helvetica, sans-serif; */
     font-size : 21pt;
 }
 
