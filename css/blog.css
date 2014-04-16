@@ -1,4 +1,8 @@
 /* CSS Document */
+#blog-header {
+    padding-bottom : 0;
+}
+
 #blog-header ul {
     margin-left  : auto;
     margin-right : auto;
