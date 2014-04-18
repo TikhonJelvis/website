@@ -13,16 +13,6 @@ fib :: Integer -> Integer
 fib n = fibs !! fromIntegral n
   where fibs = 0 : 1 : zipWith (+) fibs (drop 1 fibs)
 
--- | Here is another take on fibs, this time using a lazy array for
---   dynamic programming. For Fibonnaci, this is actually *worse*, but
---   it's a good illustration of lazy dynamic programming.
-fib' :: Integer -> Integer
-fib' 0 = 0
-fib' 1 = 1
-fib' n = fibs ! n - 1 + fibs ! n - 2 
-  where fibs = Array.listArray (0, n) [fib x | x <- [0..n]]
-
-
 -- String Edit Distance
 
 -- | The distance between two strings is just the number of operations
