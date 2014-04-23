@@ -1,8 +1,14 @@
-module TreeDiff where
+module Main where
 
 import qualified Data.Array as Array
 import           Data.Array ((!))
 import           Data.Tree  (Tree)
+
+import qualified System.Environment as System
+
+main = do [n] <- System.getArgs
+          print . length . show . fib1 $ read n
+          -- print . length $ take (read n) fibs1
 
 -- Lazy memoization and dynamic programming:
 
@@ -12,6 +18,25 @@ import           Data.Tree  (Tree)
 fib :: Integer -> Integer
 fib n = fibs !! fromIntegral n
   where fibs = 0 : 1 : zipWith (+) fibs (drop 1 fibs)
+
+fib1 :: Integer -> Integer
+fib1 n = fibs1 !! fromIntegral n
+
+fibs1 :: [Integer]
+fibs1 = 0 : 1 : zipWith (+) fibs1 (drop 1 fibs1)
+
+fib' :: Integer -> Integer
+fib' 0 = 0
+fib' 1 = 1
+fib' n = fibs ! n
+  where fibs = Array.listArray (0, n) [fib' (x - 1) + fib' (x - 2) | x <- [0..n]]
+
+fib'' :: Integer -> Integer
+fib'' max = go max
+  where go 0 = 0
+        go 1 = 1
+        go n = fibs ! n
+        fibs = Array.listArray (0, max) [go (x - 1) + go (x - 2) | x <- [0..max]]
 
 -- String Edit Distance
 
