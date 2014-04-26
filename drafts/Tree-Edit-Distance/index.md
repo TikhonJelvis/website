@@ -35,7 +35,7 @@ Right now, I'm just going to talk about the tree edit distance algorithm I need 
 
 Memoization in general is a rich topic in Haskell. There are some very interesting approaches for memoizing functions over different sorts of inputs like Conal Elliott's [elegant memoization][elegant] or Luke Palmer's [memo combinators][combinators].
 
-The general idea is to take advantage of laziness and create a large data structure like a list or a tree that stores the results of the function. This data structure is defined circularly: recursive calls are replaced with references to other parts of the data structure. Pieces of the data structure only get evaluated as need and at most once---the actual memoization emerges naturally from the evaluation rules. A very illustrative (but slightly cliche) example is the memoized version of the Fibonacci function:
+The general idea is to take advantage of laziness and create a large data structure like a list or a tree that stores the results of the function. This data structure is defined circularly: recursive calls are replaced with references to other parts of the data structure. Pieces of the data structure only get evaluated as needed and at most once---the actual memoization emerges naturally from the evaluation rules. A very illustrative (but slightly cliche) example is the memoized version of the Fibonacci function:
 
 ```haskell
 fib n = fibs !! n
@@ -100,23 +100,29 @@ Note how we only ever need the last two elements of the list. Since we don't hav
 
 ## Lazy Arrays
 
-However, memoization in dynamic programming algorithms tends to have a slightly different structure---you create an array and the inputs to the algorithm are turned into indices into the array. Since we wouldn't need most of the structure of the more general memoization approaches, we're just going to look at writing dynamic programming problems out in terms of **lazy arrays**.
+Dynamic programming algorithms tend to have a very specific memoization style---sub-problems are put into an array and the inputs to the algorithm are transformed into array indices.  These algorithms are often presented in a distinctly imperative fashion: you initialize a large array with some empty value and then manually update it as you go along. You have to do some explicit bookkeeping at each step to save your result and there is nothing preventing you from accidentally reading in part of the array you haven't set yet.
 
-Dynamic programming algorithms are often presented in a distinctly imperative style: you initialize a large array with some value and then manually update it as you go along. You have to do some explicit bookkeeping at each step to save your result and there is nothing preventing you from accidentally reading in part of the array you haven't written to yet. Moreover, this style is also quite awkward to replicate directly in Haskell: you'd have to either use a mutable array or thread an immutable array through as an argument. The first version ends up pretty ugly in Haskell and the second version---not so great itself---is not very efficient.
+This imperative-style updating is awkward to represent in Haskell. We could do it by either passing around an immutable array as an argument or using a mutable array internally, but both of these options are unpleasant to use and the former is not very efficient. 
 
-Instead of replicating the imperative approach directly, we're going to take advantage of Haskell's laziness to define an array *that depends on itself*. The trick is to have the recursive call in the function to index into the array, and each array cell contain a call back to the function. This way, the logic of calculating each value once and then caching it is handled behind the scenes by Haskell's evaluation strategy. We compute the subproblems at most once in the order that we need but the array is always used *as if* it was fully filled out: we can never accidentally forget to save a result or access the array before that result has been calculated.
+Instead of replicating the imperative approach directly, we're going to take advantage of Haskell's laziness to define an array *that depends on itself*. The trick is to have the recursive call in the function to index into the array, and each array cell contain a call back to the function. This way, the logic of calculating each value once and then caching it is handled behind the scenes by Haskell's evaluation strategy. We compute the subproblems at most once in the order that we need and the array is always used *as if* it was fully filled out: we can never accidentally forget to save a result or access the array before that result has been calculated.
 
-We can rewrite our `fib` function to use this style of memoization. Note that it is actually strictly *worse* for Fibonacci numbers than the list-based approach; this is just to illustrate how the it works.
+At its heart, this is the same idea as having a `fibs` list that depends on itself, just with an array instead of a list. An array just fits many dynamic programming problems better than a list or some other data structure.
+
+We can rewrite our `fib` function to use this style of memoization. Note that this approach is actually strictly *worse* for Fibonacci numbers; this is just to illustrate how it works.
 
 ```haskell
-fib' n = go n
+fib' max = go max
   where go 0 = 0
         go 1 = 1
-        go n = fibs ! n
-        fibs = Array.listArray (0, max) [go (x - 1) + go (x - 1) | x <- [0..n]]
+        go n = fibs ! (n - 1) + fibs ! (n - 2)
+        fibs = Array.listArray (0, max) [go x | x <- [0..max]]
 ```
 
-Note how the actual recursion is done by a helper function: we need this so that our lazy array (`fibs`) is only defined *once* in a call to `fib'` rather than redefined at each recursive call!
+The actual recursion is done by a helper function: we need this so that our memoization array (`fibs`) is only defined *once* in a call to `fib'` rather than redefined at each recursive call!
+
+For calculating `fib' 5`, `fibs` would be an array of 6 thunks each containing a call to `go`. The final result is the thunk with `go 5`, which depends on `go 4` and `go 3`; `go 4` depends on `go 3` and `go 2` and so on until we get to the entries for `go 1` and `go 0` which are the base cases `1` and `0`.
+
+![The array of sub-problems for `fib 5`.](fib-array.png)
 
 [elegant]: http://conal.net/blog/posts/elegant-memoization-with-functional-memo-tries
 [combinators]: http://lukepalmer.wordpress.com/2008/10/14/data-memocombinators/

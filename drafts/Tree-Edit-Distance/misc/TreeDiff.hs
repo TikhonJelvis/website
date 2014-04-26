@@ -26,17 +26,19 @@ fibs1 :: [Integer]
 fibs1 = 0 : 1 : zipWith (+) fibs1 (drop 1 fibs1)
 
 fib' :: Integer -> Integer
-fib' 0 = 0
-fib' 1 = 1
-fib' n = fibs ! n
-  where fibs = Array.listArray (0, n) [fib' (x - 1) + fib' (x - 2) | x <- [0..n]]
-
-fib'' :: Integer -> Integer
-fib'' max = go max
+fib' max = go max
   where go 0 = 0
         go 1 = 1
-        go n = fibs ! n
-        fibs = Array.listArray (0, max) [go (x - 1) + go (x - 2) | x <- [0..max]]
+        go n = fibs ! (n - 1) + fibs ! (n - 2)
+        fibs = Array.listArray (0, max) [go x | x <- [0..max]]
+
+-- | This version is absolutely broken since fibs gets created a new
+--   at each recursive call!
+fib'' :: Integer -> Integer
+fib'' 0 = 0
+fib'' 1 = 1
+fib'' n = fibs ! (n - 1) + fibs ! (n - 2)
+  where fibs = Array.listArray (0, n) [fib'' x | x <- [0..n]]
 
 -- String Edit Distance
 
