@@ -7,6 +7,7 @@
 import           Data.Functor         ((<$>))
 import qualified Data.List            as List
 import           Data.Monoid          ((<>), mconcat)
+import qualified Data.Set             as Set
 import           Data.String          (fromString)
 
 import qualified System.Directory     as Dir
@@ -92,7 +93,16 @@ defaultPage content = do
     >>= relativizeUrls
 
 runPandoc :: Item String -> Item String
-runPandoc = renderPandocWith defaultHakyllReaderOptions pandocOptions
+runPandoc = renderPandocWith readerOptions writerOptions
+  where writerOptions = defaultHakyllWriterOptions
+         { P.writerHTMLMathMethod = P.MathJax ""
+         , P.writerExtensions     = exts
+         }
+
+        readerOptions = defaultHakyllReaderOptions
+          { P.readerExtensions = exts }
+
+        exts = Set.insert P.Ext_tex_math_single_backslash P.pandocExtensions
 
 postContext :: Context String
 postContext = mapContext Path.takeDirectory (urlField "url")
@@ -119,11 +129,6 @@ include file = field name $ \ item -> unsafeCompiler $ do
   if exists then readFile $ dir </> "include" </> file
             else return ""
   where name = Path.takeBaseName file
-
-pandocOptions :: P.WriterOptions
-pandocOptions = defaultHakyllWriterOptions {
-  P.writerHTMLMathMethod = P.MathJax ""
-}
 
 removeDir :: String -> Routes
 removeDir dir = customRoute $ remove . toFilePath
