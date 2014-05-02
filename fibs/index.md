@@ -76,6 +76,32 @@ However, things are actually even better than this. Since we have no other refer
 
 So really, the `fibs` list is not so much a data structure as a clever loop with two variables used to calculate the next value at each step. We just evaluate as much of this loop as we need to return the nth number.
 
+## Dynamic Programming
+
 I originally made these visualizations for a blog post about dynamic programming that I'm still working on. But I think they're pretty interesting by themselves, and I'll probably try making more for other sorts of interesting lazy patterns later.
+
+Of course, dynamic programming is usually done with arrays rather than lists. Happily, we can make this quite elegant with laziness too!
+
+The basic trick is to take a recursive function and replace the recursive calls with indexes into an array. Then we define the array with calls to the function itself! We can write `fib` in this style as well, although it's much less efficient for this particular problem:
+
+```haskell
+fib' max = go max
+  where go 0 = 0
+        go 1 = 1
+        go n = fibs ! (n - 1) + fibs ! (n - 2)
+        fibs = Array.listArray (0, max) [go x | x <- [0..max]]
+```
+
+It's a function defined in terms of an array which is defined in terms of the function! Very circular.
+
+In memory, it looks something like this:
+
+![The array of sub-problems for `fib 5`.](fib-array.png)
+
+Each entry in the array (except the first two) is a thunk for `go n`, where `go n` is just `+` with pointers back into the array. These pointers make the dependencies inherent in the problem more explicit: the code has *explicit* dependencies between cells.
+
+This is quite nice because it makes all the dependencies in our dynamic programming problem explicit. Instead of manually reflecting the dependencies by mutating an array, we've specified them directly in our recursion. All the bookkeeping is then done for us by the lazy evaluation rules. Apart from making the code higher-level and clearer, it also prevents a bunch of possible mistakes: we can't access a cell before we've written to it and we can't overwrite an existing value: after all, we can only evaluate thunks.
+
+This is a good example of using laziness to **structure** mutation, much in the same way structured programming *structures* jumps. By being more explicit about *what* we want and less about *how*, we can restrict ourselves in a way that prevents many possible bugs.
 
 </div>
