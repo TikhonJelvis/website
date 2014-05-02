@@ -65,15 +65,24 @@ naive a b = d m n
   where (n, m) = (length a, length b)
         d i 0 = i
         d 0 j = j
-        d i j = minimum [ d (i - 1) j + ins (b !! (i - 1))
-                        , d i (j - 1) + del (a !! (j - 1))
-                        , d (i - 1) (j - 1) + sub (a !! (j - 1), b !! (i - 1))
+        d i j = minimum [ d (i - 1) j + 1
+                        , d i (j - 1) + 1
+                        , d (i - 1) (j - 1) + c
                         ]
+          where c | a !! (j - 1) /=  b !! (i - 1) = 1
+                  | otherwise                  = 0
 
-        -- The cost functions could be arbitrary, but for now they're
-        -- just constant:
-        ins _ = 1
-        del _ = 1
-        sub (a_j, b_i)
-          | a_j == b_i = 0
-          | otherwise = 1
+basic :: Eq a => [a] -> [a] -> Distance
+basic a b = d m n
+  where (n, m) = (length a, length b)
+        d i 0 = i
+        d 0 j = j
+        d i j = minimum [ ds ! (i - 1, j) + 1
+                        , ds ! (i, j - 1) + 1
+                        , ds ! (i -1, j - 1) + c
+                        ]
+          where c | a !! (j - 1) /= b !! (i - 1) = 1
+                  | otherwise                 = 0
+
+        ds = Array.array bounds [((i, j), d i j) | i <- [0..m], j <- [0..n]]
+        bounds = ((0, 0), (n + 1, m + 1))

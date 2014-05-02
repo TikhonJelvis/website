@@ -124,5 +124,40 @@ For calculating `fib' 5`, `fibs` would be an array of 6 thunks each containing a
 
 ![The array of sub-problems for `fib 5`.](fib-array.png)
 
+The nice thing is that this tangle of pointers and dependencies is all taken care of by laziness. We can't really mess it up or access parts of the array incorrectly because those details are *below our level of abstraction*. Filling out, updating and reading the array is all a result of forcing the thunks in the cells, not something we implemented explicitly in Haskell.
+
 [elegant]: http://conal.net/blog/posts/elegant-memoization-with-functional-memo-tries
 [combinators]: http://lukepalmer.wordpress.com/2008/10/14/data-memocombinators/
+
+</div>
+<div class="content">
+
+# String Edit Distance
+
+Now that we have a technique for doing dynamic programming neatly with lazy arrays, let's apply it to a real dynamic programming problem: **string edit distance**. This is one of the most common problems used to introduce dynamic programming in algorithms classes and a good first step towards implementing tree edit distance.
+
+The **edit distance** between two strings is a measure of how *different* the strings are: it's the number of steps needed to go from one to the other where each step can either add, remove or modify a single character. The actual sequence of steps needed is called an **edit script**. For example:
+
+  * `"brother" → \ "bother" `\ \ remove `'r'`
+  * `"bother"\  → "brother"`\ \ add `'r'`
+  * `"sitting" → "fitting"`\ \ modify `'s'` to `'f'`
+
+The distance between strings $a$ and $b$ is always the same as the distance between $b$ and $a$. We go between the two edit scripts by inverting the actions: turning adds into removes, removes into adds and flipping the characters being modified.
+
+The [Wagner-Fischer algorithm][wf-algorithm] is the basic approach for computing the edit distance between two strings. We can express it as a recurrence relation (taken from Wikipedia). Given two strings $a = a_1 \ldots a_n$ and $b = b_1 \ldots b_n$, the distance between them ($d_{mn}$) is given as: 
+
+The basic algorithm for finding the edit distance between two strings is the [Wagner-Fischer algorithm][wf-algorithm]. We can express this algorithm as a recurrence relation (taken from Wikipedia). Given two strings $a = a_1 \ldots a_n$ and $b = b_1 \ldots b_n$, the distance between them ($d_{mn}$) is given as: 
+  \[ d_{i0} = i \text{ for } 0 \le i \le m \]
+  \[ d_{0j} = j \text{ for } 0 \le j \le n \]
+  \[ d_{ij} = \min \begin{cases}
+    d_{i-1,j} + 1\ \ \ \ (\text{insert}) \\
+    d_{i,j-1} + 1\ \ \ \ (\text{delete}) \\
+    d_{i-1,j-1} + c\ (\text{modify}) \\
+  \end{cases} \\
+  \text{where } c = \begin{cases}
+    1 \text{ if } a_{j - 1} \ne b_{i - 1} \\
+    0 \text{ if } a_{j - 1} = b_{i - 1} \\
+  \end{cases}
+  \]
+
+[wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Algorithm
