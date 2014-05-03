@@ -8,20 +8,21 @@ author: Tikhon Jelvis
 # Welcome
 
 <div class="announcement">
-[Our paper on Chlorophyll](chlorophyll.pdf), a synthesis-aided compiler, was accepted to [PLDI 2014](http://conferences.inf.ed.ac.uk/pldi2014/acceptedpapers.html)!
+
+I helped make [a game][tycoon]! Play it. [Warning: sound.]
 
 <div> </div>
 
-I recently gave a talk at the Haskell Hackers meetup:
+[Our paper on Chlorophyll](chlorophyll.pdf), a synthesis-aided compiler, was accepted to [PLDI 2014][PLDI].
 
-  * [Analyzing Programs with SMT Solvers](talks/analyzing-programs-with-smt.html)
+<div> </div>
 
-All of my older slides are now available on my [talks](talks) page, including:
-
-  * [Polymorphism---System F](talks/system-f.html) ([pdf](talks/system-f.pdf))
-  * [Dependent Types](talks/dependent-types.html) ([pdf](talks/dependent-types.pdf))
+All my slides are available on my [talks](talks) page.
 
 </div>
+
+[tycoon]: http://asteroidtycoon.com
+[PLDI]: http://conferences.inf.ed.ac.uk/pldi2014/acceptedpapers.html
 
 ![Me on the roof of the Casa Milà in Barcelona. For even more Guadí, you can barely see the Sagrada Família in the background.](img/me_at_casa_mila_med.jpg)
 
