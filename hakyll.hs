@@ -4,6 +4,7 @@
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE ViewPatterns              #-}
 
+import           Data.Char            (toUpper)
 import           Data.Functor         ((<$>))
 import qualified Data.List            as List
 import           Data.Monoid          ((<>), mconcat)
@@ -35,7 +36,6 @@ main = hakyll $ do
   match ("blog/*/*.md" .||. "drafts/*/*.md") $ do
     route $ setExtension "html"
     compile $ getResourceString
-      <&> runPandoc
       >>= saveSnapshot "content"
       >>= loadAndApplyTemplate "templates/blog-post.md" context
       >>= defaultPage
@@ -43,8 +43,9 @@ main = hakyll $ do
   match "blog/index.html" $ do
     route   $ setExtension "html"
     compile $ do
-      posts <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
-      let blogContext = listField "posts" postContext (return posts) <>
+      content <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
+      let posts       = runPandoc <$> content
+          blogContext = listField "posts" postContext (return posts) <>
                         constField "title" "Blog" <>
                         context
       getResourceString
@@ -57,7 +58,7 @@ main = hakyll $ do
         compile $ do
           let feedContext = postContext <> bodyField "description"
           posts <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
-          render blogFeedConfig feedContext posts        
+          render blogFeedConfig feedContext (runPandoc <$> posts)
 
   create ["blog/atom.xml"] $ feed renderAtom
   create ["blog/rss.xml"]  $ feed renderRss
@@ -102,12 +103,19 @@ runPandoc = renderPandocWith readerOptions writerOptions
         readerOptions = defaultHakyllReaderOptions
           { P.readerExtensions = exts }
 
-        exts = Set.insert P.Ext_tex_math_single_backslash P.pandocExtensions
+        exts = Set.insert P.Ext_tex_math_single_backslash $
+               Set.insert P.Ext_all_symbols_escapable $
+               P.pandocExtensions
 
 postContext :: Context String
 postContext = mapContext Path.takeDirectory (urlField "url")
-           <> teaserField "teaser" "content"
+           <> teaser
            <> context
+  where teaser = field "teaser" $ \ item ->
+          let name = show $ itemIdentifier item in
+          case needlePrefix "<!--more-->" $ itemBody item of
+            Nothing   -> error $ printf "No teaser defined for %s!" name
+            Just body -> return body
 
 context :: Context String
 context = defaultContext <> include "imports.html"
