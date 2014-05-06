@@ -138,26 +138,109 @@ Now that we have a technique for doing dynamic programming neatly with lazy arra
 
 The **edit distance** between two strings is a measure of how *different* the strings are: it's the number of steps needed to go from one to the other where each step can either add, remove or modify a single character. The actual sequence of steps needed is called an **edit script**. For example:
 
-  * `"brother" → \ "bother" `\ \ remove `'r'`
-  * `"bother"\  → "brother"`\ \ add `'r'`
-  * `"sitting" → "fitting"`\ \ modify `'s'` to `'f'`
+  * `"brother"` → `"bother" `\ \ \ \ remove `'r'`
+  * `"bother"`\ \  → `"brother"`\ \ add `'r'`
+  * `"sitting"` → `"fitting"`\ \ modify `'s'` to `'f'`
 
-The distance between strings $a$ and $b$ is always the same as the distance between $b$ and $a$. We go between the two edit scripts by inverting the actions: turning adds into removes, removes into adds and flipping the characters being modified.
+The distance between strings \(a\) and \(b\) is always the same as the distance between \(b\) and \(a\). We go between the two edit scripts by inverting the actions: turning adds into removes, removes into adds and flipping the characters being modified.
 
-The [Wagner-Fischer algorithm][wf-algorithm] is the basic approach for computing the edit distance between two strings. We can express it as a recurrence relation (taken from Wikipedia). Given two strings $a = a_1 \ldots a_n$ and $b = b_1 \ldots b_n$, the distance between them ($d_{mn}$) is given as: 
+The [Wagner-Fischer algorithm][wf-algorithm] is the basic approach for computing the edit distance between two strings. The core idea is to go through the two strings character by character, trying all three possible actions (adding, removing or modifying).
 
-The basic algorithm for finding the edit distance between two strings is the [Wagner-Fischer algorithm][wf-algorithm]. We can express this algorithm as a recurrence relation (taken from Wikipedia). Given two strings $a = a_1 \ldots a_n$ and $b = b_1 \ldots b_n$, the distance between them ($d_{mn}$) is given as: 
-  \[ d_{i0} = i \text{ for } 0 \le i \le m \]
-  \[ d_{0j} = j \text{ for } 0 \le j \le n \]
-  \[ d_{ij} = \min \begin{cases}
-    d_{i-1,j} + 1\ \ \ \ (\text{insert}) \\
-    d_{i,j-1} + 1\ \ \ \ (\text{delete}) \\
-    d_{i-1,j-1} + c\ (\text{modify}) \\
-  \end{cases} \\
-  \text{where } c = \begin{cases}
-    1 \text{ if } a_{j - 1} \ne b_{i - 1} \\
-    0 \text{ if } a_{j - 1} = b_{i - 1} \\
-  \end{cases}
+For example, to get the distance between `"kitten"` and `"sitting"`, we would start with the first two characters `k` and `s`. As these are different, we need to try the three possible edit actions and find them smallest distance. So we would compute the distances between `"itten"` and `"sitting"` for a delete, `"kitten"` and `"itting"` for an insert and `"itten"` and `"itting"` for a modify, and choose the smallest result.
+
+This is where the branching factor comes from---each time the strings differ, we have to solve *three* recursive sub-problems to see which action is optimal at the given step.
+
+We can express this as a recurrence relation. Given two strings \(a\) and \(b\), \(d_{ij}\) is the distance between their suffixes of length \(i\) and \(j\) respectively. So, for `"kitten"` and `"sitting"`, \(d_{6,7}\) would be the whole distance while \(d_{5,6}\) would be between `"itten"` and `"itting"`. 
+
+  \[ \begin{align}
+       d_{i0} & = i & \text{ for } 0 \le i \le m & \\
+       d_{0j} & = j & \text{ for } 0 \le j \le n & \\
+       d_{ij} & = d_{i-1,j-1}\ & \text{if } a_i = b_j & \\
+       d_{ij} & = \min \begin{cases}
+         d_{i-1,j} + 1\ \ \ \ (\text{delete}) \\
+         d_{i,j-1} + 1\ \ \ \ (\text{insert}) \\
+         d_{i-1,j-1} + 1\ (\text{modify}) \\
+       \end{cases} & \text{if } a_i \ne b_j
+     \end{align}
   \]
 
-[wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Algorithm
+The base cases \(d_{i0}\) and \(d_{0j}\) arise when we've gone through all of the characters in one of the strings, since the distance is just based on the characters remaining in the other string. The recursive case has us try the three possible actions, compute the distance for the three results and return the best one.
+
+We can transcribe this almost directly to Haskell:
+
+```haskell
+naive a b = d (length a) (length b)
+  where d i 0 = i
+        d 0 j = j
+        d i j
+          | a !! (i - 1) ==  b !! (j - 1) = d (i - 1) (j - 1)
+          | otherwise = minimum [ d (i - 1) j       + 1
+                                , d i (j - 1)       + 1
+                                , d (i - 1) (j - 1) + 1
+                                ]
+```
+
+And, for small examples, this code actually works! You can try it on `"kitten"` and `"sitting"` to get `3`. Of course, it runs in exponential time, which makes it freeze on larger inputs---even just `"aaaaaaaaaa"` and `"bbbbbbbbbb"` already take a while! The practical version of this algorithm relies on dynamic programming, caching each value \(d_{ij}\) into a two-dimensional array so that we only calculate it at most once.
+
+We can do this transformation in much the same way we used a `fibs` array: we define `ds` as an array with a bunch of calls to `d i j` and we replace our recursive calls `d i j` with indexing into the array `ds ! (i, j)`.
+
+```haskell
+basic a b = d m n
+  where (m, n) = (length a, length b)
+        d i 0 = i
+        d 0 j = j
+        d i j
+          | a !! (i - 1) ==  b !! (j - 1) = ds ! (i - 1, j - 1)
+          | otherwise = minimum [ ds ! (i - 1, j)     + 1
+                                , ds ! (i, j - 1)     + 1
+                                , ds ! (i - 1, j - 1) + 1
+                                ]
+
+        ds = Array.listArray bounds
+               [d i j | (i, j) <- Array.range bounds]
+        bounds = ((0, 0), (m, n))
+```
+
+This code is really not that different from the naive version, but it's *far* faster.
+
+## Lists as Loops
+
+One thing that immediately jumps out from the above code is using `!!` for indexing into lists. Since lists are not a good data structure for random accesses, the `!!` is often a bit of a code smell. And, indeed, using lists causes problems for comparing longer strings.
+
+We can solve this by converting `a` and `b` into arrays and then actually diffing those. (We can also make the arrays 1-indexed, simplifying the arithmetic a bit.)
+
+```haskell
+better a b = d m n
+  where (m, n) = (length a, length b)
+        a'     = Array.listArray (1, m) a
+        b'     = Array.listArray (1, n) b
+
+        d i 0 = i
+        d 0 j = j
+        d i j
+          | a' ! i ==  b' ! j = ds ! (i - 1, j - 1)
+          | otherwise = minimum [ ds ! (i - 1, j)     + 1
+                                , ds ! (i, j - 1)     + 1
+                                , ds ! (i - 1, j - 1) + 1
+                                ]
+
+        ds = Array.listArray bounds
+               [d i j | (i, j) <- Array.range bounds]
+        bounds = ((0, 0), (m, n))
+```
+
+The only difference here is defining `a'` and `b'` and then using `!` instead of `!!`. In practice, this is much faster than the `basic` version.
+
+Now, it might seem a little odd to take lists as arguments just to immediately convert them into arrays. Why don't we just ask for arrays directly?
+
+Partly, people in Haskell just don't use arrays very much. They would look odd in an API. People use a large set of sequential data types like lists, sequences, text, bytestrings, vectors, REPA... Chances are they would have to convert whatever they have to an array to use our function.
+
+And how would they convert it? They'd probably go through an intermediate list! Just like us, they'd actually construct the array with something like `Array.listArray`. This seems wasteful in the same way: why create an intermediate list just to turn it into an array?
+
+The real insight is that lists in Haskell are lazy and really behave more like loops than data structures. The list never has to completely exist in memory: just like with the `fibs` example, we only evaluate the list items as we need them, and the GC can collect old elements as soon as we're done with them.
+
+So if we start with a `Sequence`, convert it to a list and feed that list into `Array.listArray`, we actually just get a loop that traverses the sequence and *safely* constructs the array. We can think of a list argument like this as a hole where you can plug in a loop rather than a normal argument.
+
+With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately the most general way to write this function: it accepts two *traversals* of some data structure and just diffs those by internally writing the traversal to a string. In fact, the `[a]` function more like iterators except much nicer: they're first-class data structures that we can pattern-match and they can be mapped over, filtered, folded and read however we like without any problems. 
+
+[wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Basic_algorithm

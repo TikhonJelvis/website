@@ -6,9 +6,14 @@ import           Data.Tree  (Tree)
 
 import qualified System.Environment as System
 
-main = do [n] <- System.getArgs
-          print . length . show . fib1 $ read n
-          -- print . length $ take (read n) fibs1
+import           Text.Printf (printf)
+
+main = do [f₁, f₂, flag] <- System.getArgs
+          a <- readFile f₁
+          b <- readFile f₂
+          if flag == "basic"
+            then printf "Basic result: %d\n" $ basic a b
+            else printf "Better result: %d\n" $ better a b
 
 -- Lazy memoization and dynamic programming:
 
@@ -56,33 +61,51 @@ type Distance = Int
 --   convert the lists to arrays, but that would also complicate the
 --   code a bit.
 -- 
---   For consistency, I used the same variable names as Wikipedia: two
---   strings `a' and `b' of length `n' and `m' respectively. The
---   distance between them is `d' indexed by `i' for string `b' and
---   `j' for string `a'.
+--   For consistency, I used similar variable names to Wikipedia: two
+--   strings `a' and `b' of length `m' and `n' respectively. The
+--   distance between them is `d' indexed by `i' for string `a' and
+--   `j' for string `b'.
 naive :: Eq a => [a] -> [a] -> Distance
-naive a b = d m n
-  where (n, m) = (length a, length b)
-        d i 0 = i
+naive a b = d (length a) (length b)
+  where d i 0 = i
         d 0 j = j
-        d i j = minimum [ d (i - 1) j + 1
-                        , d i (j - 1) + 1
-                        , d (i - 1) (j - 1) + c
-                        ]
-          where c | a !! (j - 1) /=  b !! (i - 1) = 1
-                  | otherwise                  = 0
+        d i j
+          | a !! (i - 1) ==  b !! (j - 1) = d (i - 1) (j - 1)
+          | otherwise = minimum [ d (i - 1) j       + 1
+                                , d i (j - 1)       + 1
+                                , d (i - 1) (j - 1) + 1
+                                ]
 
+-- | Here is the basic algorithm with dynamic programming. 
 basic :: Eq a => [a] -> [a] -> Distance
 basic a b = d m n
-  where (n, m) = (length a, length b)
+  where (m, n) = (length a, length b)
         d i 0 = i
         d 0 j = j
-        d i j = minimum [ ds ! (i - 1, j) + 1
-                        , ds ! (i, j - 1) + 1
-                        , ds ! (i -1, j - 1) + c
-                        ]
-          where c | a !! (j - 1) /= b !! (i - 1) = 1
-                  | otherwise                 = 0
+        d i j
+          | a !! (i - 1) ==  b !! (j - 1) = ds ! (i - 1, j - 1)
+          | otherwise = minimum [ ds ! (i - 1, j)     + 1
+                                , ds ! (i, j - 1)     + 1
+                                , ds ! (i - 1, j - 1) + 1
+                                ]
 
-        ds = Array.array bounds [((i, j), d i j) | i <- [0..m], j <- [0..n]]
-        bounds = ((0, 0), (n + 1, m + 1))
+        ds = Array.listArray bounds [d i j | (i, j) <- Array.range bounds]
+        bounds = ((0, 0), (m, n))
+
+better :: Eq a => [a] -> [a] -> Distance
+better a b = d m n
+  where (m, n) = (length a, length b)
+        a'     = Array.listArray (1, m) a
+        b'     = Array.listArray (1, n) b
+
+        d i 0 = i
+        d 0 j = j
+        d i j
+          | a' ! i ==  b' ! j = ds ! (i - 1, j - 1)
+          | otherwise = minimum [ ds ! (i - 1, j)     + 1
+                                , ds ! (i, j - 1)     + 1
+                                , ds ! (i - 1, j - 1) + 1
+                                ]
+
+        ds = Array.listArray bounds [d i j | (i, j) <- Array.range bounds]
+        bounds = ((0, 0), (m, n))
