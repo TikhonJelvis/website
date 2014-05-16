@@ -1,8 +1,10 @@
 module Main where
 
+import           Control.Applicative ((<*))
+import           Control.Monad.State
+
 import qualified Data.Array as Array
 import           Data.Array ((!))
-import           Data.Tree  (Tree)
 
 import qualified System.Environment as System
 
@@ -120,3 +122,23 @@ better a b = d m n
 
         ds = Array.listArray bounds [d i j | (i, j) <- Array.range bounds]
         bounds = ((0, 0), (m, n))
+
+-- Tree Edit Distance
+
+-- | A simple rose tree, isomorphic to `Tree' from `Data.Tree'.
+data Tree a = Node a (Forest a) deriving (Show, Eq)
+
+-- | A forest is a list of trees. This is useful as a separate type
+--   because the Zhang-Shasha algorithm is naturally expressed in
+--   terms of (ordered) forests rather than trees.
+type Forest a = [Tree a]
+
+
+-- | Traverse the tree in a post-order, labelling each node with its
+--   occurence in the traversal.
+postOrder :: Tree a -> Tree (Int, a)
+postOrder node = evalState (go node) 0
+  where go (Node v cs) = do
+          cs' <- mapM go cs
+          n   <- get <* modify (+ 1)
+          return $ Node (n, v) cs'
