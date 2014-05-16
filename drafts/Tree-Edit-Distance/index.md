@@ -241,6 +241,6 @@ The real insight is that lists in Haskell are lazy and really behave more like l
 
 So if we start with a `Sequence`, convert it to a list and feed that list into `Array.listArray`, we actually just get a loop that traverses the sequence and *safely* constructs the array. We can think of a list argument like this as a hole where you can plug in a loop rather than a normal argument.
 
-With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately the most general way to write this function: it accepts two *traversals* of some data structure and just diffs those by internally writing the traversal to a string. In fact, the `[a]` function more like iterators except much nicer: they're first-class data structures that we can pattern-match and they can be mapped over, filtered, folded and read however we like without any problems. 
+With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately the most general way to write this function: it accepts two *traversals* of some data structure and just diffs those by internally writing the traversal to a string. The lists function like iterators, except they're also first-class data structures that we can pattern-match and manipulate however we like.
 
 [wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Basic_algorithm

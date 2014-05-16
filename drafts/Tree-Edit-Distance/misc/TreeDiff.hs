@@ -76,7 +76,13 @@ naive a b = d (length a) (length b)
                                 , d (i - 1) (j - 1) + 1
                                 ]
 
--- | Here is the basic algorithm with dynamic programming. 
+-- | Here is the basic algorithm with dynamic programming. It does
+--   this by circularly defining a lazy array: the function replaces
+--   recursion by indexing into the array, and each array item just
+--   calls back into the function.
+--
+--   It still uses !! to index on lists though, which is a major
+--   problem for even moderately sized strings.
 basic :: Eq a => [a] -> [a] -> Distance
 basic a b = d m n
   where (m, n) = (length a, length b)
@@ -92,6 +98,11 @@ basic a b = d m n
         ds = Array.listArray bounds [d i j | (i, j) <- Array.range bounds]
         bounds = ((0, 0), (m, n))
 
+-- | This version is just like @basic@ except that it writes the lists
+--   into arrays and indexes on those, which is a considerable
+--   improvement in practice. It's still not super-fast in absolute
+--   terms, but I think it's pretty good given how elegant the code
+--   is.
 better :: Eq a => [a] -> [a] -> Distance
 better a b = d m n
   where (m, n) = (length a, length b)
