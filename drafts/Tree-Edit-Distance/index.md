@@ -244,3 +244,30 @@ So if we start with a `Sequence`, convert it to a list and feed that list into `
 With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately the most general way to write this function: it accepts two *traversals* of some data structure and just diffs those by internally writing the traversal to a string. The lists function like iterators, except they're also first-class data structures that we can pattern-match and manipulate however we like.
 
 [wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Basic_algorithm
+
+</div>
+<div class="content">
+
+# Trees
+
+Now that we have a framework for thinking about dynamic programming as well as a nice example, let's extend these ideas to a slightly more complex problem---tree edit distance.
+
+I'm going to be using the [Zhang-Shasha][zs-algorithm] algorithm which is just a generalization of the string edit distance algorithm. In fact, the string edit distance algorithm is just a special case of Zhang-Shasha applied to a tree with no branching. We can think of this algorithm as a version of the string edit distance algorithm which additionally keeps track of the tree structure (ie parent and children nodes) explicitly instead of assuming a purely linear configuration.
+
+This algorithm considers the same three edit actions (add, remove, modify) but generalized to trees.
+
+Modifying doesn't change the structure of the tree, it just relabels a node:
+
+![Relabeling node \(x\) to \(y\).](tree-modify.png)
+
+Removing a node moves all of its children up a level. Here, removing \(x\) moves its children up to \(x\)'s old parent \(1\).
+
+![Removing node \(x\).](tree-remove.png)
+
+I find adding nodes hard to think about. It's easier to realize that, similarly to string edit distance, adding is just the mirror image of removing a node.
+
+![Adding node \(x\).](tree-add.png)
+
+
+
+[zs-algorithm]: http://grantjenks.com/wiki/_media/ideas/simple_fast_algorithms_for_the_editing_distance_between_tree_and_related_problems.pdf
