@@ -32,7 +32,16 @@ I gave a series of talks introducing type theory at the [SF Types, Theorems and 
   
 ## Haskell
 
-I've given a few talks at Haskell hackathons. First, there were two lightning talks at [BayHac 2013](http://www.haskell.org/haskellwiki/BayHac2013):
+I've given a few talks at Haskell hackathons and meetups.
+
+<div></div>
+
+[Haskell Hackers meetup][haskell-hackers] (at Hacker Dojo):
+
+  * [Inductive Graphs](inductive-graphs.html)
+  * [Analyzing Programs with SMT Solvers](analyzing-programs-with-smt.html)
+
+Two lightning talks at [BayHac 2013](http://www.haskell.org/haskellwiki/BayHac2013):
 
   * [Program Synthesis for ArrayForth](af-slides.html)
   * [Algebras and Coalgebras](algebras.html) (based on a [post](http://stackoverflow.com/questions/16015020/what-does-coalgebra-mean-in-the-context-of-programming/16022059#16022059) I wrote)
@@ -48,3 +57,5 @@ I recently did a survey of functional reactive programming (FRP) for one of my C
   * [Introduction to FRP](frp-slides.html)
   
 </div>
+
+[haskell-hackers]: http://www.meetup.com/haskellhackersathackerdojo/
