@@ -3,28 +3,19 @@ title: Lazy Dynamic Programming
 author: Tikhon Jelvis
 ---
 
-I recently got back to an old project of mine which requires me to compute diffs between trees efficiently, a dynamic programming problem. This was a great excuse to dive into dynamic programming and look at implementing some nontrivial algorithms in a functional style.
+I recently got back to an old project of mine which requires me to compute diffs between trees efficiently, a dynamic programming problem. This is a great excuse to dive into dynamic programming in Haskell and look at implementing some nontrivial algorithms in a functional style.
 
-I'm going to do cover dynamic programming with **lazy arrays** and take a look at how to implement the classic string edit distance function. This is the first step to actually implementing tree edit distance. I will cover the other step---going from string to tree edit distance---in a future post. It turned out to be a bit trickier than I thought, and would make this post too long to read, much less write.
+I'm going to cover dynamic programming with **lazy arrays** and take a look at how to implement the classic string edit distance function, the first step to actually implementing tree edit distance. I will cover the other step---going from string to tree edit distance---in a future post. It turned out to be a bit trickier than I thought, and would make this post too long to read much less write.
+
+I figured much of this out with the help of [Joe Nelson][joe]. We worked together on that project---[semantic version control][cow]---as part of his "open source pilgrimage", which got me interested again and helped me figure out some of the key details I was missing. Overall, I had a [great time][pairing] working with him!
+
+[cow]: /cow
+[joe]: http://begriffs.com/
+[pairing]: http://blog.begriffs.com/2014/04/pilgrimage-report-structural-merging.html
 
 <!-- add tree diff image here -->
 
 <!--more-->
-
-## Semantic Version Control
-
-A few years ago, I started working on a project for **semantic version control**. The idea is to compare code *as* code, not as plain text. We would do the diffs and merges directly on syntax trees, enabling a higher level of analysis.
-
-The first version was hacked together in 18 hours at a hackathon and did not work very well. Later, [Ankur Dave][ankur] and I rewrote the whole system for a class project. We named it [cow][cow] because, well, we're bad with names.  While that version worked properly, it did not scale beyond short code snippets: I implemented the core algorithm for diffing trees incorrectly. After that, I got stuck and the project went on hiatus for a couple of years.
-
-I've been meaning to get back to it for a while and implement the algorithm correctly, but just haven't gotten around to it. I was recently contacted by [Joe Nelson][joe] who is going on an "open source pilgrimage" and wanted to pair with me on a project. This was the push I needed to get back to the project, and I spent a [great day][pairing] working with Joe on it.
-
-Right now, I'm just going to talk about the tree edit distance algorithm I need for the project; I'll cover other parts of the whole system later.
-
-[ankur]: http://ankurdave.com
-[cow]: /cow
-[joe]: http://begriffs.com/
-[pairing]: http://blog.begriffs.com/2014/04/pilgrimage-report-structural-merging.html
 
 </div>
 <div class="content">
@@ -298,7 +289,3 @@ postOrder node = evalState (go node) 0
 ```
 
 I think this is also a great example of using [`State`][State] to make the bookkeeping simpler. While the actual `State` type is a bit complicated---largely because it's actually defined using a monad transformer---we don't have to worry about any of those details at all. We just use [`evalState`][evalState] and let type inference handle everything.
-
-[zs-algorithm]: http://grantjenks.com/wiki/_media/ideas/simple_fast_algorithms_for_the_editing_distance_between_tree_and_related_problems.pdf
-[State]: https://hackage.haskell.org/package/mtl-2.0.1.0/docs/Control-Monad-State-Lazy.html#t:State
-[evalState]: https://hackage.haskell.org/package/mtl-2.0.1.0/docs/Control-Monad-State-Lazy.html#v:evalState
