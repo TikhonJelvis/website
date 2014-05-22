@@ -1,11 +1,11 @@
 ---
-title: Tree Edit Distance
+title: Lazy Dynamic Programming
 author: Tikhon Jelvis
 ---
 
-I recently got back to an old project of mine which requires me to compute diffs between trees efficiently, a problem generally called **tree edit distance**. This algorithm is a great example of how to do **dynamic programming** in Haskell, and a good case study of implementing nontrivial algorithms in a functional style.
+I recently got back to an old project of mine which requires me to compute diffs between trees efficiently, a dynamic programming problem. This was a great excuse to dive into dynamic programming and look at implementing some nontrivial algorithms in a functional style.
 
-The final goal is to take two trees and produce a summary of the *differences* between them: what nodes do we need to add, delete or modify to go from one to the other? This is a more general version of a common dynamic programming problem called **string edit distance**, so I'm going to start by implementing that and then changing the code to work for trees.
+I'm going to do cover dynamic programming with **lazy arrays** and take a look at how to implement the classic string edit distance function. This is the first step to actually implementing tree edit distance. I will cover the other step---going from string to tree edit distance---in a future post. It turned out to be a bit trickier than I thought, and would make this post too long to read, much less write.
 
 <!-- add tree diff image here -->
 
