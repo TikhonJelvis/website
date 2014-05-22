@@ -245,53 +245,15 @@ With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately 
 </div>
 <div class="content">
 
-# Trees
+With all this in mind, we have a very general technique for writing dynamic programming problems. We take our recursive algorithm and:
 
-Now that we have a framework for thinking about dynamic programming as well as a nice example, let's extend these ideas to a slightly more complex problem---tree edit distance.
+  1. add an array at the same scope level as the recursive function
+  2. define each array element as just a call back into the function with the appropriate index
+  3. replace each recursive call with an index into the array
 
-I'm going to be using the [Zhang-Shasha][zs-algorithm] algorithm which is just a generalization of the string edit distance algorithm I just described. In fact, that algorithm emerges as a special case of Zhang-Shasha applied to a tree with no branching. We can think of this algorithm as a version of the string edit distance algorithm which additionally keeps track of the tree structure (ie parent and children nodes) explicitly instead of assuming a purely linear configuration.
+This then maintains all the needed data in memory, forcing thunks as appropriate. All of the dependencies between array elements---as well as the actual mutation---is handled by laziness. And, in the end, we get code that really isn't that far off from a non-dynamic recursive version of the function!
 
-## Edit Actions
+For a bit of practice, try to implement a few other simple dynamic programming algorithms in Haskell like the [longest common substring][lcs] algorithm or [CYK parsing][cyk].
 
-We still consider the same three edit actions (add, remove, modify), extended to trees.
-
-Modifying doesn't change the structure of the tree, it just relabels a node:
-
-![Modifying node \(x\) to \(y\).](tree-modify.png)
-
-Removing a node moves all of its children up a level. Here, removing \(x\) moves its children up to \(x\)'s old parent \(1\).
-
-![Removing node \(x\).](tree-remove.png)
-
-I find adding nodes hard to think about. Adding a node moves its children down---but how do we know which nodes are the children? It's easier to realize that adding is just the mirror image of removing a node, just like in the string case.
-
-So adding is really just removing a node from the target tree instead of the source tree.
-
-![Adding node \(x\).](tree-add.png)
-
-## Basic Trees
-
-For string edit distance, we took our inputs as lazy lists. For trees, we're going to use "rose trees" which have a value at each node and any number of branches. This type is provided by `Data.Tree` but, for simplicity, I'm going to redefine it here:
-
-```haskell
-data Tree a = Node a (Forest a)
-
-type Forest a = [Tree a]
-```
-
-At each node, we have a value and a list of sub-trees. For this algorithm, having a separate `Forest` type turns out to be particularly useful because much of the code works with forests rather than trees themselves.
-
-Since this is a dynamic programming problem, we're going to use integers to index into sub-problems. For the linear string case, these integers could just be the position in the list. But what do we do for trees?
-
-We can traverse the tree in some set order and index into nodes based on their position in this traversal. For this algorithm, a post-order traversal turns out to be particularly useful. In a post order-order traversal, we first traverse all the sub-trees in order and then finally visit the root:
-
-```haskell
-postOrder :: Tree a -> Tree (Int, a)
-postOrder node = evalState (go node) 0
-  where go (Node v cs) = do
-          cs' <- mapM go cs
-          n   <- get <* modify (+ 1)
-          return $$ Node (n, v) cs'
-```
-
-I think this is also a great example of using [`State`][State] to make the bookkeeping simpler. While the actual `State` type is a bit complicated---largely because it's actually defined using a monad transformer---we don't have to worry about any of those details at all. We just use [`evalState`][evalState] and let type inference handle everything.
+[lcs]: http://en.wikipedia.org/wiki/Longest_common_substring_problem
+[cyk]: http://en.wikipedia.org/wiki/CYK_algorithm
