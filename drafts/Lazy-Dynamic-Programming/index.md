@@ -3,37 +3,43 @@ title: Lazy Dynamic Programming
 author: Tikhon Jelvis
 ---
 
-I recently got back to an old project of mine which requires me to compute diffs between trees efficiently, a dynamic programming problem. This is a great excuse to dive into dynamic programming in Haskell and look at implementing some nontrivial algorithms in a functional style.
+Dynamic programming is a method for efficiently solving complex problems with overlapping subproblems, covered in any introductory algorithms course. It is usually presented in a staunchly imperative way, explicitly writing and reading from a mutable array---doing this neatly in a functional language like Haskell is not immediately clear.
 
-I'm going to cover dynamic programming with **lazy arrays** and take a look at how to implement the classic string edit distance function, the first step to actually implementing tree edit distance. I will cover the other step---going from string to tree edit distance---in a future post. It turned out to be a bit trickier than I thought, and would make this post too long to read much less write.
+Happily, laziness provides a very natural way to express dynamic programming algorithms. The end result still relies on mutation, but purely by the runtime system---it is entirely below our level of abstraction. It's a great example of *thinking* with and embracing laziness.
 
-I figured much of this out with the help of [Joe Nelson][joe]. We worked together on that project---[semantic version control][cow]---as part of his "open source pilgrimage", which got me interested again and helped me figure out some of the key details I was missing. Overall, I had a [great time][pairing] working with him!
-
-[cow]: /cow
-[joe]: http://begriffs.com/
-[pairing]: http://blog.begriffs.com/2014/04/pilgrimage-report-structural-merging.html
+So let's look at how to do dynamic programming in Haskell and implement **string edit distance**, which is one of the most commonly taught dynamic programming algorithms. In a future post, I will also extend this algorithm to trees.
 
 <!-- add tree diff image here -->
 
 <!--more-->
+
+This post was largely spurred on by working with [Joe Nelson][joe] as part of his ["open source pilgrimage"][pairing]. We worked on my [semantic version control][cow] project which, as one of its passes, needs to compute a diff between parse trees. Pairing with Joe really helped me work out several of the key ideas in this post, which had me entirely stuck a few years ago.
+
+[cow]: /cow
+[joe]: http://begriffs.com/
+[pairing]: http://blog.begriffs.com/2014/04/pilgrimage-report-structural-merging.html
 
 </div>
 <div class="content">
 
 # Dynamic Programming and Memoization
 
-**Dynamic programming** is one of the core techniques for writing efficient algorithms. The idea is to break a problem into *smaller subproblems* and then save the result of each subproblem so that it is only ever calculated once. Dynamic programming involves two parts: first, we have to restate the problem in terms of **overlapping subproblems**, then we memoize calculating those subproblems.
+**Dynamic programming** is one of the core techniques for writing efficient algorithms. The idea is to break a problem into *smaller subproblems* and then save the result of each subproblem so that it is only calculated once. Dynamic programming involves two parts: first, we have to restate the problem in terms of **overlapping subproblems**, then we memoize it.
+
+Overlapping subproblems are subproblems that depend on each other. This is where dynamic programming is needed: if we use the result of each subproblem many times, we can save significant computation time by caching each intermediate, only calculating it once. Caching the result of a function like this is called **memoization**.
 
 Memoization in general is a rich topic in Haskell. There are some very interesting approaches for memoizing functions over different sorts of inputs like Conal Elliott's [elegant memoization][elegant] or Luke Palmer's [memo combinators][combinators].
 
-The general idea is to take advantage of laziness and create a large data structure like a list or a tree that stores the results of the function. This data structure is defined circularly: recursive calls are replaced with references to other parts of the data structure. Pieces of the data structure only get evaluated as needed and at most once---the actual memoization emerges naturally from the evaluation rules. A very illustrative (but slightly cliche) example is the memoized version of the Fibonacci function:
+The general idea is to take advantage of laziness and create a large data structure like a list or a tree that stores *all* of the function's values. This data structure is defined circularly: recursive calls are replaced with references to parts of the data structure. Thanks to laziness, pieces of the data structure only get evaluated as needed and at most once---memoization emerges naturally from the evaluation rules. A very illustrative (but slightly cliche) example is the memoized version of the Fibonacci function:
+
+<!-- TODO: Figure out how to use accents with Junction! (ie cliché) -->
 
 ```haskell
 fib n = fibs !! n
   where fibs = 0 : 1 : zipWith (+) fibs (drop 1 fibs)
 ```
 
-The `fib` function just indexes into the `fibs` list. This list is defined *in terms of itself*: instead of recursively calling `fib`, we just make newer elements of `fibs` depend on older ones by passing `fibs` and `(drop 1 fibs)` into `zipWith (+)`. It helps to visualize what this list looks like as more and more elements get evaluated:
+The `fib` function indexes into `fibs`, an infinite list of Fibonacci numbers. `fibs` is defined *in terms of itself*: instead of recursively calling `fib`, we make later elements of `fibs` depend on earlier ones by passing `fibs` and `(drop 1 fibs)` into `zipWith (+)`. It helps to visualize this list as more and more elements get evaluated:
 
 <div id="fibs-animation" class="figure">
 <ul class="animation">
