@@ -88,28 +88,28 @@ run Settings {..} = do
   putStrLn $ "Dir name: " ++ dirName
   exists <- Dir.doesDirectoryExist dirName
   if | not publish && not exists -> do
-    Dir.createDirectory dirName
-    printf "Creating post %s\n" name
-    Dir.setCurrentDirectory dirName
-    writeFile "index.md" $ index name
+      Dir.createDirectory dirName
+      printf "Creating post %s\n" name
+      Dir.setCurrentDirectory dirName
+      writeFile "index.md" $ index name
 
      | not publish && exists -> 
-    putStrLn "Draft already exists! Not doing anything."
+      putStrLn "Draft already exists! Not doing anything."
      
      | publish && exists -> do
-    published <- Dir.doesDirectoryExist $ ".." </> "blog" </> dirName
-    let var = if published then "modified" else "published"
-    putStrLn $ "Publishing " ++ name
-    Dir.setCurrentDirectory dirName
+      published <- Dir.doesDirectoryExist $ ".." </> "blog" </> dirName
+      let var = if published then "modified" else "published"
+      putStrLn $ "Publishing " ++ name
+      Dir.setCurrentDirectory dirName
 
-    zone <- Time.getCurrentTimeZone
-    time <- Time.getCurrentTime
-    let local = Time.utcToLocalTime zone time
+      zone <- Time.getCurrentTimeZone
+      time <- Time.getCurrentTime
+      let local = Time.utcToLocalTime zone time
 
-    Strict.readFile "index.md"
-      >>= writeFile "index.md" . addTimeVar var local
-    
-    () <$ runCommand [str|cp -r '../$escape dirName$' ../../blog/|]
+      Strict.readFile "index.md"
+        >>= writeFile "index.md" . addTimeVar var local
+      
+      () <$ runCommand [str|cp -r '../$escape dirName$' ../../blog/|]
 
      | publish && not exists -> 
-    error "Cannot publish draft that doesn't exist!"
+      error "Cannot publish draft that doesn't exist!"
