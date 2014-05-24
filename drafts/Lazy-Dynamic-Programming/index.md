@@ -11,6 +11,8 @@ So let's look at how to do dynamic programming in Haskell and implement **string
 
 <!-- add tree diff image here -->
 
+![An example showing the differences between two strings---computed by the edit distance algorithm.](diff-example.png)
+
 <!--more-->
 
 This post was largely spurred on by working with [Joe Nelson][joe] as part of his ["open source pilgrimage"][pairing]. We worked on my [semantic version control][cow] project which, as one of its passes, needs to compute a diff between parse trees. Pairing with Joe really helped me work out several of the key ideas in this post, which had me entirely stuck a few years ago.
@@ -24,9 +26,9 @@ This post was largely spurred on by working with [Joe Nelson][joe] as part of hi
 
 # Dynamic Programming and Memoization
 
-**Dynamic programming** is one of the core techniques for writing efficient algorithms. The idea is to break a problem into *smaller subproblems* and then save the result of each subproblem so that it is only calculated once. Dynamic programming involves two parts: first, we have to restate the problem in terms of **overlapping subproblems**, then we memoize it.
+**Dynamic programming** is one of the core techniques for writing efficient algorithms. The idea is to break a problem into *smaller subproblems* and then save the result of each subproblem so that it is only calculated once. Dynamic programming involves two parts: restating the problem in terms of **overlapping subproblems** and memoizing.
 
-Overlapping subproblems are subproblems that depend on each other. This is where dynamic programming is needed: if we use the result of each subproblem many times, we can save significant computation time by caching each intermediate, only calculating it once. Caching the result of a function like this is called **memoization**.
+Overlapping subproblems are subproblems that depend on each other. This is where dynamic programming is needed: if we use the result of each subproblem many times, we can save time by caching each intermediate result, only calculating it once. Caching the result of a function like this is called **memoization**.
 
 Memoization in general is a rich topic in Haskell. There are some very interesting approaches for memoizing functions over different sorts of inputs like Conal Elliott's [elegant memoization][elegant] or Luke Palmer's [memo combinators][combinators].
 
@@ -97,15 +99,15 @@ Note how we only ever need the last two elements of the list. Since we don't hav
 
 ## Lazy Arrays
 
-Dynamic programming algorithms tend to have a very specific memoization style---sub-problems are put into an array and the inputs to the algorithm are transformed into array indices.  These algorithms are often presented in a distinctly imperative fashion: you initialize a large array with some empty value and then manually update it as you go along. You have to do some explicit bookkeeping at each step to save your result and there is nothing preventing you from accidentally reading in part of the array you haven't set yet.
+Dynamic programming algorithms tend to have a very specific memoization style---sub-problems are put into an array and the inputs to the algorithm are transformed into array indices. These algorithms are often presented in a distinctly imperative fashion: you initialize a large array with some empty value and then manually update it as you go along. You have to do some explicit bookkeeping at each step to save your result and there is nothing preventing you from accidentally reading in part of the array you haven't set yet.
 
-This imperative-style updating is awkward to represent in Haskell. We could do it by either passing around an immutable array as an argument or using a mutable array internally, but both of these options are unpleasant to use and the former is not very efficient. 
+This imperative-style updating is awkward to represent in Haskell. We could do it by either passing around an immutable array as an argument or using a [mutable array][st-array] internally, but both of these options are unpleasant to use and the former is not very efficient. 
 
-Instead of replicating the imperative approach directly, we're going to take advantage of Haskell's laziness to define an array *that depends on itself*. The trick is to have the recursive call in the function to index into the array, and each array cell contain a call back to the function. This way, the logic of calculating each value once and then caching it is handled behind the scenes by Haskell's evaluation strategy. We compute the subproblems at most once in the order that we need and the array is always used *as if* it was fully filled out: we can never accidentally forget to save a result or access the array before that result has been calculated.
+Instead of replicating the imperative approach directly, we're going to take advantage of Haskell's laziness to define an array *that depends on itself*. The trick is to have every recursive call in the function index into the array and each array cell call back into the function. This way, the logic of calculating each value once and then caching it is handled behind the scenes by Haskell's runtime system. We compute the subproblems at most once in the order that we need and the array is always used *as if* it was fully filled out: we can never accidentally forget to save a result or access the array before that result has been calculated.
 
-At its heart, this is the same idea as having a `fibs` list that depends on itself, just with an array instead of a list. An array just fits many dynamic programming problems better than a list or some other data structure.
+At its heart, this is the same idea as having a `fibs` list that depends on itself, just with an array instead of a list. Arrays fit many dynamic programming problems better than lists or other data structures.
 
-We can rewrite our `fib` function to use this style of memoization. Note that this approach is actually strictly *worse* for Fibonacci numbers; this is just to illustrate how it works.
+We can rewrite our `fib` function to use this style of memoization. Note that this approach is actually strictly *worse* for Fibonacci numbers; this is just an illustration of how it works.
 
 ```haskell
 fib' max = go max
@@ -121,17 +123,18 @@ For calculating `fib' 5`, `fibs` would be an array of 6 thunks each containing a
 
 ![The array of sub-problems for `fib 5`.](fib-array.png)
 
-The nice thing is that this tangle of pointers and dependencies is all taken care of by laziness. We can't really mess it up or access parts of the array incorrectly because those details are *below our level of abstraction*. Filling out, updating and reading the array is all a result of forcing the thunks in the cells, not something we implemented explicitly in Haskell.
+The nice thing is that this tangle of pointers and dependencies is all taken care of by laziness. We can't really mess it up or access the array incorrectly because those details are *below our level of abstraction*. Initializing, updating and reading the array is all a result of forcing the thunks in the cells, not something we implemented directly in Haskell.
 
 [elegant]: http://conal.net/blog/posts/elegant-memoization-with-functional-memo-tries
 [combinators]: http://lukepalmer.wordpress.com/2008/10/14/data-memocombinators/
+[st-array]: http://hackage.haskell.org/package/array-0.5.0.0/docs/Data-Array-ST.html
 
 </div>
 <div class="content">
 
 # String Edit Distance
 
-Now that we have a technique for doing dynamic programming neatly with lazy arrays, let's apply it to a real dynamic programming problem: **string edit distance**. This is one of the most common problems used to introduce dynamic programming in algorithms classes and a good first step towards implementing tree edit distance.
+Now that we have a neat technique for dynamic programming with lazy arrays, let's apply it to a real problem: **string edit distance**. This is one of the most common examples used to introduce dynamic programming in algorithms classes and a good first step towards implementing tree edit distance.
 
 The **edit distance** between two strings is a measure of how *different* the strings are: it's the number of steps needed to go from one to the other where each step can either add, remove or modify a single character. The actual sequence of steps needed is called an **edit script**. For example:
 
@@ -139,13 +142,13 @@ The **edit distance** between two strings is a measure of how *different* the st
   * `"bother"`\ \  → `"brother"`\ \ add `'r'`
   * `"sitting"` → `"fitting"`\ \ modify `'s'` to `'f'`
 
-The distance between strings \(a\) and \(b\) is always the same as the distance between \(b\) and \(a\). We go between the two edit scripts by inverting the actions: turning adds into removes, removes into adds and flipping the characters being modified.
+The distance between strings \(a\) and \(b\) is always the same as the distance between \(b\) and \(a\). We go between the two edit scripts by inverting the actions: flipping modified characters and interchanging adds and removes.
 
-The [Wagner-Fischer algorithm][wf-algorithm] is the basic approach for computing the edit distance between two strings. The core idea is to go through the two strings character by character, trying all three possible actions (adding, removing or modifying).
+The [Wagner-Fischer algorithm][wf-algorithm] is the basic approach for computing the edit distance between two strings. It goes through the two strings character by character, trying all three possible actions (adding, removing or modifying) and picking the action that minimizes the distance.
 
-For example, to get the distance between `"kitten"` and `"sitting"`, we would start with the first two characters `k` and `s`. As these are different, we need to try the three possible edit actions and find them smallest distance. So we would compute the distances between `"itten"` and `"sitting"` for a delete, `"kitten"` and `"itting"` for an insert and `"itten"` and `"itting"` for a modify, and choose the smallest result.
+For example, to get the distance between `"kitten"` and `"sitting"`, we would start with the first two characters `k` and `s`. As these are different, we need to try the three possible edit actions and find the smallest distance. So we would compute the distances between `"itten"` and `"sitting"` for a delete, `"kitten"` and `"itting"` for an insert and `"itten"` and `"itting"` for a modify, and choose the smallest result.
 
-This is where the branching factor comes from---each time the strings differ, we have to solve *three* recursive sub-problems to see which action is optimal at the given step.
+This is where the branching factor and overlapping subproblems come from---each time the strings differ, we have to solve *three* recursive subproblems to see which action is optimal at the given step, and most of these results need to be used more than once.
 
 We can express this as a recurrence relation. Given two strings \(a\) and \(b\), \(d_{ij}\) is the distance between their suffixes of length \(i\) and \(j\) respectively. So, for `"kitten"` and `"sitting"`, \(d_{6,7}\) would be the whole distance while \(d_{5,6}\) would be between `"itten"` and `"itting"`. 
 
@@ -177,7 +180,7 @@ naive a b = d (length a) (length b)
                                 ]
 ```
 
-And, for small examples, this code actually works! You can try it on `"kitten"` and `"sitting"` to get `3`. Of course, it runs in exponential time, which makes it freeze on larger inputs---even just `"aaaaaaaaaa"` and `"bbbbbbbbbb"` already take a while! The practical version of this algorithm relies on dynamic programming, caching each value \(d_{ij}\) into a two-dimensional array so that we only calculate it at most once.
+And, for small examples, this code actually works! You can try it on `"kitten"` and `"sitting"` to get `3`. Of course, it runs in exponential time, which makes it freeze on larger inputs---even just `"aaaaaaaaaa"` and `"bbbbbbbbbb"` take a while! The practical version of this algorithm need dynamic programming, storing each value \(d_{ij}\) in a two-dimensional array so that we only calculate it once.
 
 We can do this transformation in much the same way we used a `fibs` array: we define `ds` as an array with a bunch of calls to `d i j` and we replace our recursive calls `d i j` with indexing into the array `ds ! (i, j)`.
 
@@ -198,13 +201,13 @@ basic a b = d m n
         bounds = ((0, 0), (m, n))
 ```
 
-This code is really not that different from the naive version, but it's *far* faster.
+This code is really not that different from the naive version, but *far* faster.
 
 ## Lists as Loops
 
-One thing that immediately jumps out from the above code is using `!!` for indexing into lists. Since lists are not a good data structure for random accesses, the `!!` is often a bit of a code smell. And, indeed, using lists causes problems for comparing longer strings.
+One thing that immediately jumps out from the above code is `!!`, indexing into lists. Lists are not a good data structure for random access! `!!` is often a bit of a code smell. And, indeed, using lists causes problems when working with longer strings.
 
-We can solve this by converting `a` and `b` into arrays and then actually diffing those. (We can also make the arrays 1-indexed, simplifying the arithmetic a bit.)
+We can solve this by converting `a` and `b` into arrays and then indexing only into those. (We can also make the arrays 1-indexed, simplifying the arithmetic a bit.)
 
 ```haskell
 better a b = d m n
@@ -232,20 +235,20 @@ Now, it might seem a little odd to take lists as arguments just to immediately c
 
 Partly, people in Haskell just don't use arrays very much. They would look odd in an API. People use a large set of sequential data types like lists, sequences, text, bytestrings, vectors, REPA... Chances are they would have to convert whatever they have to an array to use our function.
 
-And how would they convert it? They'd probably go through an intermediate list! Just like us, they'd actually construct the array with something like `Array.listArray`. This seems wasteful in the same way: why create an intermediate list just to turn it into an array?
+And how would they convert it? They'd probably go through an intermediate list! Just like us, they'd actually construct the array with `array` or `listArray`, which take lists as arguments. This seems wasteful in the same way: why create an intermediate list just to turn it into an array?
 
-The real insight is that lists in Haskell are lazy and really behave more like loops than data structures. The list never has to completely exist in memory: just like with the `fibs` example, we only evaluate the list items as we need them, and the GC can collect old elements as soon as we're done with them.
+The real insight is that lists in Haskell are lazy and often behave more like loops than data structures. The list never has to completely exist in memory: just like with the original `fibs` example, we only evaluate the list items as we need them, and the GC can collect old elements as soon as we're done with them.
 
-So if we start with a `Sequence`, convert it to a list and feed that list into `Array.listArray`, we actually just get a loop that traverses the sequence and *safely* constructs the array. We can think of a list argument like this as a hole where you can plug in a loop rather than a normal argument.
+So if we start with a `Sequence`, convert it to a list and feed that list into `Array.listArray`, we actually just get a loop that traverses the sequence and *safely* constructs the array. We can think of a list argument as a hole where you can plug in a loop rather than a normal argument.
 
-With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately the most general way to write this function: it accepts two *traversals* of some data structure and just diffs those by internally writing the traversal to a string. The lists function like iterators, except they're also first-class data structures that we can pattern-match and manipulate however we like.
+With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately the most general way to write this function: it accepts two *traversals* of some data structure and just diffs those by internally writing the traversal to an array. The lists function like iterators, except they're also first-class data structures that we can pattern-match and manipulate however we like.
 
 [wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Basic_algorithm
 
 </div>
 <div class="content">
 
-With all this in mind, we have a very general technique for writing dynamic programming problems. We take our recursive algorithm and:
+We now have a very general technique for writing dynamic programming problems. We take our recursive algorithm and:
 
   1. add an array at the same scope level as the recursive function
   2. define each array element as just a call back into the function with the appropriate index
