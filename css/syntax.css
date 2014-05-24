@@ -1,3 +1,13 @@
+/* CSS Document */
+
+/* Color Scheme 
+ *
+ * base: #B3C8E5
+ * h1:   #052d69
+ * h2:   #990000
+ * h3:   #380A7D
+ */  
+
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode, table.sourceCode pre {
     margin: 0;
     padding: 0;
@@ -13,23 +23,23 @@ td.lineNumbers {
     padding-left: 5px;
 }
 td.sourceCode { padding-left: 5px; }
-
+nnn
 pre.sourceCode {
     color : black;
     font-family : DejaVu Sans Mono, monospace;
     font-size : 11pt;
 }
 
-pre.sourceCode span.kw { color: #092F8A; }
-pre.sourceCode span.dt { color: #442288; }
+pre.sourceCode span.kw { color: #052d69; font-weight : bold }
+pre.sourceCode span.dt { color: #990000; }
 pre.sourceCode span.dv { color: black; }
 pre.sourceCode span.bn { color: black; }
 pre.sourceCode span.fl { color: black; }
 pre.sourceCode span.ch { color: black; }
 pre.sourceCode span.st { color: black; }
-pre.sourceCode span.co { color: #383838; font-style: italic; }
+pre.sourceCode span.co { color: #078600; font-style: italic; }
 pre.sourceCode span.ot { color: #0028AA; }
 pre.sourceCode span.al { color: red; }
-pre.sourceCode span.fu { color: #092F8A; }
+pre.sourceCode span.fu { color: #380A7D; }
 pre.sourceCode span.re { }
 pre.sourceCode span.er { color: red; }

@@ -1,3 +1,13 @@
+/* CSS Document */
+
+/* Color Scheme <http://colorschemedesigner.com/#3E11TacHVw0w0>:
+ *
+ * base:      #90A9CB
+ * lighter:   #B3C8E5
+ * darker:    #778598
+ * highlight: #2F5384
+ */
+
 /* This, naturally, applies to the whole page. */
 body {
     color   : black; 
@@ -209,7 +219,7 @@ a > img {
 .content code, .content pre, .content .code {
     font-family : "DejaVu Sans Mono", lucida console, monospace;
     /* font-family : lucida console, monospace; */
-    background : #8099BB;
+    background : #B3C8E5;
     font-size : 15px;
 }
 
