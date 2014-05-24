@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 module Main where
 
 import           Control.Applicative ((<*))
@@ -5,17 +6,23 @@ import           Control.Monad.State
 
 import qualified Data.Array as Array
 import           Data.Array ((!))
+import           Data.Ord   (comparing)
+import           Data.List  (minimumBy)
 
 import qualified System.Environment as System
 
 import           Text.Printf (printf)
 
+import           Debug.Trace (traceShow)
+
 main = do [f₁, f₂, flag] <- System.getArgs
           a <- readFile f₁
           b <- readFile f₂
-          if flag == "basic"
-            then printf "Basic result: %d\n" $ basic a b
-            else printf "Better result: %d\n" $ better a b
+          case flag of
+            "basic"      -> printf "Basic result: %d\n" $ basic a b
+            "better"     -> printf "Better result: %d\n" $ better a b
+            "script"     -> printf "Script result: %s\n" $ show (script a b)
+            err          -> printf "Option %s does not exist." err
 
 -- Lazy memoization and dynamic programming:
 
@@ -123,22 +130,34 @@ better a b = d m n
         ds = Array.listArray bounds [d i j | (i, j) <- Array.range bounds]
         bounds = ((0, 0), (m, n))
 
--- Tree Edit Distance
+data Action = Add | Remove | Modify | None deriving (Show, Eq)
 
--- | A simple rose tree, isomorphic to `Tree' from `Data.Tree'.
-data Tree a = Node a (Forest a) deriving (Show, Eq)
+-- | This version is just like @basic@ except that it writes the lists
+--   into arrays and indexes on those, which is a considerable
+--   improvement in practice. It's still not super-fast in absolute
+--   terms, but I think it's pretty good given how elegant the code
+--   is.
+script :: Eq a => [a] -> [a] -> [(a, Action)]
+script a b = process . reverse . snd $ d m n
+  where (m, n) = (length a, length b)
+        a'     = Array.listArray (1, m) a
+        b'     = Array.listArray (1, n) b
 
--- | A forest is a list of trees. This is useful as a separate type
---   because the Zhang-Shasha algorithm is naturally expressed in
---   terms of (ordered) forests rather than trees.
-type Forest a = [Tree a]
+        d 0 0 = (0, [])
+        d i 0 = go (i - 1) 0 Remove
+        d 0 j = go 0 (j - 1) Add
+        d i j
+          | a' ! i ==  b' ! j = go (i - 1) (j - 1) None
+          | otherwise = minimum' [ go (i - 1) j       Remove
+                                 , go i (j - 1)       Add
+                                 , go (i - 1) (j - 1) Modify
+                                 ]
 
+        minimum' = minimumBy (comparing fst)
+        go i j action = let (score, actions) = ds ! (i, j) in
+          (score + if action == None then 0 else 1, action : actions)
 
--- | Traverse the tree in a post-order, labelling each node with its
---   occurence in the traversal.
-postOrder :: Tree a -> Tree (Int, a)
-postOrder node = evalState (go node) 0
-  where go (Node v cs) = do
-          cs' <- mapM go cs
-          n   <- get <* modify (+ 1)
-          return $ Node (n, v) cs'
+        ds = Array.listArray bounds [d i j | (i, j) <- Array.range bounds]
+        bounds = ((0, 0), (m, n))
+
+        process = zip b
