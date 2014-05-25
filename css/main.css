@@ -1,11 +1,13 @@
 /* CSS Document */
 
-/* Color Scheme <http://colorschemedesigner.com/#3E11TacHVw0w0>:
+/* Color Scheme
  *
- * base:      #90A9CB
- * lighter:   #B3C8E5
- * darker:    #778598
- * highlight: #2F5384
+ * background:   #B3C8E5
+ * lighter:      #CADBF2
+ * much lighter: #D5E1F2
+ * darker:       #90A9CB
+ * h1:           #0B4FAA
+ * h2:           #053d89
  */
 
 /* This, naturally, applies to the whole page. */
@@ -44,7 +46,7 @@ a > img {
     max-width : 60em;
 
     color : black;
-    background-color : #90A9CB;
+    background-color : #B3C8E5;
 
     font-family : Junction, Helvetica, Arial, sans-serif;
     /* font-family : Helvetica, Arial, sans-serif; */
@@ -74,7 +76,7 @@ a > img {
 /* This is the general style for all headers: */
 .content h1, .content h2, .content h3 {
     text-align : center;
-    color : #0b4faa;
+    color : #0B4FAA;
     font-weight : normal;
     font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
     /* font-family : Verdana, Arial, Helvetica, sans-serif; */
@@ -132,7 +134,7 @@ a > img {
     position : relative;
     left : -2px;
 
-    background-color : #8099BB;
+    background-color : #CADBF2;
 
     margin-left : 12.5%;
     text-align : center;
@@ -160,17 +162,13 @@ a > img {
     margin-right : 10%;
 }
 
-.content .figure code {
-    background-color : #90A9CB;
-}
-
 /* A div for special announcements: */
 .content div.announcement {
     position : relative;
     left : -2px;
     z-index : 1;
     
-    background-color : #8099BB;
+    background-color : #CADBF2;
 
     margin-left : 12.5%;
     max-width : 75%;
@@ -192,7 +190,7 @@ a > img {
     font-weight : bold;
     font-size : 600%;
 
-    color : #738CAD;
+    color : #B3C8E5;
 }
 
 .content div.announcement ul, .content ul, .content ol {
@@ -219,7 +217,7 @@ a > img {
 .content code, .content pre, .content .code {
     font-family : "DejaVu Sans Mono", lucida console, monospace;
     /* font-family : lucida console, monospace; */
-    background : #B3C8E5;
+    background : #CADBF2;
     font-size : 15px;
 }
 

@@ -19,7 +19,7 @@
 
 /* This is the rectangle that is behind the header's banner. */
 #headerBackground {
-    background-color : #90A9CB;
+    background-color : #B3C8E5;
     height : 50px;
     z-index : -1;
     margin-top : 28pt;
@@ -30,7 +30,7 @@
     position : relative;
     font-family : Aller, Verdana, sans-serif;
     /* font-family : Verdana, sans-serif; */
-    color : #0b4faa;
+    color : #0B4FAA;
 }
 
 #header .big {
