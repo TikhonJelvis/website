@@ -2,7 +2,7 @@
 title: Generating Mazes with Inductive Graphs
 author: Tikhon Jelvis
 published: 2014-04-09 16:45:11
-modified: 2014-04-09 18:39:53
+modified: 2014-05-25 15:07:28
 ---
 
 A few years ago---back in high school---I spent a little while writing programs to automatically generate mazes. It was a fun exercise and helped me come to grips with recursion: the first time I implemented it (in Java), I couldn't get the recursive version to work properly so ended up using a `while` loop with an explicit stack! 
@@ -418,9 +418,7 @@ One particular trick is to take an algorithm for generating *minimum* spanning t
 </div>
 <div class="content">
 
-I hope that whole explanation was clear. If it wasn't, free free to email me at tikhon@jelv.is. You can also always ask on #haskell IRC: even if I'm not on, chances are somebody helpful is. We're friendly! I'll probably also add blog comments at some point, once I figure out the best way to do it. (Is Disqus good? I'm looking at different alternatives right now.)
-
-I think this code is a great example showing that, once you've learned how, many tasks in functional programming are easier than they seem at first. Starting from the right abstractions, working with graphs or randomness need not be difficult, even in a purely functional language like Haskell.
+I think this code is a great example of how, once you've learned a bit, many tasks in functional programming are easier than they may seem at first. Starting from the right abstractions, working with graphs or randomness need not be difficult, even in a purely functional language like Haskell.
 
 Ultimately, this is a good exercise both for becoming a better Haskell programmer and for realizing just how *versatile* the language can be.
 
