@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+inkscape -z -e frame0.png -h 75 frame0.eps 
+inkscape -z -e frame1.png -h 75 frame1.eps 
+inkscape -z -e frame2.png -h 75 frame2.eps 
+inkscape -z -e frame3.png -h 75 frame3.eps 
+inkscape -z -e frame4.png -h 75 frame4.eps 
+inkscape -z -e frame5.png -h 75 frame5.eps 
