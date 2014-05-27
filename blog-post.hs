@@ -92,6 +92,7 @@ run Settings {..} = do
       printf "Creating post %s\n" name
       Dir.setCurrentDirectory dirName
       writeFile "index.md" $ index name
+      Dir.createDirectory "misc"
 
      | not publish && exists -> 
       putStrLn "Draft already exists! Not doing anything."
