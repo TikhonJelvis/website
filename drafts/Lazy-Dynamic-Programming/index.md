@@ -4,6 +4,7 @@ author: Tikhon Jelvis
 published: 2014-05-25 15:29:33
 modified: 2014-05-25 15:31:29
 modified: 2014-05-26 17:25:43
+modified: 2014-05-27 16:00:32
 ---
 
 Dynamic programming is a method for efficiently solving complex problems with overlapping subproblems, covered in any introductory algorithms course. It is usually presented in a staunchly imperative manner, explicitly reading from and modifying a mutable array---a method that doesn't neatly translate to a functional language like Haskell.
@@ -195,7 +196,7 @@ basic a b = d m n
 
 This code is really not that different from the naive version, but *far* faster.
 
-## Lists as Loops
+## Faster Indexing
 
 One thing that immediately jumps out from the above code is `!!`, indexing into lists. Lists are not a good data structure for random access! `!!` is often a bit of a code smell. And, indeed, using lists causes problems when working with longer strings.
 
@@ -223,17 +224,7 @@ better a b = d m n
 
 The only difference here is defining `a'` and `b'` and then using `!` instead of `!!`. In practice, this is much faster than the `basic` version.
 
-Now, it might seem a little odd to take lists as arguments just to immediately convert them into arrays. Why don't we just ask for arrays directly?
-
-Partly, Haskellers just don't use arrays very much. They would look odd in an API. People use a large set of sequential data types like lists, sequences, text, bytestrings, vectors, REPA... Chances are they would have to convert whatever they have to an array to use our function.
-
-And how would they convert it? They'd probably go through an intermediate list! Just like us, they'd actually construct the array with `array` or `listArray`, which take lists as arguments. This seems wasteful in the same way: why create an intermediate list just to turn it into an array?
-
-The real insight is that lists in Haskell are lazy and often behave more like loops than data structures. The list never has to completely exist in memory: just like with the original `fibs` example, we only evaluate the list items as we need them, and the GC can collect old elements as soon as we're done with them.
-
-So if we start with a `Sequence`, convert it to a list and feed that list into `Array.listArray`, we actually just get a loop that traverses the sequence and *safely* constructs the array. We can think of a list argument as a hole where you can plug in a loop rather than a normal argument.
-
-With this in mind, our signature `Eq a => [a] -> [a] -> Distance` is ultimately the most general way to write this function: it accepts two *traversals* of some data structure and just diffs those by internally writing the traversal to an array. The lists function like iterators, except they're also first-class data structures that we can pattern-match and manipulate however we like.
+Note: I had a section here about using lists as loops which wasn't entirely accurate or applicable to this example, so I've removed it.
 
 [wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Basic_algorithm
 
