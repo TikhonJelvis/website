@@ -3,6 +3,7 @@ title: Lazy Dynamic Programming
 author: Tikhon Jelvis
 published: 2014-05-25 15:29:33
 modified: 2014-05-25 15:31:29
+modified: 2014-05-26 17:25:43
 ---
 
 Dynamic programming is a method for efficiently solving complex problems with overlapping subproblems, covered in any introductory algorithms course. It is usually presented in a staunchly imperative manner, explicitly reading from and modifying a mutable array---a method that doesn't neatly translate to a functional language like Haskell.
@@ -59,11 +60,6 @@ The `fib` function indexes into `fibs`, an infinite list of Fibonacci numbers. `
     <li> <img src="fib-frames/frame5.png" alt="The fibs list in memory." />
   </li>
 </ul>
-  <style type="text/css">
-  #fibs-animation ul li {
-    text-align : left;
-  }
-  </style>
   <script type="text/javascript">
     animate("#fibs-animation");
   </script>
@@ -87,11 +83,6 @@ Note how we only ever need the last two elements of the list. Since we don't hav
     <li> <img src="fib-frames-gc/frame5.png" alt="The fibs list in memory." />
   </li>
 </ul>
-  <style type="text/css">
-  #fibs-gc-animation ul li {
-    text-align : left;
-  }
-  </style>
   <script type="text/javascript">
     animate("#fibs-gc-animation");
   </script>
