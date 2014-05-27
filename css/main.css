@@ -162,6 +162,10 @@ a > img {
     margin-right : 10%;
 }
 
+.content div.figure code {
+    background-color : #B3C8E5;
+}
+
 /* A div for special announcements: */
 .content div.announcement {
     position : relative;
