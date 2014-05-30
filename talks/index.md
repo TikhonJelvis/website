@@ -38,6 +38,7 @@ I've given a few talks at Haskell hackathons and meetups.
 
 [Haskell Hackers meetup][haskell-hackers] (at Hacker Dojo):
 
+  * [Nondeterminism](nondeterminism.html) with animations for [function composition](composition.html) and [nondeterministic function composition](list-composition.html) (step through with space or enter).
   * [Inductive Graphs](inductive-graphs.html)
   * [Analyzing Programs with SMT Solvers](analyzing-programs-with-smt.html)
 
