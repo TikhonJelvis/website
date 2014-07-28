@@ -7,15 +7,17 @@ author: Tikhon Jelvis
 
 # Haskell
 
-Haskell is a programming language with similar capabilities to Java, but a very different perspective on programming. If you want to learn more, take a look at the wonderful free book [*Learn You a Haskell for Great Good!*][lyah] which is how I started myself.
+Haskell is a programming language with similar capabilities to Java, but a very different perspective on programming. If you want to learn more, take a look at the wonderful free book [*Learn You a Haskell for Great Good!*][lyah]---it's where I started myself.
 
-You can also look at a [static copy][demo] of my demo and the blog post about [factorisation diagrams][factorisation] that it was based on.
+You can also look at a [static copy][demo] of my demo and the blog post about [factorisation diagrams][factorisation] that it was based on. (The afternoon version had a slightly different demo, but similar at a high level. I just hid some extra details that are exposed in the linked version.)
 
 I used the [diagrams][diagrams] library for drawing shapes and [IHaskell][IHaskell] for the interactive programming environment. Unfortunately, IHaskell is still a bit experimental, so it might be a bit tricky to install.
 
+If you have any questions about Haskell, feel free to email me at tikhon@jelv.is.
+
 ![](haskell.png)
 
-![][flower]
+![Pretty neat for a few lines of code.][flower]
 
 [lyah]: http://learnyouahaskell.com/
 [diagrams]: http://projects.haskell.org/diagrams/
