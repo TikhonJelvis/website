@@ -9,7 +9,7 @@ author: Tikhon Jelvis
 
 <div class="announcement">
 
-I helped make [a game][tycoon]! Play it. [Warning: sound.]
+Another Ludum Dare. Another [game][shattered-worlds]! Play it. [Warning: sound.]
 
 <div> </div>
 
@@ -21,7 +21,7 @@ All my slides are available on my [talks](talks) page.
 
 </div>
 
-[tycoon]: http://asteroidtycoon.com
+[shattered-worlds]: http://alexnisnevich.github.io/ld30/
 [PLDI]: http://conferences.inf.ed.ac.uk/pldi2014/acceptedpapers.html
 
 ![Me on the roof of the Casa Milà in Barcelona. For even more Guadí, you can barely see the Sagrada Família in the background.](img/me_at_casa_mila_med.jpg)
