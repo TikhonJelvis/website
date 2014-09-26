@@ -7,7 +7,7 @@ author: Tikhon Jelvis
 
 Now that we have a framework for thinking about dynamic programming as well as a nice example, let's extend these ideas to a slightly more complex problem---tree edit distance.
 
-I'm going to be using the [Zhang-Shasha][zs-algorithm] algorithm which is just a generalization of the string edit distance algorithm I just described. In fact, that algorithm emerges as a special case of Zhang-Shasha applied to a tree with no branching. We can think of this algorithm as a version of the string edit distance algorithm which additionally keeps track of the tree structure (ie parent and children nodes) explicitly instead of assuming a purely linear configuration.
+I'm going to be using the [Zhang-Shasha][zs-algorithm] algorithm, a generalization of the string edit distance algorithm described previously. In fact, the string algorithm emerges as a special case of Zhang-Shasha applied to a tree with no branching. We can think of this algorithm as a version of the string edit distance algorithm which additionally keeps track of the tree structure (ie parent and children nodes) explicitly instead of assuming a purely linear configuration.
 
 ## Edit Actions
 
@@ -29,7 +29,7 @@ So adding is really just removing a node from the target tree instead of the sou
 
 ## Basic Trees
 
-For string edit distance, we took our inputs as lazy lists. For trees, we're going to use "rose trees" which have a value at each node and any number of branches. This type is provided by `Data.Tree` but, for simplicity, I'm going to redefine it here:
+For string edit distance, we took our inputs as lists. For trees, we're going to use "rose trees" which have a value at each node and any number of branches. This type is provided by `Data.Tree` but, for simplicity, I'm going to redefine it here:
 
 ```haskell
 data Tree a = Node a (Forest a)
@@ -37,7 +37,7 @@ data Tree a = Node a (Forest a)
 type Forest a = [Tree a]
 ```
 
-At each node, we have a value and a list of sub-trees. For this algorithm, having a separate `Forest` type turns out to be particularly useful because much of the code works with forests rather than trees themselves.
+At each node, we have a value and a list of sub-trees. For this algorithm, having a separate `Forest` type turns out to be particularly useful because much of the code works with forests rather than single trees.
 
 Since this is a dynamic programming problem, we're going to use integers to index into sub-problems. For the linear string case, these integers could just be the position in the list. But what do we do for trees?
 
