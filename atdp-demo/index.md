@@ -15,7 +15,7 @@ I used the [diagrams][diagrams] library for drawing shapes and [IHaskell][IHaske
 
 If you have any questions about Haskell, feel free to email me at tikhon@jelv.is.
 
-![](haskell.png)
+![The Haskell logo.](haskell.png)
 
 ![Pretty neat for a few lines of code.][flower]
 
