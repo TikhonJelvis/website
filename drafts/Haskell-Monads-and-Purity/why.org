@@ -1,6 +1,8 @@
 
 * Idyllic world
 
+* Separating evaluation and execution
+
 * First-class(ish) effects
   - different capabilities: just state, variables, IO, restricted
     IO...

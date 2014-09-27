@@ -86,6 +86,8 @@ We've added state to a language where it normally simply does not exist. All usi
 
 By now, you've probably realized that `return` and `>>=` make `State` a monad. The syntax sugar, of course, is do-notation. But if you're interested in how we get mutable state, this doesn't tell you very much. Instead, the relevant bits are what the `State a` type looks like (it's basically an AST of commands) and what the interpreter does. The fact that it's a monad is useful, but does not entirely characterize the `State` type.
 
+^1: This is why `unsafePerformIO` is unsafe: it's completely foreign to the programming model.
+
 </div>
 <div class="content">
 
@@ -112,6 +114,12 @@ So the final verdict: Haskell does not "use monads to manage effects". Rather, H
 
 After reading all this, a reasonable question is simply "why?". Why bother with all this? Why separate effects out and build all this conceptual machinery to achieve them again?
 
+There are a few answers to this, but all ultimately boil down to raising our level of abstraction and making our language more expressive.
 
+This system **separates evaluation and execution**: calculating a value and performing an action are now different. Haskell does not have a hard notion of "now" strung throughout the code, because the order of evaluation does not have visible effects^2. We're no longer constrained in writing our definitions in the order they need to be evaluated; instead, we're free to organize our code, even at a very local level, based on how we want it to be read. This extra notion of "now" and an environment that changes over time (ie mutable state) is not necessary in most code; getting rid of it limits cognitive load.
 
-^1: This is why `unsafePerformIO` is unsafe: it's completely foreign to the programming model.
+To me, at least, this separation is also very useful at a more semantic level: it helps me *think* about code. I hold actions and calculations mentally distinct and Haskell adroitly reflects this distinction. I tend to organize my code along these lines even in other languages that do not distinguish between the two directly.
+
+Our pure code lives in an idyllic world free from hidden dependencies and complexity, and we can still splash in a dash of state—or any other sort of effect—at will.
+
+^2 It can, however, still cause visible *performance* issues, which is why performance optimization is often cited as one of the hardest aspects of practical Haskell.
