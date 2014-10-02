@@ -40,7 +40,7 @@ a > img {
 /* CONTENT */
 
 /* This div has the actual content of the site in it. */
-.content {
+.content, .footnotes {
     position : relative;
     width : 70%;
     max-width : 60em;
@@ -97,12 +97,12 @@ a > img {
     text-decoration : underline;
 }
 
-.content p, .content ul, .content dl, .content ol, .content td {
+.content p, .content ul, .content dl, .content ol, .content td, .footnotes ol {
     color : black;
 }
 
 /* All of the large groups of text should be in p tags. */
-.content p, .content ul, .content ol, .content dl {
+.content p, .content ul, .content ol, .content dl, .footnotes ol {
     margin-left : 12%;
     margin-right : 12%;
     text-align : justify;
@@ -111,12 +111,12 @@ a > img {
     line-height : 2.75ex;
 }
 
-.content p {
+.content p, .footnotes p {
     margin-top : 20px;
     margin-bottom : 8px;
 }
 
-.content p +  p {
+.content p + p, .footnotes p + p {
     text-indent : 1.5em;
     margin-top : -1ex;
 }
@@ -218,14 +218,14 @@ a > img {
     /* font-family : lucida console, monospace; */
 }
 
-.content code, .content pre, .content .code {
+.content code, .content pre, .content .code, .footnotes code {
     font-family : "DejaVu Sans Mono", lucida console, monospace;
     /* font-family : lucida console, monospace; */
     background : #CADBF2;
     font-size : 15px;
 }
 
-.content code, .content .code {
+.content code, .content .code, .footnotes code {
     padding : 1px 6px;
     border-radius : 6px;
 }
@@ -253,4 +253,13 @@ a > img {
 
 .content dd p {
     margin : 0 5%;
+}
+
+/* Footnote-specific styling */
+.footnotes hr {
+  display : none;
+}
+
+.footnotes ol {
+  list-style : decimal;
 }
