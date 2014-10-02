@@ -1,0 +1,17 @@
+
+* Idyllic world
+
+* Separating evaluation and execution
+
+* First-class(ish) effects
+  - different capabilities: just state, variables, IO, restricted
+    IO...
+  - even more: just reading or just writing, resource management,
+    domain-specific effects...
+
+* Abstraction
+  - compare: virtual memory, garbage collection
+
+* New capabilities
+  - automatic parallelism
+  - STM
