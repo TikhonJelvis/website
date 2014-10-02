@@ -10,6 +10,8 @@ Similarly, in Haskell, we use types to deal with effects. In particular, we use 
 
 Now, how does this work? Well, I'll give you one view on the matter, using `State` as a case study.
 
+<div></div>
+
 <!--more-->
 
 </div>
