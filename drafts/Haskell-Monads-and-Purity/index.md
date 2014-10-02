@@ -16,7 +16,7 @@ Now, how does this work? Well, I'll give you one view on the matter, using `Stat
 
 ## State
 
-Perhaps the most important philosophical idea is that Haskell does *not* "enforce" purity. Rather, Haskell as a language simply does not include any notion of effects. Base Haskell is exclusively about **evaluation**: going from an expression like `1 + 2` to `3`. This has *no* provisions for side effects; they simply don't make any sense in this context^1.
+Perhaps the most important philosophical idea is that Haskell does *not* "enforce" purity. Rather, Haskell as a language simply does not include any notion of effects. Base Haskell is exclusively about **evaluation**: going from an expression like `1 + 2` to `3`. This has *no* provisions for side effects; they simply don't make any sense in this context[^1].
 
 Side effects and mutation are not prohibited; they simply weren't added in the first place. But let's say that, on a flight of fancy, you decide you really want some mutable state in your otherwise-happy Haskell code. How can you do this? Here's one option: implement the state machinery yourself. You can do this by creating a little sub-language and writing an interpreter for it. The language itself is actually just a data type; the interpreter is just a normal function which takes care of evaluating your stateful sub-program and maintaining the state.
 
@@ -86,7 +86,7 @@ We've added state to a language where it normally simply does not exist. All usi
 
 By now, you've probably realized that `return` and `>>=` make `State` a monad. The syntax sugar, of course, is do-notation. But if you're interested in how we get mutable state, this doesn't tell you very much. Instead, the relevant bits are what the `State a` type looks like (it's basically an AST of commands) and what the interpreter does. The fact that it's a monad is useful, but does not entirely characterize the `State` type.
 
-^1: This is why `unsafePerformIO` is unsafe: it's completely foreign to the programming model.
+[^1]: This is why `unsafePerformIO` is unsafe: it's completely foreign to the programming model.
 
 </div>
 <div class="content">
@@ -116,10 +116,18 @@ After reading all this, a reasonable question is simply "why?". Why bother with 
 
 There are a few answers to this, but all ultimately boil down to raising our level of abstraction and making our language more expressive.
 
-This system **separates evaluation and execution**: calculating a value and performing an action are now different. Haskell does not have a hard notion of "now" strung throughout the code, because the order of evaluation does not have visible effects^2. We're no longer constrained in writing our definitions in the order they need to be evaluated; instead, we're free to organize our code, even at a very local level, based on how we want it to be read. This extra notion of "now" and an environment that changes over time (ie mutable state) is not necessary in most code; getting rid of it limits cognitive load.
+This system **separates evaluation and execution**: calculating a value and performing an action are now different. Haskell does not have a hard notion of "now" strung throughout the code, because the order of evaluation does not have visible effects[^2]. We're no longer constrained in writing our definitions in the order they need to be evaluated; instead, we're free to organize our code, even at a very local level, based on how we want it to be read. This extra notion of "now" and an environment that changes over time (ie mutable state) is not necessary in most code; getting rid of it limits cognitive load.
+
+In essence, we move evaluation *below our level of abstraction*. Instead of being an omnipresent facet of every line we write, evaluation now happens largely in the background. Is it always a perfect abstraction? No. We have performance concerns which can sometimes be dire and we have ways to completely break the abstraction (`unsafePerformIO` and friends). But does it have to be perfect to be useful?
+
+I doesn't. Think of it like garbage collection: GC moved allocating and deallocating memory below our level of abstraction and pushed programming languages ahead. At the same time, it has similar pitfalls to non-strictness: performance concerns and similar ways to break the abstraction (`unsafe` blocks, FFI, low-level apis into the GC). And yet it's incredibly useful, a net win in a majority of applications.
 
 To me, at least, this separation is also very useful at a more semantic level: it helps me *think* about code. I hold actions and calculations mentally distinct and Haskell adroitly reflects this distinction. I tend to organize my code along these lines even in other languages that do not distinguish between the two directly.
 
 Our pure code lives in an idyllic world free from hidden dependencies and complexity, and we can still splash in a dash of state—or any other sort of effect—at will.
 
-^2 It can, however, still cause visible *performance* issues, which is why performance optimization is often cited as one of the hardest aspects of practical Haskell.
+Moreover, these effects we splash in are now first-class citizens. You can write functions that depend on having access to a particular effect or ones that are polymorphic over their capabilities. You have fine control over exactly what the "effect" is: you could have just state or variables or IO or a restricted subset of IO or...
+
+This fine control over effects isn't useful just for making your code more maintainable: it also gives us new capabilities. The "halo" application is concurrency and parallelism, where Haskell libraries really shine. For concurrency, things like STM would be *tricky*, at best, without tight controls over IO; for parallelism, the same is true of Haskell's strategies which parallelize code *deterministically*---they're guaranteed not to change the semantics, just the running time.
+
+[^2]: It can, however, still cause visible *performance* issues, which is why performance optimization is often cited as one of the hardest aspects of practical Haskell.
