@@ -3,6 +3,7 @@ title: Haskell, Monads and Purity
 author: Tikhon Jelvis
 published: 2014-10-01 20:15:44
 modified: 2014-10-03 20:18:56
+modified: 2014-10-03 21:25:50
 ---
 
 I believe the notion that Haskell uses "monads" to enforce purity is rather misleading. It has certainly caused quite a bit of confusion! It's very much like saying we use "rings to do arithmetic". We don't! We use numbers, which just happen to form a ring with arithmetic operations. The important idea is the *number*, not the ring. You can---and most people *do*---do arithmetic without understanding or even knowing about rings. Moreover, plenty of rings don't have anything to do with arithmetic.
@@ -124,7 +125,7 @@ This system **separates evaluation and execution**: calculating a value and perf
 
 In essence, we move evaluation *below our level of abstraction*. Instead of being an omnipresent facet of every line we write, evaluation now happens largely in the background. Is it always a perfect abstraction? No. We have performance concerns which can sometimes be dire and we have ways to completely break the abstraction (`unsafePerformIO` and friends). But does it have to be perfect to be useful?
 
-I doesn't. Think of it like garbage collection: GC moved allocating and deallocating memory below our level of abstraction and pushed programming languages ahead. At the same time, it has similar pitfalls to non-strictness: performance concerns and similar ways to break the abstraction (`unsafe` blocks, FFI, low-level apis into the GC). And yet it's incredibly useful, a net win in a majority of applications.
+It doesn't. Think of it like garbage collection: GC moved allocating and deallocating memory below our level of abstraction and pushed programming languages ahead. At the same time, it has similar pitfalls to non-strictness: performance concerns and similar ways to break the abstraction (`unsafe` blocks, FFI, low-level apis into the GC). And yet it's incredibly useful, a net win in a majority of applications.
 
 To me, at least, this separation is also very useful at a more semantic level: it helps me *think* about code. I hold actions and calculations mentally distinct and Haskell adroitly reflects this distinction. I tend to organize my code along these lines even in other languages that do not distinguish between the two directly.
 
