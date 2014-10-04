@@ -263,3 +263,8 @@ a > img {
 .footnotes ol {
   list-style : decimal;
 }
+
+a.footnoteRef sup {
+  position : relative;
+  bottom : 0.75ex;
+}
