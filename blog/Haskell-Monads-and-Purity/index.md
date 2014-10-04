@@ -2,11 +2,12 @@
 title: Haskell, Monads and Purity
 author: Tikhon Jelvis
 published: 2014-10-01 20:15:44
+modified: 2014-10-03 20:18:56
 ---
 
 I believe the notion that Haskell uses "monads" to enforce purity is rather misleading. It has certainly caused quite a bit of confusion! It's very much like saying we use "rings to do arithmetic". We don't! We use numbers, which just happen to form a ring with arithmetic operations. The important idea is the *number*, not the ring. You can---and most people *do*---do arithmetic without understanding or even knowing about rings. Moreover, plenty of rings don't have anything to do with arithmetic.
 
-Similarly, in Haskell, we use types to deal with effects. In particular, we use `IO` and `State` and `ST`, all of which happen to form monads. But it is still better to say we use "the `IO` type" to do IO than to say we use "monads" to do IO or that we use the `State` type for state.
+Similarly, in Haskell, we use types to deal with effects. In particular, we use `IO` and `State` and `ST`, all of which happen to form monads. But it is still better to say we use "the `IO` type" to do IO or that we use `State` for state than to say we use "monads" to do IO or state.
 
 Now, how does this work? Well, I'll give you one view on the matter, using `State` as a case study.
 
