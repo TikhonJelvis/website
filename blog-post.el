@@ -12,7 +12,7 @@ file munging is done by a simple Haskell script."
   (let ((flag (if publish "-p" "")))
     (message (format "Running `blog-post '%s' %s" name flag))
     (shell-command (format "blog-post.hs '%s' %s" name flag)))
-  (find-file (format "~/Public/website/drafts/%s/index.md" (replace-regexp-in-string " " "-" name)))
+  (find-file (format "~/Public/drafts/%s/index.md" (replace-regexp-in-string " " "-" name)))
   (end-of-buffer))
 
 (defun publish-post (name)

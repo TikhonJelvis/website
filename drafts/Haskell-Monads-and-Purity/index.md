@@ -4,6 +4,7 @@ author: Tikhon Jelvis
 published: 2014-10-01 20:15:44
 modified: 2014-10-03 20:18:56
 modified: 2014-10-03 21:25:50
+modified: 2014-10-04 10:42:19
 ---
 
 I believe the notion that Haskell uses "monads" to enforce purity is rather misleading. It has certainly caused quite a bit of confusion! It's very much like saying we use "rings to do arithmetic". We don't! We use numbers, which just happen to form a ring with arithmetic operations. The important idea is the *number*, not the ring. You can---and most people *do*---do arithmetic without understanding or even knowing about rings. Moreover, plenty of rings don't have anything to do with arithmetic.
@@ -33,7 +34,7 @@ We also want some way to get and set the state. Getting should just evaluate to 
 
     return ∷ a → State a
     get    ∷ State Int
-    set    ∷ Int → State Int
+    set    ∷ Int → State ()
 
 However, these actions by themselves are rather boring. We need some way to string them together—some way to *compose* actions. The simplest way is to just sequence two actions: run one, get the new state and run the next one. We can call this an infix `>>`:
 
