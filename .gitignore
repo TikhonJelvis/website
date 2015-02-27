@@ -8,6 +8,11 @@ _build
 *.hi
 hakyll
 
+# Cabal sandbox stuff
+.cabal-sandbox
+cabal.sandbox.config
+dist
+
 # Emacs backup files and the like:
 *~
 \#*\#
