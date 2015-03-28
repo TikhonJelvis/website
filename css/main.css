@@ -8,11 +8,13 @@
  * darker:       #90A9CB
  * h1:           #0B4FAA
  * h2:           #053d89
+ *
+ * text:         #343010
  */
 
 /* This, naturally, applies to the whole page. */
 body {
-    color   : black; 
+    color   : #343010;
     padding : 0;
     margin  : 0;
 
@@ -21,6 +23,8 @@ body {
     -webkit-font-feature-settings : "liga";
     -o-font-feature-settings      : "liga";
     font-feature-settings         : "liga";
+
+    text-rendering : optimizeLegibility;
 }
 
 a {
@@ -58,8 +62,6 @@ a > img {
     padding-top : 8px;
     padding-bottom : 15px;
     padding-left : 0.5em;
-
-    text-rendering : optimizeLegibility;
 }
 
 .content + .content {
@@ -107,7 +109,7 @@ a > img {
 }
 
 .content p, .content ul, .content dl, .content ol, .content td, .footnotes ol {
-    color : black;
+    color : #343010;
 }
 
 
@@ -241,6 +243,8 @@ a > img {
 
     color : #053d89;
     font-size : 60%;
+
+    margin-right : 5px;
 }
     
 /* Special kinds of text: code, ui elements...etc */
