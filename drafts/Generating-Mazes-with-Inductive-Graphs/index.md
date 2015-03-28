@@ -3,6 +3,7 @@ title: Generating Mazes with Inductive Graphs
 author: Tikhon Jelvis
 published: 2014-04-09 16:45:11
 modified: 2014-05-25 15:07:28
+modified: 2015-03-27 18:24:35
 ---
 
 A few years ago---back in high school---I spent a little while writing programs to automatically generate mazes. It was a fun exercise and helped me come to grips with recursion: the first time I implemented it (in Java), I couldn't get the recursive version to work properly so ended up using a `while` loop with an explicit stack! 
@@ -216,60 +217,60 @@ Here's a quick demo of `dfs` running over the example graph from earlier. Note h
 
 <div id="dfs-animation" class="figure">
 <ul class="animation">
-  <li>
-    <img src="dfs-frames/frame1.png" alt="A dfs over the example graph."/>
-  stack: `[7, 6]`
+<li>
+  <img src="dfs-frames/frame1.png" alt="A dfs over the example graph."/>
+stack: `[7, 6]`
 
-  result: `[3]`
+result: `[3]`
 
-  </li>
-  <li>
-    <img src="dfs-frames/frame2.png" alt="A dfs over the example graph."/>
-  stack: `[4, 2, 6]`
+</li>
+<li>
+  <img src="dfs-frames/frame2.png" alt="A dfs over the example graph."/>
+stack: `[4, 2, 6]`
 
-  result: `[3, 7]`
+result: `[3, 7]`
 
-  </li>
-  <li>
-    <img src="dfs-frames/frame3.png" alt="A dfs over the example graph."/>
-  stack: `[1, 2, 6]`
+</li>
+<li>
+  <img src="dfs-frames/frame3.png" alt="A dfs over the example graph."/>
+stack: `[1, 2, 6]`
 
-  result: `[3, 7, 4]`
+result: `[3, 7, 4]`
 
-  </li>
-  <li>
-    <img src="dfs-frames/frame4.png" alt="A dfs over the example graph."/>
-  stack: `[6, 5, 2, 6]`
+</li>
+<li>
+  <img src="dfs-frames/frame4.png" alt="A dfs over the example graph."/>
+stack: `[6, 5, 2, 6]`
 
-  result: `[3, 7, 4, 1]`
+result: `[3, 7, 4, 1]`
 
-  </li>
-  <li>
-    <img src="dfs-frames/frame5.png" alt="A dfs over the example graph."/>
-  stack: `[2, 5, 2, 6]`
+</li>
+<li>
+  <img src="dfs-frames/frame5.png" alt="A dfs over the example graph."/>
+stack: `[2, 5, 2, 6]`
 
-  result: `[3, 7, 4, 1, 6]`
+result: `[3, 7, 4, 1, 6]`
 
-  </li>
-  <li>
-    <img src="dfs-frames/frame6.png" alt="A dfs over the example graph."/>
-  stack: `[5, 5, 2, 6]`
+</li>
+<li>
+  <img src="dfs-frames/frame6.png" alt="A dfs over the example graph."/>
+stack: `[5, 5, 2, 6]`
 
-  result: `[3, 7, 4, 1, 6, 2]`
+result: `[3, 7, 4, 1, 6, 2]`
 
-  </li>
-  <li>
-    <img src="dfs-frames/frame7.png" alt="A dfs over the example graph."/>
-  stack: `[5, 2, 6]`
+</li>
+<li>
+  <img src="dfs-frames/frame7.png" alt="A dfs over the example graph."/>
+stack: `[5, 2, 6]`
 
-  result: `[3, 7, 4, 1, 6, 2, 5]`
+result: `[3, 7, 4, 1, 6, 2, 5]`
 
-  </li>
+</li>
 </ul>
 
-  <script type="text/javascript">
-    animate("#dfs-animation");
-  </script>
+<script type="text/javascript">
+  animate("#dfs-animation");
+</script>
 </div>
 
 Often---like for generating mazes---we don't care about which node to start from. This is where `ghead` comes in since it selects an arbitrary node for us! The only thing to consider is that `ghead` will fail on an empty graph.
