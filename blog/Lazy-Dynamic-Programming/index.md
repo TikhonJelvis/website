@@ -5,6 +5,7 @@ published: 2014-05-25 15:29:33
 modified: 2014-05-25 15:31:29
 modified: 2014-05-26 17:25:43
 modified: 2014-05-27 16:00:32
+modified: 2015-03-27 18:21:02
 ---
 
 Dynamic programming is a method for efficiently solving complex problems with overlapping subproblems, covered in any introductory algorithms course. It is usually presented in a staunchly imperative manner, explicitly reading from and modifying a mutable array---a method that doesn't neatly translate to a functional language like Haskell.
@@ -48,41 +49,41 @@ The `fib` function indexes into `fibs`, an infinite list of Fibonacci numbers. `
 
 <div id="fibs-animation" class="figure">
 <ul class="animation">
-  <li> <img src="fib-frames/frame0.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames/frame1.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames/frame2.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames/frame3.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames/frame4.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames/frame5.png" alt="The fibs list in memory." />
-  </li>
+<li> <img src="fib-frames/frame0.png" alt="The fibs list in memory." />
+</li>
+<li> <img src="fib-frames/frame1.png" alt="The fibs list in memory." />
+</li>
+<li> <img src="fib-frames/frame2.png" alt="The fibs list in memory." />
+</li>
+<li> <img src="fib-frames/frame3.png" alt="The fibs list in memory." />
+</li>
+<li> <img src="fib-frames/frame4.png" alt="The fibs list in memory." />
+</li>
+<li> <img src="fib-frames/frame5.png" alt="The fibs list in memory." />
+</li>
 </ul>
-  <script type="text/javascript">
-    animate("#fibs-animation");
-  </script>
-  <p> `zipWith f` applies `f` to the first elements of both lists then recurses on their tails. In this case, the two lists are actually just pointers into the same list!</p>
+<script type="text/javascript">
+  animate("#fibs-animation");
+</script>
+<p> `zipWith f` applies `f` to the first elements of both lists then recurses on their tails. In this case, the two lists are actually just pointers into the same list!</p>
 </div>
 
 Note how we only ever need the last two elements of the list. Since we don't have any other references to the `fibs` list, GHC's garbage collector can reclaim unused list elements as soon as we're done with them. So with GC, the actual execution looks more like this:
 
 <div id="fibs-gc-animation" class="figure">
 <ul class="animation">
-  <li> <img src="fib-frames-gc/frame0.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames-gc/frame1.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames-gc/frame2.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames-gc/frame3.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames-gc/frame4.png" alt="The fibs list in memory." />
-  </li>
-    <li> <img src="fib-frames-gc/frame5.png" alt="The fibs list in memory." />
-  </li>
+<li> <img src="fib-frames-gc/frame0.png" alt="The fibs list in memory." />
+</li>
+  <li> <img src="fib-frames-gc/frame1.png" alt="The fibs list in memory." />
+</li>
+  <li> <img src="fib-frames-gc/frame2.png" alt="The fibs list in memory." />
+</li>
+  <li> <img src="fib-frames-gc/frame3.png" alt="The fibs list in memory." />
+</li>
+  <li> <img src="fib-frames-gc/frame4.png" alt="The fibs list in memory." />
+</li>
+  <li> <img src="fib-frames-gc/frame5.png" alt="The fibs list in memory." />
+</li>
 </ul>
   <script type="text/javascript">
     animate("#fibs-gc-animation");
