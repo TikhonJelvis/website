@@ -30,9 +30,9 @@ function animate(content, config) {
 
   // Control widgets: step, play/pause... etc
   var controls = $("<div class='animation-controls'>"),
-      back     = $("<button>⇤</button>"),
-      forward  = $("<button>⇥</button>"),
-      play     = $("<button>▶</button>");
+      back     = $("<button class='step-animation'>⇤</button>"),
+      forward  = $("<button class='step-animation'>⇥</button>"),
+      play     = $("<button class='play-animation'>▶</button>");
 
   controls.append(back).append(play).append(forward);
 

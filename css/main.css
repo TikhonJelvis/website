@@ -55,9 +55,15 @@ a > img {
     margin-left : auto;
     margin-right : auto;
 
-    padding-bottom : 30px;
-    padding-top : 4pt;
+    padding-top : 8px;
+    padding-bottom : 15px;
     padding-left : 0.5em;
+
+    text-rendering : optimizeLegibility;
+}
+
+.content + .content {
+  padding-top : 35px;
 }
 
 /* Header sizes */
@@ -75,13 +81,16 @@ a > img {
 
 /* This is the general style for all headers: */
 .content h1, .content h2, .content h3 {
-    text-align : center;
     color : #0B4FAA;
     font-weight : normal;
     font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
     /* font-family : Verdana, Arial, Helvetica, sans-serif; */
-    margin-top : 15px;
-    margin-bottom : 15px;
+    margin-top : 30px;
+}
+
+.content h1 {
+  text-align : center;
+  margin-bottom : 30px;
 }
 
 .content h1:first-letter, .content h2:first-letter, .content h3:first-letter {
@@ -101,24 +110,28 @@ a > img {
     color : black;
 }
 
+
+.content p, .content ul, .content ol, .content dl, .footnotes ol, .content h2, .content h3 {
+  margin-left : 12%;
+  margin-right : 12%;
+}
+
 /* All of the large groups of text should be in p tags. */
 .content p, .content ul, .content ol, .content dl, .footnotes ol {
-    margin-left : 12%;
-    margin-right : 12%;
-    text-align : justify;
+    text-align : left;
     word-wrap : break-word;
     font-size : 13pt;
     line-height : 2.75ex;
 }
 
 .content p, .footnotes p {
-    margin-top : 20px;
+    margin-top : 10px;
     margin-bottom : 8px;
 }
 
 .content p + p, .footnotes p + p {
     text-indent : 1.5em;
-    margin-top : -1ex;
+    margin-top : -4px;
 }
 
 .content strong {
@@ -162,8 +175,26 @@ a > img {
     margin-right : 10%;
 }
 
+.content div.figure img + p {
+  margin-top : 30px;
+}
+
+.content div.figure p:last-child {
+  margin-bottom : 0;
+}
+
 .content div.figure code {
     background-color : #B3C8E5;
+}
+
+/* Rules for my interactive animation feature. */
+.animation-controls {
+  margin-top : 8px;
+}
+
+.play-animation {
+  padding : 2px 0 3px;
+  width : 42px;
 }
 
 /* A div for special announcements: */
@@ -231,7 +262,7 @@ a > img {
 }
 
 .content pre {
-    margin : 20px 12.5%;
+    margin : 0 12.5% 20px 12.5%;
     padding : 20px;
     line-height : 2.25ex;
 }

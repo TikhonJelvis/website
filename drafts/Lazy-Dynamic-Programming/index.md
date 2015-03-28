@@ -6,6 +6,7 @@ modified: 2014-05-25 15:31:29
 modified: 2014-05-26 17:25:43
 modified: 2014-05-27 16:00:32
 modified: 2015-03-27 18:21:02
+modified: 2015-03-27 19:45:32
 ---
 
 Dynamic programming is a method for efficiently solving complex problems with overlapping subproblems, covered in any introductory algorithms course. It is usually presented in a staunchly imperative manner, explicitly reading from and modifying a mutable array---a method that doesn't neatly translate to a functional language like Haskell.
@@ -28,7 +29,7 @@ This post was largely spurred on by working with [Joe Nelson][joe] as part of hi
 </div>
 <div class="content">
 
-# Dynamic Programming and Memoization
+## Dynamic Programming and Memoization
 
 **Dynamic programming** is one of the core techniques for writing efficient algorithms. The idea is to break a problem into *smaller subproblems* and then save the result of each subproblem so that it is only calculated once. Dynamic programming involves two parts: restating the problem in terms of **overlapping subproblems** and memoizing.
 
@@ -91,7 +92,7 @@ Note how we only ever need the last two elements of the list. Since we don't hav
   <p> More memory efficient: we only ever store a constant number of past results.</p>
 </div>
 
-## Lazy Arrays
+### Lazy Arrays
 
 Dynamic programming algorithms tend to have a very specific memoization style---sub-problems are put into an array and the inputs to the algorithm are transformed into array indices. These algorithms are often presented in a distinctly imperative fashion: you initialize a large array with some empty value and then manually update it as you go along. You have to do some explicit bookkeeping at each step to save your result and there is nothing preventing you from accidentally reading in part of the array you haven't set yet.
 
@@ -126,7 +127,7 @@ The nice thing is that this tangle of pointers and dependencies is all taken car
 </div>
 <div class="content">
 
-# String Edit Distance
+## String Edit Distance
 
 Now that we have a neat technique for dynamic programming with lazy arrays, let's apply it to a real problem: **string edit distance**. This is one of the most common examples used to introduce dynamic programming in algorithms classes and a good first step towards implementing tree edit distance.
 
@@ -197,7 +198,7 @@ basic a b = d m n
 
 This code is really not that different from the naive version, but *far* faster.
 
-## Faster Indexing
+### Faster Indexing
 
 One thing that immediately jumps out from the above code is `!!`, indexing into lists. Lists are not a good data structure for random access! `!!` is often a bit of a code smell. And, indeed, using lists causes problems when working with longer strings.
 
@@ -229,7 +230,7 @@ Note: I had a section here about using lists as loops which wasn't entirely accu
 
 [wf-algorithm]: http://en.wikipedia.org/wiki/Edit_distance#Basic_algorithm
 
-## Final Touches
+### Final Touches
 
 Now we're going to do a few more changes to make our algorithm complete. In particular, we're going to calculate the **edit script**---the list of actions to go from one string to the other---along with the distance. We're also going to generalize our algorithm to support different *cost functions* which specify how much each possible action is worth.
 

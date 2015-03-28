@@ -4,6 +4,7 @@ author: Tikhon Jelvis
 published: 2014-04-09 16:45:11
 modified: 2014-05-25 15:07:28
 modified: 2015-03-27 18:24:35
+modified: 2015-03-27 20:00:46
 ---
 
 A few years ago---back in high school---I spent a little while writing programs to automatically generate mazes. It was a fun exercise and helped me come to grips with recursion: the first time I implemented it (in Java), I couldn't get the recursive version to work properly so ended up using a `while` loop with an explicit stack! 
@@ -45,7 +46,7 @@ There are multiple algorithms we can use to generate such a tree. Let's focus on
 </div>
 <div class="content">
 
-# Inductive Data Types
+## Inductive Data Types
 
 To write our DFS, we need some way to represent a graph. Unfortunately, graphs are often inconvenient functional languages: standard representations like adjacency matrices or adjacency lists were designed with an imperative mindset. While you can certainly use them in Haskell, the resulting code would be relatively awkward.
 
@@ -76,7 +77,7 @@ Pretty straightforward.
 
 Unfortunately, graphs don't have this same structure. A graph is defined by its set of nodes and edges---the nodes and edges do not have any particular order. We can't build a graph in a unique way by adding on nodes and edges because any given graph could be built up in multiple different ways. And so we can't break the graph up in a unique way. We can't pattern match on the graph. Our code is awkward.
 
-## Inductive Graphs
+### Inductive Graphs
 
 **Inductive graphs** are graphs that we can *view* as if they were a normal inductive data type. We can split a graph up and recurse over it, but this isn't a structural operation like it would be for lists and, more importantly, it is *not* canonical: at any point, many different graph decompositions might make sense.
 
@@ -158,7 +159,7 @@ All functions in `fgl` are actually specified against a [`Graph`][graph-class] t
 
 [graph-class]: http://hackage.haskell.org/package/fgl-5.4.2.4/docs/Data-Graph-Inductive-Graph.html#t:Graph
 
-## Map
+### Map
 
 The "Hello, World!" of recursive list functions is `map`, so lets start by looking at a version of `map` for graphs. The idea is to apply a function to every node label in the graph.
 
@@ -185,7 +186,7 @@ The base case is almost exactly the same. For the recursive case, we use `matchA
 
 Since we used `matchAny`, the exact order we map over the graph is not defined! Apart from that, the code feels very similar to programming against normal Haskell data types and characterizes `fgl` in general pretty well.
 
-## DFS
+### DFS
 
 Our maze algorithm is going to be a randomized depth-first search. We can first write a simple, non-random DFS and then go from that to our maze algorithm. That's one of my favorite ways to implement more difficult algorithms: start with something really simple and iterate.
                 
@@ -275,7 +276,7 @@ result: `[3, 7, 4, 1, 6, 2, 5]`
 
 Often---like for generating mazes---we don't care about which node to start from. This is where `ghead` comes in since it selects an arbitrary node for us! The only thing to consider is that `ghead` will fail on an empty graph.
 
-## EDFS
+### EDFS
 
 `dfs` gives us nodes in the order that they were visited. But for mazes, we really care about the *edges* we followed rather than just nodes. So lets modify our `dfs` into an `edfs` which returns a list of edges rather than a list of nodes. In `fgl`, an edge is just a tuple of two nodes: `(Node, Node)`.
 
@@ -334,7 +335,7 @@ Since we used the `MonadRandom` class, we can use `edfsR` with any type that pro
 </div>
 <div class="content">
 
-# Mazes
+## Mazes
 
 We have a random DFS that gives us a list of edges---the core of the maze generation algorithm. However, it's difficult to go from a set of edges to drawing a maze. The final pieces of the puzzle are labeling the edges in a way that's convenient to draw and generating the graph for the initial grid.
 
@@ -394,17 +395,17 @@ genPng defaults "my-maze.png" 40 40
 </div>
 <div class="content">
 
-# More Fun
+## More Fun
 
 We now have a basic maze generating system using inductive graphs and randomness. If you want to play around with the code a bit, there are two interesting ways to extend this code: generating mazes from other shapes and using different graph algorithms.
 
-## Other Shapes
+### Other Shapes
 
 Our system always assumes that mazes are generated from a grid of cells. However, the actual graph code doesn't care about this at all! The grid-specific parts are just the starting graph (ie `grid 40 40`) and the drawing code.
 
 A fun challenge is to look at what mazes over other sorts of graphs look like. Try writing a maze generator based on tiled hexagons, polar rectangles or even arbitrary (maybe random?) plane tilings. Or try to generate mazes in 3D!
 
-## Other Algorithms
+### Other Algorithms
 
 Apart from modifying the graph, we can also modify our traversal. Play around with the DFS code: for example, you can substitute in a biased `shuffle` and get other shapes of mazes. If you make the shuffle more likely to choose horizontal walls than vertical ones, you will get a maze with longer vertical passages and shorter horizontal ones. How else can you change the DFS?
 
