@@ -19,6 +19,7 @@ import qualified Data.Time                 as Time
 import           Data.Time                 (LocalTime)
 
 import           Options.Applicative       hiding (str)
+import qualified Options.Applicative       as Opt
 
 import qualified System.Directory          as Dir
 import qualified System.FilePath           as Path
@@ -44,7 +45,7 @@ cmdParser = info (helper <*> options)
    desc = [str| Automatically start a blog post draft or move a draft to the published directory. |]
 
 options :: Parser Settings
-options = Settings <$> argument return
+options = Settings <$> argument Opt.str
                      ( help "The name of the blog post."
                     <> metavar "NAME" )
                    <*> switch

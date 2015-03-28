@@ -11,7 +11,7 @@ file munging is done by a simple Haskell script."
   (interactive "sName: ")
   (let ((flag (if publish "-p" "")))
     (message (format "Running `blog-post '%s' %s" name flag))
-    (shell-command (format "blog-post.hs '%s' %s" name flag)))
+    (shell-command (format "blog-post '%s' %s" name flag)))
   (find-file (format "~/Public/drafts/%s/index.md" (replace-regexp-in-string " " "-" name)))
   (end-of-buffer))
 
