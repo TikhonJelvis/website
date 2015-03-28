@@ -1,0 +1,11 @@
+* Algebraic Structures
+  - good source of abstraction
+  - crop up all over the place
+  
+** Monoids
+   - in the Haskell library
+   - simple
+   - useful (quick examples):
+     - diagrams
+     - sorting functions
+     - external links
