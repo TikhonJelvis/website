@@ -38,4 +38,6 @@ Outside CS, I'm an avid skier and a saber fencer (albeit on hiatus). I'm oddly f
 
 Please feel free to contact me for any reason at <a href="mailto:tikhon@jelv.is">tikhon@jelv.is</a>. I am always happy to respond to emails, although I may take a while. I also use Jabber (Google Talk), and will probably be happy to chat if I'm online.
 
+Unless otherwise noted, content on this site is available under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>. If you want to use something beyond this license or have questions about it, feel free to contact me; I'm usually accommodating.
+
 </div>
