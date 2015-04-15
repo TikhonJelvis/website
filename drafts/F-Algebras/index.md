@@ -7,9 +7,9 @@ Abstract math, as the name implies, is a wonderful source of abstractions---some
 
 A particularly prolific source of useful mathematical abstractions is abstract algebra, the study of **algebraic structures**. Algebraic structures come up in everything from cryptography to computer graphics to parsing and can be used to neatly organize your own code.
 
-We can go further and generalize the different algebraic structures we care about into F-algebras. Apart from unifying abstractions we already find useful, F-algebras also come up as a natural way to structure generic data transformations by generalizing list folds, making them a useful part of functional programmer's arsenal.
+Going further, we can generalize algebraic structures into F-algebras. Apart from unifying abstractions we already find useful, F-algebras also come up as a natural way to structure generic data transformations by generalizing the higher-order `fold` function, making them a useful part of any functional programmer's arsenal.
 
-![The Haskell [`diagrams`][diagrams] library exposes a simple and consistent interface for working with shapes in terms of monoids, a sort of algebraic structure.][diagrams-example]
+![The Haskell [`diagrams`][diagrams] library exposes a simple and consistent interface for working with shapes and pictures in terms of monoids, a kind of algebraic structure.][diagrams-example]
 
 <!--more-->
 
@@ -18,9 +18,9 @@ We can go further and generalize the different algebraic structures we care abou
 
 ## Algebraic Structures
 
-An **algebraic structure** is some set \(S\) with some operations *closed* over \(S\). A "closed operation" is a function that takes some number of elements in \(S\) to another element in \(S\) rather than an element from some other set. It is "enclosed" inside \(S\). Algebraic structures can also have "identity elements" which are specific elements from the set that have some sort of relationship with the defined operations.
+An **algebraic structure** is some set \(S\) with some operations *closed* over \(S\). A "closed operation" is a function that takes some number of elements in \(S\) to another element in \(S\) (rather than an element from some other set). It is "enclosed" inside \(S\). Algebraic structures can also have **identity elements** which are specific elements from \(S\) that have some sort of relationship with the defined operations.
 
-Since we're talking about Haskell, we're going to replace sets with types, but the rest of the idea is the same: an algebraic structure is some type `τ` with some number of operations and identities. All these functions take some number of arguments of type `τ` and produce a single result of type `τ`. (We don't really have to worry about closure because any function with the right type will be closed over that type by definition.)
+Since we're talking about Haskell, we're going to replace sets with types, but the rest remains the same: an algebraic structure is some type&nbsp;`τ` with some number of operations and identities. All these functions take some number of arguments of type&nbsp;`τ` and produce a single result of type&nbsp;`τ`. (We don't really have to worry about closure because any function with the right signature will be closed over our type by definition.)
 
 Haskell has a natural way of associating functions (and values) with types: typeclasses. A good example structure to start with is the **monoid** which has a single binary operation and an identity. It's actually defined in the standard library module `Data.Monoid` as follows:
 
@@ -30,16 +30,16 @@ class Monoid m where
   mappend :: m -> m -> m -- binary operation
 ```
 
-`mappend` is an awkward name for a function, so I use the provided infix synonym `<>`.
+`mappend` is an awkward name, so I'll use the provided infix synonym&nbsp;`<>`.
 
-Monoids have a few additional restrictions called the monoid laws which are invariants that just hold for every valid instance of the structure. In particular, the binary operation has to be associative and the "empty" value has to be an identity for the operation:
+Monoids have a few additional restrictions called the monoid laws which are invariants that hold for every valid instance of the structure. The binary operation has to be associative and the "empty" value has to be an identity for the operation:
 
 ```haskell
 mempty <> a == a == a <> mempty
 a <> b <> c == (a <> b) <> c == a <> (b <> c)
 ```
 
-This is very important for using monoids or other specific algebraic structures, but something we will broadly ignore as we generalize them to F-algebras. We *could* extend our abstraction to include these---and people have---but it's not necessary for many interesting uses.
+This is important for using monoids or other specific algebraic structures, but something we will broadly ignore as we generalize them to F-algebras. We *could* extend our abstraction to include these---and people have---but it's not necessary for many interesting uses.
 
 Another example structure is the group. We use groups less than monoids in Haskell, but they're far more common in pure and applied mathematics. Groups are monoids with an additional inverse operation.
 
@@ -54,25 +54,25 @@ Other examples of algebraic structures you may have run into include rings, fiel
 
 ### Generalizing
 
-If we look at each operation of a structure in its uncurried form, we see a pattern emerge. Monoids have two operations: `m` and `(m, m) -> m`; groups have three: `m`, `m -> m` and `(m, m) -> m`. The first similarity is that all of these expressions return a single `m`. The second is that they all take a tuple of some number of `m` elements---where the number can be 0 or 1.
+If we look at the types of a structure's operations in uncurried form, we see a pattern emerge. Monoids have two: `τ` and `(τ, τ) -> τ`; groups have three: `τ`, `τ -> τ` and `(τ, τ) -> τ`. All these functions return a single `τ` and they all take a tuple of some number of `τ` elements---where the number can be 0 or 1.
 
 ```haskell
-gempty   :: ()     -> g
-ginverse :: (g)    -> g
-gappend  :: (g, g) -> g
+gempty   :: ()     -> τ
+ginverse :: (τ)    -> τ
+gappend  :: (τ, τ) -> τ
 ```
 
-Tuples are often called product types because creating a tuple from two types behaves similarly to multiplication. This logic gives us another way of recognizing this pattern---each function takes the form `mⁿ` or `m` multiplied by itself `n` times. Identities are not a special case in this view: we can rewrite `m` as `() -> m` where `()` is `m⁰`. This is still consistent with multiplication where \(x^0 = 1\).
+Tuples are often called product types because creating a tuple from two types behaves similarly to multiplication. This logic gives us another way of recognizing this pattern---each function takes the form `τⁿ` or `τ` multiplied by itself `n` times. Identities are not a special case in this view: we can rewrite `τ` as `() -> τ` where `()` is `τ⁰`. This is still consistent with multiplication where \(x^0 = 1\).
 
 ```haskell
-gempty   :: g⁰ -> g
-ginverse :: g¹ -> g
-gappend  :: g² -> g
+gempty   :: τ⁰ -> τ
+ginverse :: τ¹ -> τ
+gappend  :: τ² -> τ
 ```
 
 Now we have a simple way to generalize algebras by the number of operations they have and how many arguments each operation takes---the **signature** of the algebra. Monoids would have the signature (0, 2), groups would have (0, 1, 2), rings would be (0, 0, 1, 2, 2) and so on. (Don't worry about the exact details; all that's important is that different structures have different signatures.)
 
-Algebraic structures themselves are common patterns that have been "factored out" by mathematicians because they come up again and again. People noticed these patterns and factored them out into specific structures like monoids, groups and so on. We've just done the same thing at a higher level and factored all *those* common patterns into a generic notion of an algebra with some signatures.
+Algebraic structures are common patterns that have been "factored out" by mathematicians because they come up again and again---people noticed certain repeated patterns and factored them into monoids, groups and so on. We've just done the same thing at a higher level and factored all *those* patterns into a generic notion of an algebra with some signature.
 
 Algebras in this sense are both general enough to cover most algebraic structures used by mathematicians and powerful enough to allow some interesting reasoning. Any conclusion about algebras applies equally well to any conforming sort of structure. If you're interested in these sort of conclusions, take a look at the field of [universal algebra][universal-algebra] which studies these algebras.
 
