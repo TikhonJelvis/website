@@ -1,0 +1,900 @@
+
+<!DOCTYPE html>
+<!--
+  Copyright 2010 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Original slides: Marcin Wichary (mwichary@google.com)
+  Modifications: Ernest Delgado (ernestd@google.com)
+		 Alex Russell (slightlyoff@chromium.org)
+		 Brad Neuberg
+-->
+<html>
+<head>
+<title>F-Algebras</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2015-04-02 19:26:45 PDT"/>
+<meta name="author" content="Tikhon Jelvis (tikhon@jelv.is)"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; font-size: 30px; }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+<link rel="stylesheet" type="text/css" href="css/slides.css" />
+</head>
+
+<body>
+<div class="presentation">
+<div id="content">
+
+
+<div class="slide">
+  <section class="center intro">
+    <style>
+      span.strike { text-decoration:line-through;}
+    </style>
+    <h2>
+      F-Algebras
+    </h2>
+    <p style="margin-top:100px">
+      Tikhon Jelvis (tikhon@jelv.is)
+    </p>
+    <p class="instructions" style="font-size: 25px; line-height: 180%;">Press <span class="key">&rarr;</span> key to advance.<br />
+    Zoom in/out: <span class="key">Ctrl or Command</span> + <span class="key">+/-</span></p>
+  </section>
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">1</span> Abstract Algebra </h1></header>
+
+<section class="Abstract-Algebra">
+<ul class="summary">
+<li><b>great source of abstractions</b>
+</li>
+<li>common patterns, factored out
+<ul class="summary">
+<li>simple
+</li>
+<li>broad
+</li>
+<li>expressive
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">2</span> Algebraic Structures </h1></header>
+
+<section class="Algebraic-Structures">
+<ul class="summary">
+<li>set \(S\) with certain operations
+<ul class="summary">
+<li>functions <b>closed</b> over set
+</li>
+<li>any number of arguments
+</li>
+<li>special values: <b>identities</b>
+</li>
+</ul>
+
+</li>
+<li>Haskell: set ⇒ type
+<ul class="summary">
+<li>express as typeclass
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">3</span> Monoid </h1></header>
+
+<section class="Monoid">
+<ul class="summary">
+<li>type <code>m</code>
+<ul class="summary">
+<li><code>(&lt;&gt;) ∷ m → m → m</code>
+</li>
+<li><code>mempty ∷ m</code>
+</li>
+</ul>
+
+</li>
+<li>laws:
+<ul class="summary">
+<li><code>mempty &lt;&gt; x = x = x &lt;&gt; mempty</code>
+</li>
+<li><code>(a &lt;&gt; b) &lt;&gt; c = a &lt;&gt; (b &lt;&gt; c)</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">4</span> Others </h1></header>
+
+<section class="Others">
+<ul class="summary">
+<li>Group <code>g</code>
+<ul class="summary">
+<li><code>(&lt;&gt;) ∷ m → m → m</code>
+</li>
+<li><code>mempty ∷ m</code>
+</li>
+<li><code>inv ∷ m → m</code>
+</li>
+</ul>
+
+</li>
+<li>rings, lattices&hellip;
+<ul class="summary">
+<li>semirings, semilattices&hellip;
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">5</span> Patterns </h1></header>
+
+<section class="Patterns">
+<ul class="summary">
+<li>Group <code>g</code>
+<ul class="summary">
+<li><code>() → g</code>
+</li>
+<li><code>(g) → g</code>
+</li>
+<li><code>(g, g) → g</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">6</span> Patterns </h1></header>
+
+<section class="Patterns">
+<ul class="summary">
+<li>Group <code>g</code>
+<ul class="summary">
+<li><code>g⁰ → g</code>
+</li>
+<li><code>g¹ → g</code>
+</li>
+<li><code>g² → g</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">7</span> Algebra </h1></header>
+
+<section class="Algebra">
+<ul class="summary">
+<li><b>algebra</b>
+<ul class="summary">
+<li>universe: set/type <code>a</code>
+</li>
+<li>signature: <code>(x, y, z…)</code>
+</li>
+</ul>
+
+</li>
+<li>operations assumed associative
+</li>
+<li>ignore other laws
+</li>
+<li>monoid: <code>(0, 2)</code>
+</li>
+<li>group: <code>(0, 1, 2)</code>
+</li>
+<li>ring: <code>(0, 0, 1, 2, 2)</code>
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">8</span> F-Algebras </h1></header>
+
+<section class="F-Algebras">
+<ul class="summary">
+<li>combine into one function:
+</li>
+</ul>
+
+
+
+
+<pre class="example">op ∷ Monoid m ⇒ Either (m, m) () → m
+op (Left (a, b)) = a &lt;&gt; b
+op (Right ())    = mempty
+</pre>
+
+<ul class="summary">
+<li>works for any number of operations!
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">9</span> Data Type </h1></header>
+
+<section class="Data-Type">
+<ul class="summary">
+<li>semantic name
+</li>
+</ul>
+
+
+
+
+<pre class="example">data MonoidArgument m = MAppend m m 
+                      | MEmpty
+</pre>
+
+<ul class="summary">
+<li>similarly
+</li>
+</ul>
+
+
+
+
+<pre class="example">data GroupArgument m = GAppend m m
+                     | GInverse m
+                     | GEmpty
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">10</span> Algebras </h1></header>
+
+<section class="Algebras">
+<ul class="summary">
+<li>new definition:
+</li>
+</ul>
+
+
+
+
+<pre class="example">type Monoid m = MonoidArgument m → m
+
+type Group g = GroupArgument g → g
+</pre>
+
+<ul class="summary">
+<li>both types are <b>functors</b>
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">11</span> F-Algebras </h1></header>
+
+<section class="F-Algebras">
+<ul class="summary">
+<li>general definition
+</li>
+</ul>
+
+
+
+
+<pre class="example">type Algebra f a = f a → a
+
+type Monoid m = Algebra MonoidArgument m
+type Group g = Algebra GroupArgument g
+</pre>
+
+
+<ul class="summary">
+<li>allows other kinds of algebras
+<ul class="summary">
+<li><code>Num</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">12</span> Review </h1></header>
+
+<section class="Review">
+<ul class="summary">
+<li><code>type Algebra f a = f a → a</code>
+</li>
+<li><code>f</code> is the <b>signature</b>
+</li>
+<li><code>a</code> is the <b>universe</b>
+</li>
+<li><b>existing typeclasses and structures</b>
+<ul class="summary">
+<li><code>Monoid</code>
+</li>
+<li><code>Group</code>
+</li>
+<li><code>Num</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">13</span> Folds </h1></header>
+
+<section class="Folds">
+<ul class="summary">
+<li>algebras are all about <b>deconstructing</b>
+<ul class="summary">
+<li>produce <code>a</code> from richer <code>f a</code>
+</li>
+</ul>
+
+</li>
+<li>generalizes <b>fold</b> to different types
+<ul class="summary">
+<li>aka <b>catamorphism</b>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">14</span> Fix </h1></header>
+
+<section class="Fix">
+<ul class="summary">
+<li>recursive types in two parts
+</li>
+</ul>
+
+
+
+
+<pre class="example">data List a = Cons a (List a) | Nil
+</pre>
+
+
+
+<pre class="example">data Fix f = Fix (f (Fix f))
+data ListF a r = Cons a r | Nil
+</pre>
+
+
+
+<pre class="example">type List a = Fix (ListF a)
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">15</span> Fold </h1></header>
+
+<section class="Fold">
+<ul class="summary">
+<li>unwrap layers of <code>Fix</code>
+</li>
+<li>apply F-algebra at each step
+</li>
+</ul>
+
+
+
+
+<pre class="example">fold ∷ (f a → a) → (Fix f → a)
+fold fa (Fix fs) = fa $ fmap (fold fa) fs
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">16</span> Example </h1></header>
+
+<section class="Example">
+<ul class="summary">
+<li>looks familiar?
+</li>
+</ul>
+
+
+
+
+<pre class="example">data ListF a r = Cons a r | Nil
+  deriving (Functor)
+type List a = Fix (ListF a)
+
+sum' = fold fa
+  where fa (Cons a b) = a + b
+        fa Nil        = 0
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">17</span> Foldable </h1></header>
+
+<section class="Foldable">
+<ul class="summary">
+<li>list folds: monoids!
+</li>
+</ul>
+
+
+
+
+<pre class="example">fa (Cons a b) = a + b
+fa Nil        = 0
+
+fa (Mappend a b) = a + b
+fa Mempty        = 0
+</pre>
+
+<ul class="summary">
+<li><code>Data.Foldable</code>
+<ul class="summary">
+<li><code>fold ∷ (Foldable f, Monoid m) =&gt; f m → m</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">18</span> Tree Fold </h1></header>
+
+<section class="Tree-Fold">
+<ul class="summary">
+<li>different shape
+</li>
+</ul>
+
+
+
+
+<pre class="example">data TreeF a r = Node a [r]
+  deriving (Functor)
+type Tree a = Fix (TreeF a)
+
+treeSum ∷ Tree Int → Int
+treeSum = fold fa
+  where fa (Node x ts) = x + sum ts
+</pre>
+
+
+</section>
+
+</div>
+
+<div class="slide">
+<header><h1><span class="section-number-2">19</span> Review </h1></header>
+
+<section class="Review">
+<ul class="summary">
+<li>F-Algebras <b>generalize algebraic structures</b>
+</li>
+<li><code>type Algebra f a = f a → a</code>
+<ul class="summary">
+<li>functor <code>f</code> as <b>signature</b>
+</li>
+</ul>
+
+</li>
+<li>lets us <b>destruct</b> data structures
+<ul class="summary">
+<li>generic fold
+</li>
+<li>works for data structures with <b>different shapes</b>
+</li>
+<li><code>fold ∷ (f a → a) → (Fix f → a)</code>
+</li>
+</ul>
+
+</li>
+</ul>
+
+</section>
+</div>
+
+</div>
+<script>
+  (function() {
+    // Since we don't have the fallback of attachEvent and
+    // other IE only stuff we won't try to run JS for IE.
+    // It will run though when using Google Chrome Frame
+    if (document.all) { return; }
+
+    var currentSlideNo;
+    var notesOn = false;
+    var slides = document.getElementsByClassName('slide');
+    var touchStartX = 0;
+
+    // var slide_hash = window.location.hash.replace(/#/, '');
+    // if (slide_hash) {
+    //   for (var i = 0, len = slides.length; i < len; i++) {
+    //     if (slides[i].id == slide_hash) {
+    //       currentSlideNo = i;
+    //       updateSlideClasses();
+    //     }
+    //   }
+    // }
+
+    var spaces = /\s+/, a1 = [""];
+
+    var str2array = function(s) {
+      if (typeof s == "string" || s instanceof String) {
+	if (s.indexOf(" ") < 0) {
+	  a1[0] = s;
+	  return a1;
+	} else {
+	  return s.split(spaces);
+	}
+      }
+      return s;
+    };
+
+    var trim = function(str) {
+      return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+
+    var addClass = function(node, classStr) {
+      classStr = str2array(classStr);
+      var cls = " " + node.className + " ";
+      for (var i = 0, len = classStr.length, c; i < len; ++i) {
+	c = classStr[i];
+	if (c && cls.indexOf(" " + c + " ") < 0) {
+	  cls += c + " ";
+	}
+      }
+      node.className = trim(cls);
+    };
+
+    var removeClass = function(node, classStr) {
+      var cls;
+      if (classStr !== undefined) {
+	classStr = str2array(classStr);
+	cls = " " + node.className + " ";
+	for (var i = 0, len = classStr.length; i < len; ++i) {
+	  cls = cls.replace(" " + classStr[i] + " ", " ");
+	}
+	cls = trim(cls);
+      } else {
+	cls = "";
+      }
+      if (node.className != cls) {
+	node.className = cls;
+      }
+    };
+
+    var getSlideEl = function(slideNo) {
+      if (slideNo > 0) {
+	return slides[slideNo - 1];
+      } else {
+	return null;
+      }
+    };
+
+    var getSlideTitle = function(slideNo) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	return el.getElementsByTagName('header')[0].innerHTML;
+      } else {
+	return null;
+      }
+    };
+
+    var changeSlideElClass = function(slideNo, className) {
+      var el = getSlideEl(slideNo);
+
+      if (el) {
+	removeClass(el, 'far-past past current future far-future');
+	addClass(el, className);
+      }
+    };
+
+    var updateSlideClasses = function() {
+      window.location.hash = "slide" + currentSlideNo;
+      changeSlideElClass(currentSlideNo - 2, 'far-past');
+      changeSlideElClass(currentSlideNo - 1, 'past');
+      changeSlideElClass(currentSlideNo, 'current');
+      changeSlideElClass(currentSlideNo + 1, 'future');
+      changeSlideElClass(currentSlideNo + 2, 'far-future');
+    };
+
+    var nextSlide = function() {
+      if (currentSlideNo < slides.length) {
+	currentSlideNo++;
+      }
+
+      updateSlideClasses();
+    };
+
+    var prevSlide = function() {
+      if (currentSlideNo > 1) {
+	currentSlideNo--;
+      }
+      updateSlideClasses();
+    };
+
+    var showNotes = function() {
+      var notes = document.querySelectorAll('.notes');
+      for (var i = 0, len = notes.length; i < len; i++) {
+	notes[i].style.display = (notesOn) ? 'none':'block';
+      }
+      notesOn = (notesOn) ? false:true;
+    };
+
+    var switch3D = function() {
+      if (document.body.className.indexOf('three-d') == -1) {
+	document.getElementsByClassName('presentation')[0].style.webkitPerspective = '1000px';
+	document.body.className += ' three-d';
+      } else {
+	window.setTimeout("document.getElementsByClassName('presentation')[0].style.webkitPerspective = '0';", 2000);
+	document.body.className = document.body.className.replace(/three-d/, '');
+      }
+    };
+
+    var handleBodyKeyDown = function(event) {
+      // console.log(event.keyCode);
+      switch (event.keyCode) {
+	case 37: // left arrow
+	  prevSlide();
+	  break;
+	case 39: // right arrow
+	// case 32: // space
+	  nextSlide();
+	  break;
+	case 50: // 2
+	  showNotes();
+	  break;
+	case 51: // 3
+	  switch3D();
+	  break;
+      }
+    };
+
+    var addTouchListeners = function() {
+      document.addEventListener('touchstart', function(e) {
+	touchStartX = e.touches[0].pageX;
+      }, false);
+      document.addEventListener('touchend', function(e) {
+	var pixelsMoved = touchStartX - e.changedTouches[0].pageX;
+	var SWIPE_SIZE = 150;
+	if (pixelsMoved > SWIPE_SIZE) {
+	  nextSlide();
+	}
+	else if (pixelsMoved < -SWIPE_SIZE) {
+	 prevSlide();
+	}
+      }, false);
+    };
+
+    // initialize
+
+    (function() {
+      if (window.location.hash != "") {
+	currentSlideNo = Number(window.location.hash.replace('#slide', ''));
+      } else {
+	currentSlideNo = 1;
+      }
+
+      document.addEventListener('keydown', handleBodyKeyDown, false);
+
+      var els = slides;
+      for (var i = 0, el; el = els[i]; i++) {
+	addClass(el, 'slide far-future');
+      }
+      updateSlideClasses();
+
+      // add support for finger events (filter it by property detection?)
+      addTouchListeners();
+    })();
+  })();
+</script>
+</body>
+</html>

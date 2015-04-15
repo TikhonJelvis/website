@@ -5,9 +5,9 @@ author: Tikhon Jelvis
 
 Abstract math, as the name implies, is a wonderful source of abstractions---something deeply valuable to programmers. It's a toolbox of ideas that are simple, well-defined and universal.
 
-A particularly prolific source of mathematical abstractions useful to programmers is abstract algebra, the study of **algebraic structures**. Various algebraic structures come up in everything from cryptography to computer graphics to parsing and can be used to express interesting structure in your own code.
+A particularly prolific source of useful mathematical abstractions is abstract algebra, the study of **algebraic structures**. Algebraic structures come up in everything from cryptography to computer graphics to parsing and can be used to neatly organize your own code.
 
-We can go further and generalize all the different algebraic structures we care about into F-algebras. Apart from unifying a bunch of abstractions we already find useful, F-algebras also come up as a natural way to structure generic data transformations, making them a useful part of functional programmer's arsenal.
+We can go further and generalize the different algebraic structures we care about into F-algebras. Apart from unifying abstractions we already find useful, F-algebras also come up as a natural way to structure generic data transformations by generalizing list folds, making them a useful part of functional programmer's arsenal.
 
 ![The Haskell [`diagrams`][diagrams] library exposes a simple and consistent interface for working with shapes in terms of monoids, a sort of algebraic structure.][diagrams-example]
 
