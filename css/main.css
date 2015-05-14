@@ -71,7 +71,7 @@ a > img {
   }
 }
 
-@media (min-width : 400px) and (max-width : 600px) {
+@media (min-width : 400px) and (max-width : 605px) {
   .content, .footnotes {
     width : 85%;
     max-width : auto;
@@ -85,6 +85,12 @@ a > img {
 /* Header sizes */
 .content h1 {
     font-size : 28pt;
+}
+
+@media (max-width : 400px) {
+  .content h1 {
+    font-size : 20pt;
+  }
 }
 
 .content h2 {
@@ -139,7 +145,7 @@ a > img {
   }
 }
 
-@media (min-width : 400px) and (max-width : 600px) {
+@media (min-width : 400px) and (max-width : 605px) {
   .content p, .content ul, .content ol, .content dl, .footnotes ol, .content h2, .content h3 {
     margin-left : 8%;
     margin-right : 8%;
@@ -198,7 +204,7 @@ a > img {
   }
 }
 
-@media (min-width : 400px) and (max-width : 600px) {
+@media (min-width : 400px) and (max-width : 605px) {
   .content div.figure {
     margin-left : 8%;
     max-width : 84%;
@@ -268,7 +274,7 @@ a > img {
   }
 }
 
-@media (min-width : 400px) and (max-width : 600px) {
+@media (min-width : 400px) and (max-width : 605px) {
   .content div.announcement {
     margin-left : 8%;
     max-width : 84%;

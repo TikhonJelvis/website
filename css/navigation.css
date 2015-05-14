@@ -6,6 +6,18 @@
     height : 24pt;
 }
 
+@media (max-width : 400px) {
+  #navigation {
+    height : 16.5pt;
+  }
+}
+
+@media (min-width : 400px) and (max-width : 605px) {
+  #navigation {
+    height : 20.5pt;
+  }
+}
+
 /* This div makes the background of the navigation menu. */
 #navigation > div {
     position : relative;
@@ -16,6 +28,12 @@
     background-color : #B3C8E5;
 }
 
+@media (min-width : 400px) and (max-width : 605px) {
+  #navigation > div {
+    min-width : 400px;
+  }
+}
+
 /* This list is the actual navigation menu--each item is a link. */
 #navigation ul {
     margin-right : 7px;
@@ -24,9 +42,22 @@
     float : right;
 }
 
+@media (max-width : 605px) {
+  #navigation ul {
+    margin-left : auto;
+    margin-right : auto;
+  }
+}
+
 .navigation ul {
     position : relative;
     list-style : none;
+}
+
+@media (max-width : 400px) {
+  #navigation ul {
+    float : left;
+  }
 }
 
 /* This controls the individual navigation items. It is best to only have one
@@ -44,7 +75,23 @@
     font-weight : normal;
     font-size : 20pt;
     font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
-    /* font-family : Verdana, Arial, Helvetica, sans-serif; */
+}
+
+@media (max-width : 400px) {
+  .navigation li {
+    font-size : 15pt;
+  }
+
+  .navigation li:first-child {
+    border-left : none;
+    margin-left : 0px;
+  }
+}
+
+@media (min-width : 400px) and (max-width : 605px) {
+  .navigation li {
+    font-size : 19pt;
+  }
 }
 
 .navigation li:first-letter {
