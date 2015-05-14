@@ -11,6 +11,20 @@
     height : 75px;
 }
 
+@media (min-width : 400px) and (max-width : 605px) {
+  #header {
+    font-size : 42px;
+    height : 52px;
+  }
+}
+
+@media (max-width : 400px) {
+  #header {
+    font-size : 30px;
+    height : 40px;
+  }
+}
+
 /* This is just to center the header. */
 #header > div {
     margin-left : auto;
@@ -24,6 +38,18 @@
     z-index : -1;
     margin-top : 28pt;
     margin-left : 36.3%;
+}
+
+@media (min-width : 400px) and (max-width : 600px) {
+  #headerBackground {
+    height : 32px;
+  }
+}
+
+@media (max-width : 400px) {
+  #headerBackground {
+    height : 22px;
+  }
 }
 
 #header span {
@@ -40,12 +66,58 @@
     font-size : 90px;
 }
 
+@media (min-width : 400px) and (max-width : 600px) {
+  #header .big {
+    font-size : 58px;
+    top : -12px;
+    margin-left : 0px;
+  }
+}
+
+@media (max-width : 400px) {
+  #header .big {
+    font-size : 42px;
+    top : -7px;
+    margin-left : 0px;
+  }
+
+  #header #tikhon + .big {
+    margin-left : 6px;
+  }
+}
+
 #header #tikhon {
     top : -42px;
     margin-right : -15px;
 }
 
+@media (min-width : 400px) and (max-width : 600px) {
+  #header #tikhon {
+    top : -26px;
+  }
+}
+
+@media (max-width : 400px) {
+  #header #tikhon {
+    top : -18px;
+  }
+}
+
 #header #jelvis {
     top : -26px;
     left : -3px;
+}
+
+@media (min-width : 400px) and (max-width : 600px) {
+  #header #jelvis {
+    top : -17px;
+    left : -1px;
+  }
+}
+
+@media (max-width : 400px) {
+  #header #jelvis {
+    top : -12px;
+    left : -1px;
+  }
 }
