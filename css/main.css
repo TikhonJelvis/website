@@ -338,6 +338,7 @@ a > img {
     margin : 0 12.5% 20px 12.5%;
     padding : 20px;
     line-height : 2.25ex;
+    overflow : auto;
 }
 
 .content pre code {
