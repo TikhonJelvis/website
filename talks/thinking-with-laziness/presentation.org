@@ -1,0 +1,222 @@
+#+OPTIONS: f:nil toc:nil
+#+TITLE: Thinking with Laziness
+#+AUTHOR: Tikhon Jelvis (tikhon@jelv.is)
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+#+BEAMER_THEME: Rochester [height=20pt]
+#+BEAMER_COLOR_THEME: spruce
+
+* Perspectives
+  - *modularity* 
+    - evaluation vs definition
+  - *control* 
+    - lazy structures as control flow
+  - *precision* 
+    - arbitrary precision values
+  - *memoization* 
+    - laziness = built-in memoization
+    
+* Modularity
+  - separate *evaluation* from *definition*
+    - evaluate at use site
+    - different use sites—different evaluation
+  - new way of separating into components
+  - interleave or modify evaluation at use site
+
+* Preserving Asymptotics
+  - select n top elements
+#+BEGIN_SRC Haskell
+  select ∷ Ord o ⇒ [o] → [o]
+  select = take n . sort
+#+END_SRC
+  - *does not sort whole list*
+  - like adding =break= into /definition/ of =sort=
+
+* Control Execution
+  - F18A emulator:
+  #+BEGIN_SRC Haskell
+    step ∷ State → State
+
+    trace ∷ State → [State]
+    trace = iterate step
+  #+END_SRC
+  - infinite list of states
+
+* Different Uses
+  - repl: run until end state
+    - =takeWhile (≠ end) $ trace start=
+  - tests:
+    - =take limit $ trace start=
+  - limit based on spec program
+  - both:
+    - =take limit . takeWhile (≠ end)=
+
+* α-β pruning
+  [[file:img/ab-pruning.png]]
+  - don't evaluate pruned branches
+
+* Control Structures
+  - lazy data structure ≡ control flow
+    - list ≡ for loop
+  - first-class
+    - *manipulate*
+      - pass into functions
+      - pattern match
+    - *compose* 
+      - combine into larger lazy structures
+
+* Examples
+  - F18a trace 
+    - interpreter loop
+  - game tree 
+    - recursive move function
+  - =take n . sort= 
+    - loop
+    - partially executed sort
+
+* Intermediate Structures
+  - lazy structures *need not fully exist*
+    - garbage collected on the fly
+  - =fact n = product [1..n]=
+    - internal list ⇒ for loop
+    - collected on the fly
+    - constant memory usage
+  - common style:
+    - =fold . unfold=
+
+* Nondeterministic Programming
+  - lists ≡ loop
+  - nest list ≡ nested loop
+    - monad instance!
+  - *nondeterministic programming*
+  #+BEGIN_SRC Haskell
+    do a ← [1..10]
+       b ← [1..10]
+       guard (a ≠ b ∧ a + b == 7)
+       return (a, b)
+  #+END_SRC
+
+* Map Coloring
+  [[file:img/Blank_US_Map.svg]]
+
+* Map Coloring
+  [[file:img/out.svg]]
+
+* Map Coloring
+   - =step ∷ Map → State → [Map]=
+
+   #+BEGIN_SRC Haskell
+     solutions ∷ [Map]
+     solutions = foldM step blank states
+     
+     first = head solutions
+
+     -- solution where California is blue
+     some = find caBlue solution
+     all = filter caBlue solution
+   #+END_SRC
+
+* Arbitrary Precision
+  - lazy structures ⇒ *precision on demand*
+  - Conal Elliott:
+  #+BEGIN_QUOTE
+    approximations compose badly
+  #+END_QUOTE
+  - modularity!
+  - *vector vs raster*
+
+* Exact Real Arithmetic
+  - lazy list of digits
+  - continued fractions
+  - any other series
+  #+BEGIN_SRC Haskell
+  N [3] [1, 4, 1, 5, 9, 2, 6...]
+  #+END_SRC
+  - simple implement
+  - no loss of precision *at seams*
+
+* Infinite Quadtrees
+  [[file:img/QuadTree.png]]
+
+* Memoization
+  - built-in controlled side-effect
+  - *below level of abstraction*
+  - laziness:
+    - computes value *at most once*
+    - deterministic
+    - thread-safe
+
+* Fibonacci
+  - classic example
+#+BEGIN_SRC Haskell
+fibs ∷ [Integer]
+fibs = 0 : 1 : zipWith (+) fibs (drop 1 fibs)
+#+END_SRC
+  - [[file:img/fibs-0-large.png]]
+
+* Fibonacci
+  - [[file:img/fibs-1-large.png]]
+  - [[file:img/fibs-2-large.png]]
+  - [[file:img/fibs-3-large.png]]
+
+* Intermediate Values
+#+BEGIN_SRC Haskell
+fib ∷ Integer → Integer
+fib n = fibs !! n
+  where fibs =
+     0 : 1 : zipWith (+) fibs (drop 1 fibs)
+#+END_SRC
+  -[[file:img/fibs-0-large.png]]
+
+* Intermediate Values
+  - [[file:img/fibs-iv-1-large.png]]
+  - [[file:img/fibs-iv-2-large.png]]
+  - [[file:img/fibs-iv-3-large.png]]
+
+* Packages
+  - Luke Palmer: =data-memocombinators=
+  - Conal Elliott: =MemoTrie=
+  - infinite lazy trees
+
+* Dynamic Programming
+  - array of lazy values
+#+BEGIN_SRC Haskell
+fib ∷ Integer → Integer
+fib 0 = 0
+fib 1 = 1
+fib n = fibs ! (n - 1) + fibs ! (n - 2)
+  where
+    fibs = Array (0, n) [go i | i ← [0..n]]
+#+END_SRC
+
+* Dynamic Programming
+  - array with dependencies as thunks
+  - [[file:img/fib-array-large.png]]
+  - interesting for harder problems!
+
+* Perspectives
+  - *modularity* 
+    - evaluation vs definition
+  - *control* 
+    - lazy structures as control flow
+  - *precision* 
+    - arbitrary precision values
+  - *memoization* 
+    - laziness = built-in memoization
+
+* References
+  - “Why Functional Programming Matters” by John Hughes
+  - /Parallel and Concurrent Programming in Haskell/ by Simon Marlowe
+  - “Lazy Algorithms for Exact Real Arithmetic” by Pietro Di
+    Gianantonio and Pier Luca Lanzi
+  - “Functional Programming and Quadtrees” by F. Warren Burton and
+    John (Yannis) G. Kollias
+
+* References
+  - [[https://lukepalmer.wordpress.com/2008/10/14/data-memocombinators/][data-memocombinators]]
+  - [[http://conal.net/blog/posts/elegant-memoization-with-functional-memo-tries][elegant memoization with memo tries]]
+  - [[http://jelv.is/blog/Lazy-Dynamic-Programming][Lazy Dynamic Programming]]
+  - thanks:
+    - Conal Elliott
+    - Edward Kmett
