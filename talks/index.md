@@ -36,6 +36,10 @@ I've given a few talks at Haskell hackathons and meetups.
 
 <div></div>
 
+A longer talk at [BayHac 2015](http://bayhac.org):
+
+  * [Thinking with Laziness](thinking-with-laziness)
+
 [Haskell Hackers meetup][haskell-hackers] (at Hacker Dojo):
 
   * [Nondeterminism](nondeterminism.html) 
