@@ -9,15 +9,15 @@ author: Tikhon Jelvis
 
 <div class="announcement">
 
+I gave a talk called ["Thinking with Laziness"](talks/thinking-with-laziness) at [BayHac 2015](http://bayhac.org).
+
+<div> </div>
+
 Another Ludum Dare. Another [game][shattered-worlds]! Play it. [Warning: sound.]
 
 <div> </div>
 
 [Our paper on Chlorophyll](chlorophyll.pdf), a synthesis-aided compiler, was accepted to [PLDI 2014][PLDI].
-
-<div> </div>
-
-All my slides are available on my [talks](talks) page.
 
 </div>
 
