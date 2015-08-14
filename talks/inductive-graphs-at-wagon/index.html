@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Inductive Graphs</title>
+<meta name="author" content="(Tikhon Jelvis)"/>
+
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+<link rel="stylesheet" href="./reveal.js/css/theme/tikhon.css" id="theme"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="Introduction to inductive graphs and functional graph algorithms in Haskell.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>Inductive Graphs</h1>
+<h2>Tikhon Jelvis</h2>
+<h2><a href="mailto:tikhon@jelv.is">tikhon@jelv.is</a></h2>
+<h2></h2>
+</section>
+
+<section>
+<section id="slide-sec-1">
+<h2 id="sec-1">Graphs: Hard in Haskell?</h2>
+<p>
+Graph algorithms and data structures:
+</p>
+
+<p>
+<b>too imperative</b>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-2">
+<h2 id="sec-2">Pattern match on a graph?</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-3">
+<h2 id="sec-3">What <i>can</i> we match on?</h2>
+<ul class="fragment roll-in">
+<li>lists</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>trees</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>algebraic data types</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-4">
+<h2 id="sec-4">Why?</h2>
+<p>
+Algebraic data types are <b>inductive</b>:
+</p>
+
+<p>
+there is exactly one way to construct them
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-5">
+<h2 id="sec-5"></h2>
+<p>
+Consider lists:
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-Haskell">data List a = Nil | Cons a (List a)
+</pre>
+</div>
+
+<span class="fragment roll-in"><p>
+one way to construct
+</p></span>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in">Nil
+Cons 1 (Cons 2 Nil)
+</pre>
+</div>
+
+<span class="fragment roll-in"><p>
+one way to deconstruct
+</p></span>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in">case list of
+  Nil       -&gt; ...
+  Cons x xs -&gt; ...
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-6">
+<h2 id="sec-6">Graphs are <b>not</b> inductive</h2>
+<p>
+Graph construction — <b>implementation detail</b>
+</p>
+
+<p>
+nodes are not ordered
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-7">
+<h2 id="sec-7">Let's pretend!</h2>
+<p>
+<b>View</b> graphs as inductive
+</p>
+
+<p>
+Decompose into:
+</p>
+
+<ul class="fragment roll-in">
+<li>a node</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>its edges</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>the rest of the graph</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-sec-8">
+<h2 id="sec-8">View graphs as ADTs</h2>
+<div class="org-src-container">
+
+<pre  class="src src-Haskell">data Context =
+  Context [Node] Node [Node]
+
+data View =
+  Context :&amp; Graph
+</pre>
+</div>
+<p>
+(ignoring node and edge labels)
+</p>
+</section>
+</section>
+<section>
+<section id="slide-sec-9">
+<h2 id="sec-9"></h2>
+
+<div class="figure">
+<p><img src="full.png" alt="full.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-10">
+<h2 id="sec-10"></h2>
+
+<div class="figure">
+<p><img src="match1.png" alt="match1.png" />
+</p>
+</div>
+
+<p>
+<code>([4, 5, 6], 1, []) :&amp; graph</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-11">
+<h2 id="sec-11"></h2>
+
+<div class="figure">
+<p><img src="recurse.png" alt="recurse.png" />
+</p>
+</div>
+
+<p>
+the rest of the graph
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-12">
+<h2 id="sec-12">Like lists:</h2>
+<p>
+match
+</p>
+
+
+<div class="figure">
+<p><img src="list-match-cropped.png" alt="list-match-cropped.png" />
+</p>
+</div>
+
+<p>
+recurse
+</p>
+
+
+<div class="figure">
+<p><img src="list-recurse-cropped.png" alt="list-recurse-cropped.png" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-sec-13">
+<h2 id="sec-13">Another match</h2>
+
+<div class="figure">
+<p><img src="match2.png" alt="match2.png" />
+</p>
+</div>
+
+<p>
+<code>([5, 6, 7], 2, []) :&amp; graph</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-14">
+<h2 id="sec-14">matchAny</h2>
+<div class="org-src-container">
+
+<pre  class="src src-Haskell">matchAny :: Graph -&gt; View
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-Haskell">foo :: Graph -&gt; ...
+foo graph | isEmpty graph     = ...
+foo (matchAny -&gt; ctx :&amp; rest) = ...
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-15">
+<h2 id="sec-15">match</h2>
+<div class="org-src-container">
+
+<pre  class="src src-Haskell">match :: Node -&gt; Graph -&gt; Maybe View
+</pre>
+</div>
+
+<ul>
+<li>matches a <b>specific</b> node</li>
+<li><code>Nothing</code> if not in graph</li>
+<li>directed graph traversal</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-16">
+<h2 id="sec-16">depth-first traversal</h2>
+<div class="org-src-container">
+
+<pre  class="src src-Haskell">dfs :: [Node] -&gt; Graph -&gt; [Node]
+dfs [] _ = []
+
+dfs (x:xs) (match x -&gt; Just (ctx :&amp; g)) =
+  x : dfs (neighbors ctx ++ xs) g
+
+dfs (_:xs) graph = dfs xs graph
+</pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-17">
+<h2 id="sec-17"></h2>
+
+<div class="figure">
+<p><img src="full.png" alt="full.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[]</code>
+</p>
+
+<p>
+result: <code>[]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-18">
+<h2 id="sec-18"></h2>
+
+<div class="figure">
+<p><img src="step_0.png" alt="step_0.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[4, 5, 6]</code>
+</p>
+
+<p>
+result: <code>[1]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-19">
+<h2 id="sec-19"></h2>
+
+<div class="figure">
+<p><img src="step_1.png" alt="step_1.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[7, 5, 6]</code>
+</p>
+
+<p>
+result: <code>[1, 4]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-20">
+<h2 id="sec-20"></h2>
+
+<div class="figure">
+<p><img src="step_2.png" alt="step_2.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[2, 3, 5, 6]</code>
+</p>
+
+<p>
+result: <code>[1, 4, 7]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-21">
+<h2 id="sec-21"></h2>
+
+<div class="figure">
+<p><img src="step_3.png" alt="step_3.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[5, 6, 5, 6]</code>
+</p>
+
+<p>
+result: <code>[1, 4, 7, 2]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-22">
+<h2 id="sec-22"></h2>
+
+<div class="figure">
+<p><img src="step_4.png" alt="step_4.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[6, 5, 6]</code>
+</p>
+
+<p>
+result: <code>[1, 4, 7, 2, 5]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-23">
+<h2 id="sec-23"></h2>
+
+<div class="figure">
+<p><img src="step_5.png" alt="step_5.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[3, 5, 6]</code>
+</p>
+
+<p>
+result: <code>[1, 4, 7, 2, 5, 6]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-24">
+<h2 id="sec-24"></h2>
+
+<div class="figure">
+<p><img src="step_6.png" alt="step_6.png" />
+</p>
+</div>
+
+<p>
+stack: <code>[5, 6]</code>
+</p>
+
+<p>
+result: <code>[1, 4, 7, 2, 5, 6, 3]</code>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-25">
+<h2 id="sec-25">Pattern Matching on Graphs!</h2>
+<ul>
+<li>see graphs as <b>inductive</b></li>
+<li>use <b>directed</b> pattern matching</li>
+<li>write normal functional code</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-26">
+<h2 id="sec-26">Real World Use</h2>
+<ul>
+<li><code>fgl</code> library
+<ul>
+<li>labels</li>
+<li>directed edges</li>
+<li>slightly different API</li>
+
+</ul></li>
+<li>higher-order graph functions</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-27">
+<h2 id="sec-27">Further Reading</h2>
+<ul>
+<li><a href="http://jelv.is/blog/Generating-Mazes-with-Inductive-Graphs">Generating Mazes with Inductive Graphs</a>
+<ul>
+<li>on jelv.is/blog</li>
+
+</ul></li>
+<li><a href="https://web.engr.oregonstate.edu/~erwig/papers/InductiveGraphs_JFP01.pdf">“Inductive Graphs and Functional Graph Algorithms”</a>
+<ul>
+<li>Martin Erwig.
+
+<p>
+<i>Journal of Functional Programming, Vol. 11</i>,
+</p>
+
+<p>
+No. 5, 467-492, 2001
+</p></li>
+
+</ul></li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<p> Created by Tikhon Jelvis. </p>
+
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: false,
+progress: false,
+history: true,
+center: true,
+slideNumber: true,
+rollingLinks: false,
+keyboard: true,
+overview: true,
+width: 1200,
+height: 800,
+margin: 0.10,
+minScale: 0.50,
+maxScale: 2.50,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'slide', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+]
+});
+</script>
+</body>
+</html>
