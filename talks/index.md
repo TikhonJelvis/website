@@ -7,15 +7,9 @@ author: Tikhon Jelvis
 
 # Talks
 
-Here are the slides for a few technical talks that I have recently given.
+Here are the slides for talks I've given at meetups. Presenting is fun! Unfortunately, most were not recorded. I included links to videos for the ones that were.
 
-The slides work directly in the browser with JavaScript. Use the arrows to navigate back and forth. I'm going to provide PDF versions of all of the talks at some point, but the formatting may not be as good as the JavaScript version.
-
-Unfortunately, the slides do not work correctly in FireFox. I'll fix it, any day now...
-
-As a technical note, the slides are generated from [org-mode](http://orgmode.org), using a modified version of  [org-html5presentation.el](https://gist.github.com/kinjo/509761). Both the modified `.el` script and the org files for talks are up on [github](https://github.com/TikhonJelvis/talks).
-
-Unlike the regular script, my version breaks in FireFox :P. The equations are rendered with [MathJax](http://mathjax.org), which is a really awesome library. 
+My older slides were produced with a customized version of [org-html5presentation.el](https://gist.github.com/kinjo/509761) that does not work properly in Firefox. I've included pdf versions of most of these that are ugly but should be readable. Newer slides, based on [reveal.js](http://lab.hakim.se/reveal-js/#/) (Still built from [org mode](https://github.com/yjwen/org-reveal)) should work properly.
 
 </div>
 <div class="content">
@@ -36,14 +30,18 @@ I've given a few talks at Haskell hackathons and meetups.
 
 <div></div>
 
+[SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) at [Wagon](http://wagonhq.com):
+
+  * [Inductive Graphs](inductive-graphs-at-wagon)
+
 A longer talk at [BayHac 2015](http://bayhac.org):
 
-  * [Thinking with Laziness](thinking-with-laziness)
+  * [Thinking with Laziness](thinking-with-laziness) ([video](http://begriffs.com/posts/2015-06-17-thinking-with-laziness.html))
 
 [Haskell Hackers meetup][haskell-hackers] (at Hacker Dojo):
 
   * [Nondeterminism](nondeterminism.html) 
-  * [Inductive Graphs](inductive-graphs.html)
+  * [Inductive Graphs](inductive-graphs.html) (my newer talk at Wagon is better)
   * [Analyzing Programs with SMT Solvers](analyzing-programs-with-smt.html)
 
 Two lightning talks at [BayHac 2013](http://www.haskell.org/haskellwiki/BayHac2013):

@@ -5,11 +5,9 @@ author: Tikhon Jelvis
 
 <div class="content">
 
-# Welcome
-
 <div class="announcement">
 
-I gave a talk called ["Thinking with Laziness"](talks/thinking-with-laziness) at [BayHac 2015](http://bayhac.org).
+I gave a talk about [Inductive Graphs](talks/inductive-graphs-at-wagon) at the [SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) at [Wagon](http://wagonhq.com).
 
 <div> </div>
 
