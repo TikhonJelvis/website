@@ -354,7 +354,29 @@ a > img {
     font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
     /* font-family : Verdana, Arial, Helvetica, sans-serif; */
     margin-top : 10px;
-    margin-left : 1em;
+
+    font-size : 125%;
+}
+
+.content dd img {
+  position : relative;
+  max-height : 125px;
+}
+
+.content dd:nth-child(4n+2) img {
+  float : left;
+  right : 8px;
+  margin-right : 8px;
+}
+
+.content dd:nth-child(4n) img {
+  float : right;
+  margin-left : 8px;
+}
+
+.content dd {
+  min-height : 125px;
+  padding-left : 0.5em;
 }
 
 .content dd p {

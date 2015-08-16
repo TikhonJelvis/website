@@ -9,9 +9,9 @@ author: Tikhon Jelvis
 
 <div id="help">
 
-<span class="hide">[<a href="#" class="hide-control">hide</a>]</span>
-
 ## Instructions
+
+<span class="hide">[<a href="#" class="hide-control">hide</a>]</span>
 
 To draw a picture, write a javascript function in the text box below. This function will be called for every pixel and will be given four arguments: `x`, `y`, `d` and `a`. The first two correspond to the Cartesian coordinates of the point; the latter two are the polar coordinates with `d` being the distance to the center and `a` being the angle.
 

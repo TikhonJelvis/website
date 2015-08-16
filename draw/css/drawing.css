@@ -41,12 +41,6 @@
     position : relative;
 }
 
-#help span.hide {
-    position : absolute;
-    top : 10pt;
-    float : left;
-}
-
 .controls {
     margin-left : 12.5%;
     margin-right : 12.5%;
