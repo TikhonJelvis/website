@@ -44,10 +44,13 @@ I've participated in two [Ludum Dare game jams][ld] which involve building a gam
 Haskell is now easily my favorite language. Here are some projects I've used it for. Also check out my [blog](/blog) which tends to focus on Haskell and functional programming.
 
 [TPL](/tpl)
-  ~ ![The TPL Logo](projects/img/tpl-thumbnail.png) A simple but flexible dynamically typed scripting language. Has a mostly working implementation, but was abandoned because of design issues. (Designing a language is hard!)
+  ~ ![The TPL Logo](projects/img/tpl-thumbnail.png) A simple but flexible dynamically typed scripting language with some design issues. **Designing a language is hard!** This project changed how I think about [programming language design][tpl-pl-design] and [programming in general][tpl-general], which I wrote about on Quora.
 
 [modular-arithmetic][ma-github]
   ~ ![Modular arithmetic in action.](projects/img/modular-arithmetic-thumbnail.png) A simple library [on Hackage][ma-hackage] for creating integral types modulo some constant, like ``Integer `Mod` 10`` or, with some Unicode and operator goodness, `ℤ/10`.
+
+[tpl-pl-design]: https://www.quora.com/If-you-were-to-design-a-programming-language-what-language-would-it-evolve-from-and-what-aspect-of-that-language-would-you-do-differently/answer/Tikhon-Jelvis?share=1
+[tpl-general]: https://www.quora.com/What-programming-projects-have-given-you-the-most-insight-on-a-programming-concept-technique/answer/Tikhon-Jelvis?share=1
 
 [ma-hackage]: https://hackage.haskell.org/package/modular-arithmetic
 [ma-github]: https://github.com/TikhonJelvis/modular-arithmetic
