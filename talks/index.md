@@ -34,7 +34,7 @@ I've given a few talks at Haskell hackathons and meetups.
 
 <div></div>
 
-[SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) at [Wagon]:
+[SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) hosted by [Wagon]:
 
   * [Inductive Graphs](inductive-graphs-at-wagon)
 
