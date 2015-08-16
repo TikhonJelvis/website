@@ -9,7 +9,11 @@ author: Tikhon Jelvis
 
 Here are the slides for talks I've given at meetups. Presenting is fun! Unfortunately, most were not recorded. I included links to videos for the ones that were.
 
+![Me giving a talk at the SF Haskell meetup at [Wagon].](img/me-giving-talk-at-wagon.jpg)
+
 My older slides were produced with a customized version of [org-html5presentation.el](https://gist.github.com/kinjo/509761) that does not work properly in Firefox. I've included pdf versions of most of these that are ugly but should be readable. Newer slides, based on [reveal.js](http://lab.hakim.se/reveal-js/#/) (Still built from [org mode](https://github.com/yjwen/org-reveal)) should work properly.
+
+[Wagon]: http://wagonhq.com
 
 </div>
 <div class="content">
@@ -30,7 +34,7 @@ I've given a few talks at Haskell hackathons and meetups.
 
 <div></div>
 
-[SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) at [Wagon](http://wagonhq.com):
+[SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) at [Wagon]:
 
   * [Inductive Graphs](inductive-graphs-at-wagon)
 
