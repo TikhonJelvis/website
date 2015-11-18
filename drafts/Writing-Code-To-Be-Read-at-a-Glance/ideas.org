@@ -1,0 +1,39 @@
+* General Ideas
+  - code that is conceptually related should *look related*
+    - even if implementation isn't!
+  - code that is *not* conceptually related should *look different*
+    - even if implementation is similar!
+  - think about the *shape* of your code
+    - verbose/unnecessary names, boilerplate *obscure* the shape of code
+* Example: Math Notation
+  - highlight *structure* of an expression
+    - think about polynomials: like a set of terms
+    - operators as plumbing
+  - make conceptually similar things *look* similar (regardless of
+    implementation)
+* Example: Routes
+** Minimum Amount of Information
+   - think about what the *minimum* amount of information needed is
+     - everything else is some sort of boilerplate
+       - not always bad (ie structure, mnemonic)
+       - try to minimize
+       - try to make unnecessary information look different from
+         necessary information
+** Repetition
+   - routes are a good example because there are a lot of routes in a
+     web app
+     - code that repeats a lot should have a structure that helps
+       navigate it
+     - being terse is extra valuable
+   - learn once, use a lot
+** Locality
+   - try to keep all relevant information in together
+     - route URI
+     - parameters (and their types)
+     - handler
+   - keep *unrelated* information separate
+     - parsing code
+     - code specific to handling the request
+* Domain-Specific Languages
+  - simple eDSLs are a great application of this idea
+  - make code *look like* what it represents
