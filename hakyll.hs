@@ -4,6 +4,8 @@
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE ViewPatterns              #-}
 
+import           Control.Monad        (mapM)
+
 import           Data.Char            (toUpper)
 import           Data.Functor         ((<$>))
 import qualified Data.List            as List
@@ -44,8 +46,8 @@ main = hakyll $ do
     route   $ setExtension "html"
     compile $ do
       content <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
-      let posts       = runPandoc <$> content
-          blogContext = listField "posts" postContext (return posts) <>
+      posts   <- mapM runPandoc content
+      let blogContext = listField "posts" postContext (return posts) <>
                         constField "title" "Blog" <>
                         context
       getResourceString
@@ -57,8 +59,9 @@ main = hakyll $ do
         route idRoute
         compile $ do
           let feedContext = postContext <> bodyField "description"
-          posts <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
-          render blogFeedConfig feedContext (runPandoc <$> posts)
+          posts    <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
+          pandoced <- mapM runPandoc posts
+          render blogFeedConfig feedContext pandoced
 
   create ["blog/atom.xml"] $ feed renderAtom
   create ["blog/rss.xml"]  $ feed renderRss
@@ -89,11 +92,11 @@ defaultPage :: Item String -> Compiler (Item String)
 defaultPage content = do
   includes <- setIncludes =<< getUnderlying
   applyAsTemplate includes content
-    <&> runPandoc
+    >>= runPandoc
     >>= loadAndApplyTemplate "templates/default.html" context
     >>= relativizeUrls
 
-runPandoc :: Item String -> Item String
+runPandoc :: Item String -> Compiler (Item String)
 runPandoc = renderPandocWith readerOptions writerOptions
   where writerOptions = defaultHakyllWriterOptions
          { P.writerHTMLMathMethod = P.MathJax ""
