@@ -36,7 +36,7 @@ I've given a few talks at Haskell hackathons and meetups.
 
 [SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) hosted by [Wagon]:
 
-  * [Inductive Graphs](inductive-graphs-at-wagon)
+  * [Inductive Graphs](inductive-graphs-at-wagon) ([video](http://begriffs.com/posts/2015-09-04-pure-functional-graphs.html))
 
 A longer talk at [BayHac 2015](http://bayhac.org):
 

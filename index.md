@@ -7,9 +7,12 @@ author: Tikhon Jelvis
 
 <div class="announcement">
 
-I gave a talk about [Inductive Graphs](talks/inductive-graphs-at-wagon) at the [SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) at [Wagon](http://wagonhq.com).
+Videos for my last two [talks](talks)! [Thinking with Laziness][laziness] and [Functional Graph Algorithms][graphs]
 
+[laziness]: http://begriffs.com/posts/2015-06-17-thinking-with-laziness.html
+[graphs]: http://begriffs.com/posts/2015-09-04-pure-functional-graphs.html
 <div> </div>
+
 
 Another Ludum Dare. Another [game][shattered-worlds]! Play it. [Warning: sound.]
 

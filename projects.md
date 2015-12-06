@@ -11,24 +11,25 @@ author: Tikhon Jelvis
 
 [Semantic Version Control](/cow) 
   ~ ![Detecting a moved and modified block of JavaScript code.](projects/img/cow-thumbnail.png)
-  A proof-of-concept diff and merge algorithm that looks at the **structure of code** rather than just text. Currently it's in a background research phase, trying to formalize the approach used in the proof of concept and find relevant algorithms and metrics in the literature.
+  A proof-of-concept diff and merge algorithm that looks at the **structure of code** rather than just text. Currently it's in a background research phase, trying to put the algorithm from the proof-of-concept on a sound footing and implement it efficiently.
 
 [Patricia Tries](projects/different-tries)
-  ~ ![A binary trie with a three-bit key. Figure from Okasaki's paper.](projects/different-tries/img/trie.png) I'm implementing a couple of variants on Patricia tries to understand exactly how they work and how to optimize them. The end-goal is to efficient implement an adaptive radix tree.
+  ~ ![A binary trie with a three-bit key. Figure from Okasaki's paper.](projects/different-tries/img/trie.png) I'm implementing a couple of variants on Patricia tries to understand exactly how they work and how to optimize them. The end-goal is to efficiently implement a persistent adaptive radix tree.
 
 </div>
 <div class="projects content">
 
 ## Ludum Dare
 
-I've participated in two [Ludum Dare game jams][ld] which involve building a game in 72 hours with a small team.
+I've helped design and implement a couple of games in [Ludum Dare game jams][ld] which involve building a game with a small team in 72 hours to some random theme.
 
 [Shattered Worlds][shattered-worlds]
-  ~ ![Jumping over a bear in Shattered Worlds.](projects/img/shattered-worlds-thumbnail.png) A platformer where you can overlay a map from any level you've passed on top of the current level. The theme was "connected worlds" and Alex wrote a nice [postmorten][shattered-worlds-postmortem] for the project.
+  ~ ![Jumping over a bear in Shattered Worlds.](projects/img/shattered-worlds-thumbnail.png) A platformer where you can overlay a map from any level you've passed on top of the current level. The theme was "connected worlds" and Alex wrote a great [postmortem][shattered-worlds-postmortem] from the project.
 
 [Asteroid Tycoon][asteroid-tycoon]
-  ~ ![A spaceship dropping off robots in Asteroid Tycoon](projects/img/asteroid-tycoon-thumbnail.png) A tunneling game where you buy robots to mine asteroids. The robots do their own path finding and mine until they explode and teleport your reward to the ship. The theme was "below the surface" and Alex wrote a [nice postmortem][asteroid-tycoon-postmortem] for the project.
+  ~ ![A spaceship dropping off robots in Asteroid Tycoon](projects/img/asteroid-tycoon-thumbnail.png) A tunneling game where you buy robots to mine asteroids. The robots do their own path finding and mine until they explode and teleport your reward to the ship. The theme was "below the surface" and Alex wrote a [ postmortem][asteroid-tycoon-postmortem] for this one as well.
 
+[ld]: http://ludumdare.com/compo/
 
 [shattered-worlds]: http://ludumdare.com/compo/ludum-dare-30/?action=preview&uid=3353
 [shattered-worlds-postmortem]: http://ludumdare.com/compo/2014/09/11/shattered-worlds-postmortem/
@@ -41,10 +42,10 @@ I've participated in two [Ludum Dare game jams][ld] which involve building a gam
 
 ## Haskell
 
-Haskell is now easily my favorite language. Here are some projects I've used it for. Also check out my [blog](/blog) which tends to focus on Haskell and functional programming.
+Haskell is now easily my favorite language. Here are some projects I've written in Haskell. Also check out my [blog](/blog) which tends to focus on Haskell and functional programming.
 
 [TPL](/tpl)
-  ~ ![The TPL Logo](projects/img/tpl-thumbnail.png) A simple but flexible dynamically typed scripting language with some design issues. **Designing a language is hard!** This project changed how I think about [programming language design][tpl-pl-design] and [programming in general][tpl-general], which I wrote about on Quora.
+  ~ ![The TPL Logo](projects/img/tpl-thumbnail.png) A simple but flexible dynamically typed scripting language---with some design issues. **Designing a language is hard!** This project changed how I think about [programming language design][tpl-pl-design] and [programming in general][tpl-general], which I wrote about on Quora.
 
 [modular-arithmetic][ma-github]
   ~ ![Modular arithmetic in action.](projects/img/modular-arithmetic-thumbnail.png) A simple library [on Hackage][ma-hackage] for creating integral types modulo some constant, like ``Integer `Mod` 10`` or, with some Unicode and operator goodness, `ℤ/10`.
