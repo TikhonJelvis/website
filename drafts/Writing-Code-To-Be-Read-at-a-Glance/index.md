@@ -54,6 +54,9 @@ Everything else is fundamentally different from this core, essential information
 
 The point is not to make an immediate conclusion based on what is and isn't essential but consider it. It should influence how you organize and present your code. As a general guide though, I try to eliminate more and more of the inessential code as I repeat a particular kind of expression more and more. In extreme cases, a table layout might be the most readable option if you have a whole bunch of structured rows of code repeating.
 
+</div>
+<div class="content">
+
 ## Math Notation
 
 A great example in my eyes is mathematical notation. Compare the following two ways of writing the same expression:
@@ -70,7 +73,7 @@ The paragraph, on the other hand, has the advantage of being readable by anyone-
 
 If this paragraph was surrounded by other paragraphs, we wouldn't be able to tell it apart from other prose. I regularly skim through papers by skipping the explanations and looking at just the equations until I find what I need---I wouldn't be able to do that without the special notation.
 
-This is why I am not a big fan of the Ruby and CoffeeScript style that tries to make code read like English. Just like reading math in paragraph form, reading code is the *last* thing I want to do!
+This is why I am not a big fan of the Ruby and CoffeeScript style that tries to make code read like English. Just like reading math in paragraph form, *reading code is the last thing I want to do!*
 
 ### Unfamiliarity
 
