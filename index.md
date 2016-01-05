@@ -7,10 +7,9 @@ author: Tikhon Jelvis
 
 <div class="announcement">
 
-Videos for my last two [talks](talks)! [Thinking with Laziness][laziness] and [Functional Graph Algorithms][graphs]
+I'll be giving a talk at [Compose 2016][compose] in NYC about analyzing programs with the Z3 theorem prover.
 
-[laziness]: http://begriffs.com/posts/2015-06-17-thinking-with-laziness.html
-[graphs]: http://begriffs.com/posts/2015-09-04-pure-functional-graphs.html
+[compose]: http://www.composeconference.org/
 <div> </div>
 
 
