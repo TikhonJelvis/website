@@ -1,0 +1,18 @@
+* Idea
+  - reason about programs *exhaustively* (within bounds)
+  - answer arbitrary questions
+    - check invariants
+    - verify against specification
+    - run forwards/backwards (!)
+    - synthesize code
+
+* IMP
+  - simple language: booleans, ints, control flow
+  - used to teach PL theory (esp operational semantics)
+
+** Syntax
+
+* Unrolling Execution
+  - we compile a program to a formula by *unrolling* the execution of
+    the program to /n/ steps
+
