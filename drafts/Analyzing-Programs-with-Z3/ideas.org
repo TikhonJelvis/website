@@ -6,6 +6,15 @@
     - run forwards/backwards (!)
     - synthesize code
 
+* Bounded Verification/Bounded Model Checking
+  - [[http://www.cs.cmu.edu/~emc/papers/Papers%2520In%2520Refereed%2520Journals/Bounded%2520Model%2520Checking%2520Using%2520Satisfiablility%2520Solving.pdf][Bounded Model Checking Using Satisfiability Solving]]
+    - general idea I'm covering
+  - check invariants
+
+* Temporal Logic
+  - mention temporal logic, FRP?
+    - probably not FRP, but it is a cool, unexpected connection!
+
 * IMP
   - simple language: booleans, ints, control flow
   - used to teach PL theory (esp operational semantics)
@@ -15,4 +24,8 @@
 * Unrolling Execution
   - we compile a program to a formula by *unrolling* the execution of
     the program to /n/ steps
-
+    - unroll loops
+    - inline function calls
+    - single-static assignment
+      - x++; turns into x_2 = x_1 + 1;
+    - conditions turned into *φ-functions*
