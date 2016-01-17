@@ -26,7 +26,7 @@ Another Ludum Dare. Another [game][shattered-worlds]! Play it. [Warning: sound.]
 
 I'm interested in programming languages, functional programming, program synthesis, static analysis, semantics, type theory and startups. In the near future I want to combine as many of these as possible.
 
-I enjoy presenting about CS and try to give [talks at meetups](talks) regularly. I like writing too but don't update my blog nearly often enough—I'm more active on [Quora](https://www.quora.com/Tikhon-Jelvis/) and [StackOverflow](http://stackoverflow.com/users/286871/tikhon-jelvis), writing mostly (but not entirely) about CS.
+I enjoy presenting about CS and try to give [talks at meetups](talks) regularly. I like writing too but don't update my blog nearly often enough—I'm more active on [Quora](https://www.quora.com/Tikhon-Jelvis/answers) and [StackOverflow](http://stackoverflow.com/users/286871/tikhon-jelvis), writing mostly (but not entirely) about CS.
 
 ![A couple of monkeys. I'm the one on the left.](img/me_with_monkey.jpg)
 
