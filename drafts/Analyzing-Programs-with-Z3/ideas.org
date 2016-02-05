@@ -26,6 +26,7 @@
     the program to /n/ steps
     - unroll loops
     - inline function calls
+      - thought: inline and unroll AST *first*?
     - single-static assignment
       - x++; turns into x_2 = x_1 + 1;
     - conditions turned into *φ-functions*
