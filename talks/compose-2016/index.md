@@ -3,6 +3,8 @@ title: Talks
 author: Tikhon Jelvis
 ---
 
+<div class="content">
+
 # Analyzing Programs with Z3
 
 I have a simple formula compiler for IMP using the [Haskell Z3 bindings][haskell-z3] up on [GitHub][code]. I built it with Nix so I was really lazy on setting bounds in the cabal file. If it doesn't build for you, please tell me!
@@ -16,3 +18,4 @@ I originally learned this material taking a [class on program synthesis][class] 
 [class]: http://www.cs.berkeley.edu/~bodik/cs294fa12
 [bibliography]: https://github.com/TikhonJelvis/talks/blob/master/compose-2016/bibliography.org
 
+</div>
