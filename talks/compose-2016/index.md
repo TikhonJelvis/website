@@ -7,11 +7,14 @@ author: Tikhon Jelvis
 
 # Analyzing Programs with Z3
 
-I have a simple formula compiler for IMP using the [Haskell Z3 bindings][haskell-z3] up on [GitHub][code]. I built it with Nix so I was really lazy on setting bounds in the cabal file. If it doesn't build for you, please tell me!
+I gave a talk at Compose 2016 about bounded verification with Z3 in Haskell.
 
-I'll have slides and a recording of the talk up later.
+  * [slides](slides.html)
+  * [code]
+  * [papers, links, etc][bibliography]
+  * [program synthesis class][class]
 
-I originally learned this material taking a [class on program synthesis][class] taught by Ras Bodik at Berkeley. Lectures and materials are available online. If you want to read about the topic further, I also have a random selection of papers, also [on GitHub][bibliography].
+![Me giving the talk.](img/compose-talk.jpg)
 
 [haskell-z3]: https://hackage.haskell.org/package/z3
 [code]: https://github.com/tikhonjelvis/imp
