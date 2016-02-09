@@ -7,7 +7,7 @@ author: Tikhon Jelvis
 
 <div class="announcement">
 
-I'll be giving a talk at [Compose 2016][compose] in NYC about analyzing programs with the Z3 theorem prover.
+I gave a talk at [Compose 2016][compose]: [Analyzing Programs with Z3](talks/compose-2016).
 
 [compose]: http://www.composeconference.org/
 <div> </div>
