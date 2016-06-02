@@ -29,6 +29,10 @@ For the demo, I managed to shrink the relevant code down to about eight lines. T
 
 ## Code
 
+You can see the whole project up [on GitHub][reactive-life], although it might be hard to build now---it was written several years ago. (The wx widgets library is a bit of a pain to work with!)
+
+[reactive-life]: https://github.com/TikhonJelvis/reactive-life
+
 Even without the simplifications and with a bunch of boilerplate, the program is still only 38 lines long. Here are the relevant bits:
 
 ```haskell

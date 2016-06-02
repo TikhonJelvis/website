@@ -9,7 +9,7 @@ author: Tikhon Jelvis
 
 I gave a talk at [Compose 2016][compose]: [Analyzing Programs with Z3](talks/compose-2016).
 
-[compose]: http://www.composeconference.org/
+[compose]: http://www.composeconference.org/2016/
 <div> </div>
 
 
