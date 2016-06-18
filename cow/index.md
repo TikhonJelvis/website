@@ -9,7 +9,10 @@ author: Tikhon Jelvis
 
 Cow is a tool that compares and merges code more intelligently by diffing and analyzing parse trees rather than plain text. I've been working on this project on-and-off[^1] for a few years, with significant help from [Ankur Dave] and Dimitri DeFigueiredo.
 
+The code is available on [GitLab].
+
 [Ankur Dave]: http://ankurdave.com
+[GitLab]: https://gitlab.com/tikhon/cow
 
 Here's a [brief screencast](cow-out.ogv) giving a demo of the system's basic capabilities (based on an old proof-of-concept implementation). The proof-of-concept included the ability to find move blocks of code in simple JavaScript programs:
 
