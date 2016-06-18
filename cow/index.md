@@ -7,81 +7,77 @@ author: Tikhon Jelvis
 
 # Cow: Semantic Version Control
 
-Cow is a tool to compare and merge source code more intelligently. I worked on this project with [Ankur Dave](http://ankurdave.com). It is completely free and open source, with the code available on [GitHub](https://github.com/TikhonJelvis/Cow).
+Cow is a tool that compares and merges code more intelligently by diffing and analyzing parse trees rather than plain text. I've been working on this project on-and-off[^1] for a few years, with significant help from [Ankur Dave] and Dimitri DeFigueiredo.
 
-Watch a [brief screencast](cow-out.ogv) giving a demo of the system's basic capabilities. 
+[Ankur Dave]: http://ankurdave.com
+
+Here's a [brief screencast](cow-out.ogv) giving a demo of the system's basic capabilities (based on an old proof-of-concept implementation). The proof-of-concept included the ability to find move blocks of code in simple JavaScript programs:
+
+![A block of code that was both moved *and* modified.](img/cow-thumbnail.png)
+
+[^1]: More off than on, unfortunately. Cow started out as my final project for CS 164 in 2012 and I've worked on it in spurts since, whenever motivation, schoolwork and actual work permitted.
 
 </div>
 
 <div class="content">
 
-# Description
+# Goals
 
-Cow is a tool for diffing and merging code. The core idea is to treat code as code rather than text. This means that we first parse the files and then analyze the parse trees.
+Here are the features I'm aiming for:
 
-Currently we have a proof-of-concept implementation. The basics work and have been tested on some very small examples. However, the performance is completely untenable and the program has not been tested on real-world code. There are some well-known ways to improve the performance asymptotically, so all this is just a matter of work.
+  1. **Syntax-awareness**: by working with parse trees, all our results follow the syntax of the code, not how it looks in text. This will allow us to selectively and intelligently ignore unimportant changes like whitespace as well as differentiating between changes to code and to comments or documentation.
 
-There is also no UI. We have a couple of different visualization systems---as shown in the video---but nothing usable for real work.
+  2. **Better grouping**: by considering the parse tree, we'll naturally group related changes together, letting our diff be a more intuitive summary of the changes to a program.
+
+  3. **Move detection**: based on our intelligent grouping, we can detect when whole blocks have been moved or copied---even if they were slightly changed in the process.
+
+  4. **Conflict resolution**: our high-level insight into the kinds of changes applied to the program will make automatic conflict resolution more intelligent, including resolving certain kinds of conflicts that *lexically overlap*.
+
+  5. **Additional analysis**: by exposing everything from the diff to the substructure mapping in a convenient way, we'll be able to write more language-specific analyses like using scope analysis to detect when a variable was renamed.
+
+# Progress
+
+The current code is really rough. The core $$O(n^2)$$ edit distance algorithm works properly, but needs to be adapted to handle larger files (probably by a separate alignment pass before the actual diff). To test it I have a JavaScript parser which has not been tested extensively but does a reasonable job on real-life JavaScript programs I've written in the past.
+
+Before the current iteration, I had a proof-of-concept I developed in CS 164 with Ankur Dave. I didn't really know what I wanted to accomplish so it's rough and hard to follow. I also never managed to get the diff algorithm working efficiently (partly because it was never well-specified), so never tested anything on non-trivial amounts of code. The new diff algorithm fixes this problem, but the rest of the system hasn't been updated to match it.
+
+The main work now is testing the diff algorithm with different heuristics and updating the move detection and merging to work with my new code.
 
 </div>
+
 <div class="content">
 
-# Features
+# Architecture
 
-## Syntactic Diff
+The current approach is structured as a pipeline of several distinct algorithms. Each one will provide an intermediate form with a clear interface, making it easy to plug additional logic between any two steps.
 
-Parsing the files and operating on the AST gives us a "syntactic" diff: we operate at the level of syntax rather than just text. This by itself has some nice properties: the diff is whitespace/formatting agnostic and it is accurate at the token level rather than a word/line level.
+  1. **Parsing**: the only language-specific part of the pipeline is producing the parse trees. In this context, a **parse tree** is a slightly lower-level representation than an abstract syntax tree---it's a tree that's only labeled at its leaves, with exactly one leaf node per token. Reading out the leaves in order complete recreates the input stream of tokens.
 
-However, for this to work, we need a parser for each language we want to support. If all our features were purely syntactic, needing a parser would not be worth it! (We could probably get away with just having a lexer, but even that would not be terribly useful.)
+    Each language we support will need a custom parser. This is inevitable because the parsing behavior we need for diffing and merging is different from what a compiler requires:
 
-## Semantic Diff
+    * We can make distinctions the compiler wouldn't like detecting statements grouped with blank lines.
+    * We want to preserve as much lexical information as possible to recreate the program text—especially for merging.
+    * Controlling how the code is parsed gives us fine control over the resulting diff, letting us selectively ignore things we don't care about. Think of this as a sophisticated, syntax-aware alternative to ignoring whitespace with normal diff.
 
-Happily, we do more than just look at syntax. As the name "Semantic Version Control" implies, we try to analyze the meaning of the code and guess what high-level actions the programmer performed in editing it.
+  2. **Parse tree diff**: we find a minimal number of additions and deletions to go between two parse trees. The tree structure is used to consolidate multiple changes into one: if you changed most of the lines in a block of code, it's useful to think of that as a single action rather than a bunch of separate actions per line. The threshold for when to consolidate changes is based on a heuristic which will probably have to be tuned per-language.
 
-Of course, at its core, all this analysis is trying to read the programmer's mind: we try to guess what the user *meant* to do based on how the text changed. This means that we can never be 100% accurate. However, even if we don't guess the programmer's intentions correctly, the analysis can still be useful.
+    This diff is useful on its own to reflect the structure of your code and reduce some of the noise you can get with text-based diff algorithms. However, the main advantage here is for giving the diff some extra structure which can be taken advantage of in analysis passes after the tree diff.
 
-### Move Detection
+    The current algorithm for calculating the needed changes is a slight modification of the [Wagner-Fischer] algorithm for normal string edit distance. It's based on dynamic programming and runs in $$O(n^2)$$ time and space where n is the total number of nodes in the tree (including internal nodes).
 
-Currently, the main semantic feature is move detection. If you move a function or block of code, we can usually detect this as one action rather than some additions in one place and some deletions in another. We can detect moves even if you make changes to the block of code---as long as its still pretty close, we'll see it. As an example, consider changing:
+  3. **Substructure detection**: the next step identifies which blocks of code (ie subtrees) correspond between the two trees being compared, with some heuristic for determining when two subtrees are "close enough". This information is used to find blocks of code that were moved and can also be used for additional analysis by a plugin.
 
-```javascript
-function foo(a, b) {
-  function bar(c, d) {
-    return c * d;
-  }
+    It's useful to think of this as a graph problem where each subtree is a node with edges to each other subtree weighted based on some distance between them (perhaps based on the distances calculated in step 2). Given this graph, there are two possible approaches I'm considering:
 
-  return a + bar(b, 10);
-}
-```
+    * **bipartite graph matching**: the earlier proof of concept found matching substructures by finding the best match between subtrees from the input and output and keeping all the resulting pairs that were close enough in weight. This approach is solid in common cases where you just move a block of code, but doesn't detect more complex transformations like copying a subtree into *two* places in the new tree.
+    * **clustering**: the main alternative I'm considering now is some sort of clustering algorithm that tries to find all the subtrees that are "close enough". This will be able to detect more complex relationships in the code but will likely also depend more on the weights and heuristics used to identify clusters.
 
-to:
+  4. **Merging**: the final (optional) step is merging and conflict resolution. One of the neat advantages to how the tree diff was designed for step 2 is that the resulting diff is a parse tree itself with some additional annotations. This allows us to find conflicts by doing a diff-of-diffs.
 
-```javascript
-function foo(a, b) {
-  return a + bar(b, 10);
-}
+    Once we have a diff-of-diffs, we should be able to resolve more conflicts than a purely text-based system thanks to the high-level information we derived in the previous steps. For example, we can apply *both* a move *and* a modification to a block even if the changes physically overlap in the text.
 
-function bar(a, b) {
-  return a * b;
-}
-```
+    Merging is the least-developed step currently. The approach I described worked well in the old proof-of-concept but I've since rethought many of the details leading up to. I'll put more thought and work towards merging once I get the previous steps working smoothly.
 
-We would detect this change as moving `bar` outside of `foo`, even though `bar` itself was changed (its arguments got renamed). Moreover, this allows us to detect the *overlapping* changes: since we know that `bar` was moved, we can also compare the two moved versions and find that the arguments got renamed. So we could find different changes in the code even though the text they affect is actually the same!
-
-### Scope Analysis
-
-We also do some analysis to figure out which variables are the same. This lets us identify when two `i`s are the same and when they're not, even if the code is heavily nested.
-
-The analysis itself is already implemented but is not currently being used for anything. However, it will have a very simple use in the near future: identifying renames. If you go through your code and rename some variable `x` to `y`, it would be great to consolidate all those changes into one high-level action rather than highlighting every single line that changed.
-
-This would be particularly useful when merging files: if you rename a variable, you almost definitely want it renamed on *every* line it appears. So turning the rename into a single atomic action would make merging easier and reduce the number of mistakes you can make.
-
-## Merging
-
-Apart from using our semantic information to find the differences between two programs, we can also do three-way merges and conflict resolution.
-
-Since we have additional information about the code, we can actually resolve conflicts that *overlap*. For example, imagine a file where one person moves a function and another person renames some variables. Since we detect both actions at a higher level than just changes in text, we can see that they do not actually conflict---both can be applied without breaking anything.
-
-Now, this is probably a little bit too heuristic-driven to be used in a fully automated fashion. However, it can make interactive merging *much* easier between files. Being able to look at semantic actions like renames and moves rather than individual changes to regions of text should be both easier and less error-prone than using a normal merging tool.
+[Wagner-Fischer]: https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm
 
 </div>

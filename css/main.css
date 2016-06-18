@@ -138,6 +138,16 @@ a > img {
   margin-right : 12%;
 }
 
+.content li > p {
+  margin-left : 2%;
+  margin-right : 2%;
+}
+
+/* Nested lists. */
+.content li ul {
+  margin-left : 8%;
+}
+
 @media (max-width : 400px) {
   .content p, .content ul, .content ol, .content dl, .footnotes ol, .content h2, .content h3 {
     margin-left : 2%;
