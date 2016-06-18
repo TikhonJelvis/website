@@ -28,7 +28,9 @@ I'm interested in programming languages, functional programming, program synthes
 
 I enjoy presenting about CS and try to give [talks at meetups](talks) regularly. I like writing too but don't update my blog nearly often enough—I'm more active on [Quora](https://www.quora.com/Tikhon-Jelvis/answers) and [StackOverflow](http://stackoverflow.com/users/286871/tikhon-jelvis), writing mostly (but not entirely) about CS.
 
-![A couple of monkeys. I'm the one on the left.](img/me_with_monkey.jpg)
+![I'm pointing to my screen as I explain something to my partner during a [Lean Poker] event.](img/me_pointing_to_screen.jpg)
+
+[Lean Poker]: http://leanpoker.org/
 
 I studied at Berkeley and interned at a few different companies including Jane Street Capital, a trading firm that is the largest commercial user of OCaml. I also did some research on program synthesis at the Berkeley ParLab with professor Bodik.
 
