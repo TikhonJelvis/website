@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Functional Reactive Programming</title>
+<meta name="author" content="(Tikhon Jelvis)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+<link rel="stylesheet" href="./reveal.js/css/theme/tikhon.css" id="theme"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="Overview of functional reactive programming as a beautiful abstraction.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>Functional Reactive Programming</h1>
+<h2>Tikhon Jelvis</h2>
+<h2><a href="mailto:tikhon@jelv.is">tikhon@jelv.is</a></h2>
+<h2></h2>
+</section>
+
+<section>
+<section id="slide-orgheadline1">
+<h2 id="orgheadline1">What <i>is</i> FRP?</h2>
+<p>
+\(\newcommand{\lb}{\unicode{x27E6}}\)
+\(\newcommand{\rb}{\unicode{x27E7}}\)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline2">
+<h2 id="orgheadline2"></h2>
+<p>
+<img src="./stackoverflow.png" alt="stackoverflow.png" />
+<img src="./quora.png" alt="quora.png" />
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline3">
+<h2 id="orgheadline3">FRP is an abstraction</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline4">
+<h2 id="orgheadline4">FRP is abstract</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline5">
+<h2 id="orgheadline5">Two answers:</h2>
+<ul>
+<li>what it <b>is</b>
+<ul>
+<li>definition</li>
+
+</ul></li>
+<li>why it's <b>interesting</b>
+<ul>
+<li>synthesis</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline6">
+<h2 id="orgheadline6">What <i>is</i> it?</h2>
+<ul>
+<li><b>programming with time-varying values</b></li>
+<li>time is an explicit part of the programming model</li>
+<li>composable, declarative</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline7">
+<h2 id="orgheadline7">What it is</h2>
+<ul>
+<li><b>Behavior</b>: changes continuously
+<ul>
+<li>mouse position: <code>Behavior (Int, Int)</code></li>
+
+</ul></li>
+<li><b>Event</b>: happens at a point in time
+<ul>
+<li>keyboard press: <code>Event Char</code></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline8">
+<h2 id="orgheadline8">Behavior vs Event</h2>
+<p>
+<img src="./frp-behavior.png" alt="frp-behavior.png" />
+<img src="./frp-event.png" alt="frp-event.png" />
+</p>
+
+<p>
+(From <code>reactive-banana</code> documentation.)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline9">
+<h2 id="orgheadline9">Composable: Continuous Time</h2>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./VectorBitmapExample.svg" >
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline10">
+<h2 id="orgheadline10">Declarative: Simple Semantics</h2>
+<ul>
+<li>Time \(T\)</li>
+<li>\(\lb\text{Behavior}\ a\rb = T \to a\)</li>
+<li>\(\lb\text{Event}\ a\rb = (T, a)\)</li>
+<li>\(\text{Stream}\ a = \text{Event}(a, \text{Stream}\ a)\)</li>
+<li>first-class values</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline11">
+<h2 id="orgheadline11">Temporal Logic</h2>
+<ul>
+<li>\(\square P(x)\): \(P(x)\) always holds</li>
+<li>\(\Diamond P(x)\): \(P(x)\) eventually holds</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Symmetrical:
+<ul>
+<li>\(\square P(x) \Leftrightarrow \lnot\Diamond\lnot P(x)\)</li>
+<li>\(\Diamond P(x) \Leftrightarrow \lnot\square\lnot P(x)\)</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline12">
+<h2 id="orgheadline12">Curry-Howard</h2>
+<ul>
+<li>\(\text{Behavior}\ a : \square a\)</li>
+<li>\(\text{Event}\ a\hspace{1.3em}: \Diamond a\)</li>
+<li><b>symmetrical!</b></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline13">
+<h2 id="orgheadline13">Generalities:</h2>
+<ul>
+<li><b>abstract</b> types:
+<ul>
+<li><code>Behavior a</code></li>
+<li><code>Event a</code></li>
+
+</ul></li>
+<li>no literal “time” values</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline14">
+<h2 id="orgheadline14">Input ⇒ Combinators ⇒ Output</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline15">
+<h2 id="orgheadline15">Inputs</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell">mouse    :: Behavior (Int, Int)
+keypress :: Event KeyCode
+click    :: Event (Int, Int)
+
+data TextWidget = {
+  text  :: Behavior String
+  typed :: Event ()
+}
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell">-- robotics
+camera :: Behavior Image
+bump   :: Event ()
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline16">
+<h2 id="orgheadline16">Combinators</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell">when  :: B Bool -&gt; E a -&gt; E a
+at    :: B a -&gt; E b -&gt; E a
+union :: E a -&gt; E a -&gt; E a
+steps :: E a -&gt; B a
+foldP :: (a -&gt; b -&gt; b) -&gt; E a -&gt; E b
+</code></pre>
+</div>
+
+<ul>
+<li>Functor, Applicative, Monoid&#x2026; etc</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline17">
+<h2 id="orgheadline17">Output</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell">set :: Element -&gt; Attribute a -&gt; 
+       B a -&gt; IO ()
+handle :: E a -&gt; (a -&gt; IO ()) -&gt; IO ()
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline18">
+<h2 id="orgheadline18">Life</h2>
+<p>
+<img src="./life-screenshot-1.png" alt="life-screenshot-1.png" />
+<img src="./life-wx.png" alt="life-wx.png" />
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline19">
+<h2 id="orgheadline19"></h2>
+<p>
+Game code:
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="haskell">blank :: Int -&gt; Int -&gt; Grid
+rPentonimo :: Grid
+step :: Grid -&gt; Grid
+modify :: (Int, Int) -&gt; Grid -&gt; Grid
+</code></pre>
+</div>
+
+<ul>
+<li>Widgets:
+<ul>
+<li><code>canvas</code>: contains game of life</li>
+<li><code>pauseButton</code>: pauses animation</li>
+<li><code>timer</code>: sends an event every 200 milliseconds</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline20">
+<h2 id="orgheadline20">Input</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell">-- every 200ms from timer
+ticks :: Event ()
+
+mouse :: Behavior Point
+click :: Event ()
+
+-- button presses
+pauses :: Event ()
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline21">
+<h2 id="orgheadline21">Operators:</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell">f $ x = f x
+
+f &lt;$&gt; xs = fmap f xs
+
+x' &lt;$ xs = fmap (const x') xs
+
+() &lt;$ [1,2,3,4] = [(), (), (), ()]
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline22">
+<h2 id="orgheadline22">Combinators</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell">active &lt;- accumB False (not &lt;$ pauses)
+
+steps, modifies :: Event (Grid -&gt; Grid)
+steps    = whenE active (step &lt;$ ticks)
+modifies = modify . adjust &lt;$&gt; clicks
+
+changes = updates `union` modifies
+life &lt;- accumE start changes
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline23">
+<h2 id="orgheadline23">Output</h2>
+<ul>
+<li>redraw canvas on change</li>
+<li>depends on II framework</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline24">
+<h2 id="orgheadline24">Adding Features</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell">generation &lt;- accumB 0 ((+ 1) &lt;$ steps)
+</code></pre>
+</div>
+
+<ul>
+<li>no changing old code</li>
+<li>very modular</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline25">
+<h2 id="orgheadline25">Libraries:</h2>
+<ul>
+<li><code>reactive-banana</code>
+<ul>
+<li>fast, good semantics</li>
+
+</ul></li>
+<li><code>threepenny-gui</code>: 
+<ul>
+<li>lightweight UI framework</li>
+<li>prototyping, internal tools</li>
+<li>FRP layers based on <code>reactive-banana</code></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline26">
+<h2 id="orgheadline26">Libraries</h2>
+<ul>
+<li><code>reflex-frp</code>
+<ul>
+<li>fast, good semantics</li>
+<li>integrates with GHCJS, DOM</li>
+<li>used in production at Skedge.me?</li>
+
+</ul></li>
+<li>easy install: <code>reflex-platform</code>
+<ul>
+<li>builds GHCJS/reflex using Nix</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline27">
+<h2 id="orgheadline27">Open Questions</h2>
+<ul>
+<li>FRP is an active research field</li>
+<li>performance optimization</li>
+<li>correctness</li>
+<li>nested events/behaviors
+<ul>
+<li>think TODO MVC</li>
+
+</ul></li>
+<li>organizing larger programs</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline28">
+<h2 id="orgheadline28">Open Questions</h2>
+<ul>
+<li>dependent typing</li>
+<li>reasoning about totality/productivity</li>
+<li>temporal logic operators:
+<ul>
+<li>\(a \triangleright b\): \(a\) <i>until</i> \(b\)</li>
+<li>FRP take on session types?</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline29">
+<h2 id="orgheadline29">IO and Abstraction</h2>
+<ul>
+<li>alternative to Haskell <code>IO</code> type</li>
+<li>I/O is <i>not</i> inherently imperative</li>
+<li>a different way to handle effects</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<p> Created by Tikhon Jelvis. </p>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: false,
+history: true,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+width: 1200,
+height: 800,
+margin: 0.10,
+minScale: 0.50,
+maxScale: 2.50,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'slide', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: './reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
