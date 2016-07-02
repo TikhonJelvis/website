@@ -20,6 +20,10 @@ My older slides were produced with a customized version of [org-html5presentatio
 
 ## Programming Languages/Haskell
 
+[East Bay Haskell][eb] hosted by LeapYear in Berkeley:
+
+  * [FRP](frp-2016) - a high-level introduction to functional reactive programming (FRP).
+
 [Compose 2016][compose] hosted by JP Morgan in New York:
 
   * [Analyzing Programs with Z3](compose-2016) - modeling and analyzing programs with the Z3 SMT solver: bounded verification, program synthesis… etc.
@@ -50,6 +54,7 @@ A longer talk at [Hac φ 2013](http://www.haskell.org/haskellwiki/Hac_%CF%86):
 [compose]: http://www.composeconference.com/2016
 [fgl]: https://hackage.haskell.org/package/fgl
 [chlorophyll compiler]: http://pl.eecs.berkeley.edu/projects/chlorophyll/
+[eb]: http://www.meetup.com/East-Bay-Haskell-Meetup/
 
 ## Type Theory
 
