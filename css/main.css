@@ -333,26 +333,26 @@ a > img {
     /* font-family : lucida console, monospace; */
 }
 
-.content code, .content pre, .content .code, .footnotes code {
+.content code, .content pre, .footnotes pre, .footnotes code {
     font-family : "DejaVu Sans Mono", lucida console, monospace;
     /* font-family : lucida console, monospace; */
     background : #CADBF2;
     font-size : 15px;
 }
 
-.content code, .content .code, .footnotes code {
+.content code, .content .code, .footnotes code, .footnotes .code {
     padding : 1px 6px;
     border-radius : 6px;
 }
 
-.content pre {
+.content pre, .footnotes pre {
     margin : 0 12.5% 20px 12.5%;
     padding : 20px;
     line-height : 2.25ex;
     overflow : auto;
 }
 
-.content pre code {
+.content pre code, .footnotes pre code {
     padding : 0;
 }
 
@@ -400,6 +400,10 @@ a > img {
 
 .footnotes ol {
   list-style : decimal;
+}
+
+.footnotes ol pre {
+  margin : 0 2% 20px 2%;
 }
 
 a.footnoteRef sup {

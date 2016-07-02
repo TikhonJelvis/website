@@ -10,29 +10,62 @@ author: Tikhon Jelvis
 
 # IMP
 
-Imp is a bare-bones imperative language used as a teaching tool. It's too limited for real programming, but its simple operational semantics make it easy to analyze programs by hand---or in our case, with an SMT solver.
+IMP is a bare-bones imperative language used as a teaching tool. It's too limited for real programming, but its simple operational semantics make it easy to analyze programs by hand---or in our case, with an SMT solver.
 
-Lets start by looking at how IMP works and implementing an interpreter for it in Haskell.
+Let's start by looking at how IMP works and implementing an interpreter for it in Haskell.
 
 ## Abstract Syntax
 
-The place to start with pretty much any language is its abstract syntax—what can it express? The abstract syntax is specified as a series of grammars which translate almost verbatim to algebraic data types. It's a particularly apropos starting point in Haskell, since types are the first thing we write in most projects.
+The place to start with pretty much any language is its abstract syntax—what can it express? The abstract syntax is specified as a series of grammars which translate almost verbatim to algebraic data types. It's a particularly apropos starting point in Haskell, since types are often the first thing we write anyhow.
 
-IMP is broken up into three parts: arithmetic expressions, boolean expressions and commands (statements). A notable simplification compared to normal imperative languages is that expressions can't have side-effects and commands don't evaluate to a value, making the split between the two even more extreme. I wouldn't like this property in a language *to use*, but it's useful in a language *to analyze*.
+Note that this does not need to correspond one-to-one with the actual syntax of the language---it just needs to capture the core constructs of the language. This is why it's called an "abstract syntax" as opposed to a "concrete syntax" which you would use to write programs. The abstract syntax can omit unneeded details like how programs are parsed or constructs that are pure "syntax sugar"[^syntax-sugar].
 
-Arithmetic is pretty much what you'd expect, with the four basic operators, numeric literals and variables:
+[^syntax-sugar]: Syntax sugar generally refers to syntactic constructs that can be expressed purely in terms of *other* language constructs. We can get rid of syntactic sugar by transforming it into core language constructs before we analyze or run the code---this step is called "desugaring". 
+
+    The for-in loop in many languages is a good example. It's syntax sugar that can be transformed into a while loop and an iterator. That is,
+
+    ```java
+    for (x in xs) { 
+      <body> 
+    }
+    ```
+    
+    might desugar into:
+    
+    ```java
+    iter = xs.iterator()
+    while (iter.hasNext()) {
+      x = iter.getNext()
+      <body>
+    }
+    ```
+
+    Syntax sugar is useful because it provides convenience features to the programmer without making the language substantially more complex. Since the for-in loop's semantics are defined in terms of existing features, tools and compilers don't need to know about how it works (except maybe for nice error messages); instead, they can just work on the program after desugaring.
+
+IMP is naturally broken up into expressions and commands (statements). A notable simplification compared to normal imperative languages is that expressions can't have side-effects and commands don't evaluate to a value, neatly delineating the two. I wouldn't like this property in a language *to use*, but it's useful in a language *to analyze*.
+
+### Expressions
+
+For simplicity, we only care about two kinds of expressions:
+
+  * **arithmetic expressions** simplify to a number and can be bound to variables
+  * **boolean expressions** simplify to a true or false value and are used for control flow, but can't be bound to a variable
+  
+Again, this is a simplification over real languages: instead of supporting different kinds of expressions equally, perhaps with a type system, we have two syntactically distinct expressions which can only be used in mutually exclusive contexts.
+
+Arithmetic is pretty much what you'd expect, with basic operators, numeric literals and variables:
 
   \[ \begin{align}
-       aexp ::&= \text{x} \\
+       AExp ::&= \text{x} \\
            &|\quad n \\
-           &|\quad aexp + aexp  \\
-           &|\quad aexp - aexp  \\
-           &|\quad aexp * aexp  \\
-           &|\quad aexp / aexp
+           &|\quad AExp + AExp  \\
+           &|\quad AExp - AExp  \\
+           &|\quad AExp \times AExp  \\
+           &|\quad AExp \div AExp
       \end{align}
   \]
 
-Here's how this looks translated to an algebraic data type:
+Here's how this translates to an algebraic data type (ADT):
 
 ```haskell
 data AExp = Lit Int
@@ -40,7 +73,8 @@ data AExp = Lit Int
           | AExp :+: AExp
           | AExp :-: AExp
           | AExp :*: AExp
-          | AExp :/: AExp deriving (Show, Eq)
+          | AExp :/: AExp 
+            deriving (Show, Eq)
 ```
 
 `:+:`, `:-:`, `:*:` and `:/:` are *infix constructors*---in Haskell, starting an infix identifier with `:` is like starting a normal identifier with a capital letter. This isn't necessary but makes values of the type a bit easier to write by hand. For example, here's what the expression `a + (7 / b)` would look:
@@ -49,33 +83,67 @@ data AExp = Lit Int
 Var "a" :+: (Lit 7 :/: Var "b")
 ```
 
+The algebraic data type is a reasonable reflection of how we abstractly think of the language's syntax. It comes with a natural way to decompose expressions in the language---pattern matching. ADTs are one of the main reasons people often recommend languages like Haskell and ML for working on compilers.
+
+Another advantage of using an ADT is that the compiler knows all the possible cases in the type. If we enable the right warning (`-fwarn-incomplete-patterns`[^patterns-warning]), it will tell us if we forget a case as we're defining a function.
+
+[^patterns-warning]: Also enabled by the `-W` and `-Wall` flags. You can enable a flag for a single session from inside `ghci`:
+
+    ```
+    λ> :set -fwarn-incomplete-patterns
+    ```
+    
+    You can also add this to your `.cabal` file or your global GHCi config file (`~/.ghci` on Linux systems).
+
+    Personally, I think this warning should be on by default (as they are in OCaml). It's incredibly useful, especially on larger projects.
+
 Boolean expressions are similar. For simplicity, the language does not have boolean variables, so we only have literals and operators:
 
   \[ \begin{align}
-       bexp ::&= \text{true} \\
+       BExp ::&= \text{true} \\
            &|\quad \text{false} \\
-           &|\quad aexp \le aexp \\
-           &|\quad aexp = aexp \\
-           &|\quad bexp \lor bexp \\
-           &|\quad bexp \land bexp \\
-           &|\quad !bexp
+           &|\quad AExp \le AExp \\
+           &|\quad AExp = AExp \\
+           &|\quad BExp \lor BExp \\
+           &|\quad BExp \land BExp \\
+           &|\quad !BExp
       \end{align}
   \]
+  
+This grammar translates to an algebraic data type exactly the same way as `AExp`.
 
-Commands are a bit more interesting: apart from our normal control flow, we have `skip` to allow for empty blocks and `seq` (\(;\)) to sequence two commands in a row for blocks with multiple statements.
+### Commands
+
+Commands are a bit more interesting: since IMP is a simple *imperative* language, the whole program is structured as a bunch of statements one after the other.
 
   \[ \begin{align}
        cmd ::&= \text{skip} \\
-          &|\quad \text{x} \gets aexp & \text{assignment} \\
+          &|\quad \text{x} \gets AExp & \text{assignment} \\
           &|\quad cmd ; cmd & \text{seq} \\
-          &|\quad \text{if}\ bexp\ \text{then}\ cmd\ \text{else}\ cmd & \text{if} \\
-          &|\quad \text{while}\ bexp\ cmd & \text{while} \\
+          &|\quad \text{if}\ BExp\ \text{then}\ cmd\ \text{else}\ cmd & \text{if} \\
+          &|\quad \text{while}\ BExp\ cmd & \text{while} \\
      \end{align}
   \]
+  
+We have some normal control flow and an assignment statement to define and update variables---nothing surprising there. The two other constructs are a bit more subtle: `skip` exists to represent empty code blocks and `seq` (`;`) *sequences* two commands one after the other. A code block with multiple commands is represented as those commands chained together with `seq`.
 
-Commands and boolean expressions translate to algebraic types in the same way as arithmetic expressions; in my code, I called them `BExp` and `Cmd` respectively.
+Here's what this looks as an algebraic data type:
 
-These types are important because they provide the *skeleton* for everything else we: operational semantics, writing an interpreter and compiling to a Z3 formula.
+```haskell
+data Cmd = Skip
+         | Set Name AExp
+         | Seq Cmd Cmd
+         | If BExp Cmd Cmd
+         | While BExp Cmd
+           deriving (Show, Eq)
+```
+
+An alternative encoding is to replace `Skip` and `Seq` with a list of commands (ie `Block [Cmd]`). Think about it this way: `skip` is `[]` and `seq` is `:`. This would probably make the code a bit neater, but I kept `Skip` and `Seq` explicit to make the connection between the abstract syntax and the `Cmd` type more explicit; it also fits better with how we'll define IMP's operational semantics.
+
+The `AExp`, `BExp` and `Cmd` types---and the grammars they represent---provide a skeleton for everything else we'll be doing: writing an interpreter, talking about operational semantics and compiling to Z3 formulas. The rest of the code is very type-directed.
+
+</div>
+<div class="content">
 
 ## Operational Semantics
 

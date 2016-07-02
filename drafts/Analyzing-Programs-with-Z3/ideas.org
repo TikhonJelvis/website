@@ -14,10 +14,12 @@
 * Temporal Logic
   - mention temporal logic, FRP?
     - probably not FRP, but it is a cool, unexpected connection!
+  - implement mini LTL DSL for model checking?
 
 * IMP
   - simple language: booleans, ints, control flow
   - used to teach PL theory (esp operational semantics)
+  - extend with functions? assertions?
 
 ** Syntax
 
