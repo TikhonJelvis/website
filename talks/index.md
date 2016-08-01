@@ -7,7 +7,7 @@ author: Tikhon Jelvis
 
 # Talks
 
-Here are the slides for talks I've given at meetups and conferences. Presenting is fun! Unfortunately, most were not recorded. I included links to videos for the ones that were.
+Here are the slides for talks I've given at meetups and conferences. Presenting is fun! Unfortunately, most were not recorded. I included links to the ones that were.
 
 ![Me giving a talk at the SF Haskell meetup at [Wagon].](img/me-giving-talk-at-wagon.jpg)
 
@@ -20,21 +20,21 @@ My older slides were produced with a customized version of [org-html5presentatio
 
 ## Programming Languages/Haskell
 
-[East Bay Haskell][eb] hosted by LeapYear in Berkeley:
+[East Bay Haskell][eb-haskell] hosted by LeapYear in Berkeley:
 
-  * [FRP](frp-2016) - a high-level introduction to functional reactive programming (FRP).
+  * [FRP](frp-2016) ([video][frp-2016-video]) - a high-level introduction to functional reactive programming (FRP).
 
 [Compose 2016][compose] hosted by JP Morgan in New York:
 
-  * [Analyzing Programs with Z3](compose-2016) - modeling and analyzing programs with the Z3 SMT solver: bounded verification, program synthesis… etc.
+  * [Analyzing Programs with Z3](compose-2016) ([video][compose-2016-video])- modeling and analyzing programs with the Z3 SMT solver: bounded verification, program synthesis… etc.
 
-[SF Haskell meetup](http://www.meetup.com/Bay-Area-Haskell-Users-Group/) hosted by [Wagon]:
+[SF Haskell meetup][sf-haskell] hosted by [Wagon]:
 
-  * [Inductive Graphs](inductive-graphs-at-wagon) ([video](http://begriffs.com/posts/2015-09-04-pure-functional-graphs.html)) - working with graphs in a functional style using the [functional graph library][fgl] (fgl)
+  * [Inductive Graphs](inductive-graphs-at-wagon) ([video][wagon-graphs-video]) - working with graphs in a functional style using the [functional graph library][fgl] (fgl)
 
 [BayHac 2015](http://bayhac.org) - a small annual Haskell conference/hackathon:
 
-  * [Thinking with Laziness](thinking-with-laziness) ([video](http://begriffs.com/posts/2015-06-17-thinking-with-laziness.html)) - understanding laziness and using it to write more modular, expressive and elegant programs
+  * [Thinking with Laziness](thinking-with-laziness) ([video][bayhac-2015-video]) - understanding laziness and using it to write more modular, expressive and elegant programs
 
 [Haskell Hackers meetup][haskell-hackers] (at Hacker Dojo):
 
@@ -42,19 +42,28 @@ My older slides were produced with a customized version of [org-html5presentatio
   * [Inductive Graphs](inductive-graphs.html) - introduction to functional graph algorithms (my newer talk at Wagon is better)
   * [Analyzing Programs with SMT Solvers](analyzing-programs-with-smt.html) - see newer Compose talk
 
-Two lightning talks at [BayHac 2013](http://www.haskell.org/haskellwiki/BayHac2013):
+Two lightning talks at [BayHac 2013][bay-hac-2013]:
 
   * [Program Synthesis for ArrayForth](af-slides.html) - brief overview of what I did working on the [Chlorophyll compiler][chlorophyll compiler] at Berkeley
-  * [Algebras and Coalgebras](algebras.html) - explanation of algebras and co-algebras based on a [post](http://stackoverflow.com/questions/16015020/what-does-coalgebra-mean-in-the-context-of-programming/16022059#16022059) I wrote
+  * [Algebras and Coalgebras](algebras.html) - explanation of algebras and co-algebras based on a [post][so-coalgebras] I wrote
 
-A longer talk at [Hac φ 2013](http://www.haskell.org/haskellwiki/Hac_%CF%86):
+A longer talk at [Hac φ 2013][hac-phi-2013]:
 
   * [Program synthesis](synthesis-slides.html) ([pdf](synthesis-slides.pdf)) - a general overview of program synthesis techniques
 
 [compose]: http://www.composeconference.com/2016
 [fgl]: https://hackage.haskell.org/package/fgl
 [chlorophyll compiler]: http://pl.eecs.berkeley.edu/projects/chlorophyll/
-[eb]: http://www.meetup.com/East-Bay-Haskell-Meetup/
+[eb-haskell]: http://www.meetup.com/East-Bay-Haskell-Meetup/
+[sf-haskell]: http://www.meetup.com/Bay-Area-Haskell-Users-Group/
+[bay-hac-2013]: http://www.haskell.org/haskellwiki/BayHac2013
+[hac-phi-2013]: http://www.haskell.org/haskellwiki/Hac_%CF%86
+[so-coalgebras]: http://stackoverflow.com/questions/16015020/what-does-coalgebra-mean-in-the-context-of-programming/16022059#16022059
+
+[frp-2016-video]: https://begriffs.com/posts/2016-07-27-tikhon-on-frp.html
+[compose-2016-video]: https://www.youtube.com/watch?v=ruNFcH-KibY
+[wagon-graphs-video]: http://begriffs.com/posts/2015-09-04-pure-functional-graphs.html
+[bayhac-2015-video]: http://begriffs.com/posts/2015-06-17-thinking-with-laziness.html
 
 ## Type Theory
 
