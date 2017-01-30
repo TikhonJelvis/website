@@ -18,6 +18,7 @@ let
           array base containers directory filepath hakyll Interpolation mtl
           optparse-applicative pandoc process strict time
         ];
+        buildTools = [ nixpkgs.pkgs.s3cmd ];
         license = stdenv.lib.licenses.unfree;
       };
 
