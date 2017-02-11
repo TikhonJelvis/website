@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Reflex FRP</title>
+<meta name="author" content="(Tikhon Jelvis)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="/talks/reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="/talks/reveal.js/css/theme/tikhon.css" id="theme"/>
+
+<link rel="stylesheet" href="/talks/reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '/talks/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<meta name="description" content="Using Reflex FRP and GHCJS to build UIs for internal tools.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Reflex FRP</h1><h2 class="author">Tikhon Jelvis</h2><h2 class="email"><a href="mailto:tikhon@jelv.is">tikhon@jelv.is</a></h2>
+</section>
+
+<section>
+<section id="slide-org5ca2398">
+<h2 id="org5ca2398">Internal Tools</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfb76d9b">
+<h2 id="orgfb76d9b">Internal Tools</h2>
+
+<div class="figure">
+<p><img src="./img/haskell-ekg.png" alt="haskell-ekg.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org5c5f9b9">
+<h2 id="org5c5f9b9">Internal Tools</h2>
+<ul>
+<li>dashboards, monitoring</li>
+<li>admin consoles</li>
+<li>simulations, visualizations</li>
+<li>code analysis, benchmarking</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org896436d">
+<h2 id="org896436d">What do we care about?</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org8cb9c2c">
+<h2 id="org8cb9c2c">Easy to write.</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org3e6053c">
+<h2 id="org3e6053c">Easy to maintain.</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org2e69705">
+<h2 id="org2e69705">Performance? Size?</h2>
+<p>
+Less important.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org4c786bd">
+<h2 id="org4c786bd">Code reuse <i>is crucial</i>.</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc9d3606">
+<h2 id="orgc9d3606">No Code Reuse</h2>
+
+<div class="figure">
+<p><img src="./img/no-share.png" alt="no-share.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgffebe43">
+<h2 id="orgffebe43">Reuse Types</h2>
+
+<div class="figure">
+<p><img src="./img/share-types.png" alt="share-types.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org57feffc">
+<h2 id="org57feffc">Reuse Types &amp; API</h2>
+
+<div class="figure">
+<p><img src="./img/share-interface.png" alt="share-interface.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd5b52a3">
+<h2 id="orgd5b52a3">GHCJS :: Haskell → JavaScript</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell" >main = mainWith 
+        (text "Compiled With Haskell")
+</code></pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./img/haskell-in-browser.png" alt="haskell-in-browser.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org8b5f935">
+<h2 id="org8b5f935">Reflex</h2>
+<ul>
+<li>FRP framework</li>
+<li>virtual DOM</li>
+<li><a href="https://github.com/imalsogreg/servant-reflex">servant-reflex</a> (work in progress?)</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org00119a8">
+<h2 id="org00119a8">Functional Reactive Programming</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgec15f95">
+<h2 id="orgec15f95">Time-Varying Values</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfef2d94">
+<h2 id="orgfef2d94">Time-Varying Values</h2>
+<ul>
+<li>time is <b>explicit</b></li>
+<li>changing values are <b>first-class citizens</b></li>
+<li>composable</li>
+<li>declarative</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org1483c35">
+<h2 id="org1483c35">Behaviors and Events</h2>
+<ul>
+<li><b>Behavior</b>: continuously changing value
+<ul>
+<li>mouse position: <code>Behavior (Int, Int)</code></li>
+
+</ul></li>
+<li><b>Events</b>: values <i>at discrete times</i>
+<ul>
+<li>mouse click: <code>Event (Int, Int)</code></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org8740501">
+<h2 id="org8740501">〚Behavior a〛 = Time → a</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org3247d3d">
+<h2 id="org3247d3d">Behavior</h2>
+<p>
+Behavior = Time → a
+</p>
+
+
+<div class="figure">
+<p><img src="./img/behavior.png" alt="behavior.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org35d06ee">
+<h2 id="org35d06ee">〚Event a〛 = [(Time, a)]</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgcb515b2">
+<h2 id="orgcb515b2">Event</h2>
+<p>
+Event = [(Time, a)]
+</p>
+
+
+<div class="figure">
+<p><img src="./img/event.png" alt="event.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org642e7c1">
+<h2 id="org642e7c1">Dynamic</h2>
+<p>
+Dynamic = Event + Behavior
+<img src="./img/dynamic.png" alt="dynamic.png" />
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org2214217">
+<h2 id="org2214217">Input ⇒ Combinators ⇒ Output</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc2556e6">
+<h2 id="orgc2556e6">Input</h2>
+<ul>
+<li>user input widgets</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >text ← textInput inputConfig
+
+text ^. value :: Dynamic t Text
+</code></pre>
+</div>
+
+<ul>
+<li>timers</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >tick :: NominalDiffTime
+      → UTCTime → m (Event t ())
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org93cc65e">
+<h2 id="org93cc65e">Combinators</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell" >gate :: B t Bool → E t a → E t a
+hold :: a → E t a → m (B t a)
+tag  :: B t b → E t a → E t b
+
+-- typeclasses:
+fmap  :: (a → b) → E t a → E t b
+(&lt;*&gt;) :: B (a → b) → B a → B b
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org77a4035">
+<h2 id="org77a4035">Output</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell" >dynText :: MonadWidget t m ⇒
+           Dynamic t Text → m ()
+
+dyn :: MonadWidget t m ⇒
+       Dynamci t (m a) → m (Event t a)
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc1ec469">
+<h2 id="orgc1ec469">Example: Simple Search App</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org7d0eedf">
+<h2 id="org7d0eedf"></h2>
+
+<div class="figure">
+<p><img src="./img/example-screenshot.png" alt="example-screenshot.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgef08e23">
+<h2 id="orgef08e23"></h2>
+<ol>
+<li>user types query</li>
+<li>call HTTP API</li>
+<li>parse JSON response</li>
+<li>render results</li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-org7b9f56b">
+<h2 id="org7b9f56b"></h2>
+<div class="org-src-container">
+
+<pre><code class="javascript" >{ 
+  "id" : "abcdefgh",
+  "url" : "http://...",
+  "name" : "Some Item"
+}
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >data Product = Product
+  { id   :: Text
+  , url  :: Text
+  , name :: Text
+  }
+  deriving (..., Generic, FromJSON)
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgaa7d367">
+<h2 id="orgaa7d367">API</h2>
+<ul>
+<li>input event determines <b>when</b> request fires</li>
+
+</ul>
+<div class="org-src-container">
+
+<pre><code class="haskell" >search query = do
+  urls = fmap url query
+  products &lt;- getAndDecode urls
+  holdDyn Nothing products
+  where url param = "..." &lt;&gt; param
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0684e73">
+<h2 id="org0684e73">Input</h2>
+<ul>
+<li>fire whenever input updates</li>
+
+</ul>
+<div class="org-src-container">
+
+<pre><code class="haskell" >do text     &lt;- textInput def
+   queries  &lt;- updated $ t ^. value
+   products &lt;- search queries
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >products :: Event t (Maybe [Product])
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org7da9528">
+<h2 id="org7da9528">Render Results</h2>
+<div class="org-src-container">
+
+<pre><code class="haskell" >productEntry Product {..} =
+  elClass "li" "product" $ do
+    elAttr "img" [...] (return ())
+    el "div" $ text name
+</code></pre>
+</div>
+
+<ul>
+<li>Embed widgets that change over time:</li>
+
+</ul>
+<div class="org-src-container">
+
+<pre><code class="haskell" >dyn $ productWidget products
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc730616">
+<h2 id="orgc730616">Pros</h2>
+<ul>
+<li>expressive</li>
+<li>short (&lt; 80 lines of code!)</li>
+<li>extensible</li>
+<li>maintainable</li>
+<li><b>in Haskell!</b></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org9928a62">
+<h2 id="org9928a62">Cons</h2>
+<ul>
+<li>documentation</li>
+<li>CSS and HTML</li>
+<li>intermediate Haskell experience
+<ul>
+<li>bad type errors: turn off MMR</li>
+
+</ul></li>
+<li>GHCJS infrastructure
+<ul>
+<li><a href="https://github.com/reflex-frp/reflex-platform">reflex-platform</a>: turnkey solution using Nix</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org6ca451e">
+<h2 id="org6ca451e">Vs Elm</h2>
+<ul>
+<li>cons:
+<ul>
+<li><b>not Haskell!</b></li>
+<li>2x code, more boilerplate</li>
+<li>Elm architecture: verbose and non-modular</li>
+
+</ul></li>
+
+<li>pros:
+<ul>
+<li>good documentation</li>
+<li>easy for non-Haskellers and beginners</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgcaf0b74">
+<h2 id="orgcaf0b74">Questions?</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org1452e1e">
+<h2 id="org1452e1e">Picture Credits</h2>
+<ul>
+<li>Haskell EKG screenshot by <a href="http://maxgabriel.github.io/ekg-yesod/">Max Tegher</a></li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<p> Created by Tikhon Jelvis. </p>
+<script src="/talks/reveal.js/lib/js/head.min.js"></script>
+<script src="/talks/reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: false,
+history: true,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+width: 1200,
+height: 800,
+margin: 0.10,
+minScale: 0.50,
+maxScale: 2.50,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'slide', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: '/talks/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: '/talks/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '/talks/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '/talks/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
