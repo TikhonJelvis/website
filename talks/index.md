@@ -20,9 +20,13 @@ My older slides were produced with a customized version of [org-html5presentatio
 
 ## Programming Languages/Haskell
 
+[Compose 2017][compose-2017] in NYC:
+
+  * [Probability Monad](probability-monad): simple probabilistic programming in Haskell with monads.
+
 [East Bay Haskell][eb-haskell] hosted by LeapYear in Berkeley:
 
-  * [FRP](frp-2016) ([video][frp-2016-video]) - a high-level introduction to functional reactive programming (FRP).
+  * [FRP](frp-2016) ([video][frp-2016-video]): a high-level introduction to functional reactive programming (FRP).
 
 [Compose 2016][compose] hosted by JP Morgan in New York:
 
@@ -30,27 +34,28 @@ My older slides were produced with a customized version of [org-html5presentatio
 
 [SF Haskell meetup][sf-haskell] hosted by [Wagon]:
 
-  * [Inductive Graphs](inductive-graphs-at-wagon) ([video][wagon-graphs-video]) - working with graphs in a functional style using the [functional graph library][fgl] (fgl)
+  * [Inductive Graphs](inductive-graphs-at-wagon) ([video][wagon-graphs-video]): working with graphs in a functional style using the [functional graph library][fgl] (fgl)
 
-[BayHac 2015](http://bayhac.org) - a small annual Haskell conference/hackathon:
+[BayHac 2015](http://bayhac.org): a small annual Haskell conference/hackathon:
 
-  * [Thinking with Laziness](thinking-with-laziness) ([video][bayhac-2015-video]) - understanding laziness and using it to write more modular, expressive and elegant programs
+  * [Thinking with Laziness](thinking-with-laziness) ([video][bayhac-2015-video]): understanding laziness and using it to write more modular, expressive and elegant programs
 
 [Haskell Hackers meetup][haskell-hackers] (at Hacker Dojo):
 
-  * [Nondeterminism](nondeterminism.html) - lightweight nondeterministic programming in Haskell using the list monad
-  * [Inductive Graphs](inductive-graphs.html) - introduction to functional graph algorithms (my newer talk at Wagon is better)
-  * [Analyzing Programs with SMT Solvers](analyzing-programs-with-smt.html) - see newer Compose talk
+  * [Nondeterminism](nondeterminism.html): lightweight nondeterministic programming in Haskell using the list monad
+  * [Inductive Graphs](inductive-graphs.html): introduction to functional graph algorithms (my newer talk at Wagon is better)
+  * [Analyzing Programs with SMT Solvers](analyzing-programs-with-smt.html): see newer Compose talk
 
 Two lightning talks at [BayHac 2013][bay-hac-2013]:
 
-  * [Program Synthesis for ArrayForth](af-slides.html) - brief overview of what I did working on the [Chlorophyll compiler][chlorophyll compiler] at Berkeley
-  * [Algebras and Coalgebras](algebras.html) - explanation of algebras and co-algebras based on a [post][so-coalgebras] I wrote
+  * [Program Synthesis for ArrayForth](af-slides.html): brief overview of what I did working on the [Chlorophyll compiler][chlorophyll compiler] at Berkeley
+  * [Algebras and Coalgebras](algebras.html): explanation of algebras and co-algebras based on a [post][so-coalgebras] I wrote
 
 A longer talk at [Hac φ 2013][hac-phi-2013]:
 
-  * [Program synthesis](synthesis-slides.html) ([pdf](synthesis-slides.pdf)) - a general overview of program synthesis techniques
+  * [Program synthesis](synthesis-slides.html) ([pdf](synthesis-slides.pdf)): a general overview of program synthesis techniques
 
+[compose-2017]: http://composeconference.org/2017/
 [compose]: http://www.composeconference.com/2016
 [fgl]: https://hackage.haskell.org/package/fgl
 [chlorophyll compiler]: http://pl.eecs.berkeley.edu/projects/chlorophyll/
@@ -81,7 +86,7 @@ I'm not sure I would recommend following *these slides*, but this general progre
 
 I did a survey of functional reactive programming (FRP) for CS 263 at Berkeley. At the end of the semester, I gave a presentation on the subject:
 
-  * [Introduction to FRP](../frp) - includes a bit more detail about my example code
+  * [Introduction to FRP](../frp): includes a bit more detail about my example code
 
 </div>
 
