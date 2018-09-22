@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Radix Trees</title>
+<meta name="author" content="(Tikhon Jelvis)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="../reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="../reveal.js/css/theme/tikhon.css" id="theme"/>
+
+<link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '../reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<meta name="description" content="An overview of tries (or radix trees) in Haskell, focusing on the PATRICIA trie used by Data.IntMap.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide" data-background="#052d69" data-background-transition="none"><h1 class='title'>Radix Trees</h1> <h2 class='subtitle'>How IntMap Works</h2> <h3 class='author'>Tikhon Jelvis</h3>
+</section>
+
+<section>
+<section id="slide-org475bf37" data-background="./img/graph-background.png" data-background-transition="none">
+<h2 id="org475bf37">Graphs</h2>
+</section>
+</section>
+<section>
+<section id="slide-org2aa7cd6" data-background="./img/graph-background.png" data-background-transition="none">
+<h3 id="org2aa7cd6"><i>Functional</i> Graphs</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd1cc999" data-background-transition="none">
+<h3 id="orgd1cc999">FGL</h3>
+<div style="position:relative; height:75px"></div>
+<img style="height:535px" class="no-background" src="./img/step_0.png" />
+<span style="position: relative; bottom: 270px; font-size: 94pt"> ⇒ </span>
+<img style="height:535px" class="no-background" src="./img/step_1.png" />
+
+</section>
+</section>
+<section>
+<section id="slide-org8ba47c9">
+<h3 id="org8ba47c9">Data.IntMap</h3>
+
+<div class="figure">
+<p><img src="./img/intmap-haddock.png" alt="intmap-haddock.png" class="no-background" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfb69c7d">
+<h3 id="orgfb69c7d">PATRICIA</h3>
+<p class="fragment (appear)">
+<b>P</b>ractical <b>A</b>lgorithm <b>t</b>o <b>R</b>etrieve <b>I</b>nformation <b>C</b>oded <b>i</b>n <b>A</b>lphanumeric
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org37fa20d">
+<h3 id="org37fa20d">Other Uses</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org0685fbb">
+<h3 id="org0685fbb">Merging</h3>
+
+<div class="figure">
+<p><img src="./img/okasaki.png" alt="okasaki.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org9ad78eb">
+<h3 id="org9ad78eb">Prefix Operations</h3>
+<ol>
+<li>all keys, <b>sorted</b></li>
+
+<li>read by prefix</li>
+
+<li>update by prefix</li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-org45b3967">
+<h3 id="org45b3967"></h3>
+
+<div class="figure">
+<p><img src="./img/two-keys.png" alt="two-keys.png" class="no-background" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orge72a483" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orge72a483"><i>How IntMap Works</i></h2>
+</section>
+</section>
+<section>
+<section id="slide-org9edbbb8">
+<h3 id="org9edbbb8">Tries</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org1aafffe">
+<h3 id="org1aafffe">Re<i>trie</i>val</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org36e08b7">
+<h3 id="org36e08b7"></h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/tree.svg" class="org-svg" width="800px">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org385daba">
+<h3 id="org385daba"></h3>
+<p>
+<code>lookup “b”</code>
+</p>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+b = 1
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc99d5a6">
+<h3 id="orgc99d5a6"></h3>
+<p>
+<code>lookup “bab”</code>
+</p>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/b.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+b
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org42f2f4e">
+<h3 id="org42f2f4e"></h3>
+<p>
+<code>lookup “bab”</code>
+</p>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/b→ba.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+b → a
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbcfcaec">
+<h3 id="orgbcfcaec"></h3>
+<p>
+<code>lookup “bab”</code>
+</p>
+
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/b→ba→bab.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+b → a → b = 7
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org9ede2e7">
+<h3 id="org9ede2e7">Prefixes</h3>
+<p>
+every key starting with “ba”
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org7f3e8c1">
+<h3 id="org7f3e8c1">b</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/b.svg" class="org-svg" width="700px">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org3021af8">
+<h3 id="org3021af8">b → a</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/b→ba.svg" class="org-svg" width="700px">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org52367b4">
+<h3 id="org52367b4">b → a</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/prefix-ba.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org1b212e2">
+<h3 id="org1b212e2">Tries</h3>
+<p>
+re<i>trie</i>ve key character by character
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org0e65e39">
+<h3 id="org0e65e39"><i>Binary</i> Trie</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org5349a53">
+<h3 id="org5349a53">Bit-by-Bit</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/binary.svg" class="org-svg" width="900px">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbdf5623">
+<h3 id="orgbdf5623">Paths</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/paths-waste.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+two keys: 00011, 00001 
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org0eb53b9">
+<h3 id="org0eb53b9">Path Compression</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/compressed.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+two keys: 00011, 00001 
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org533de50">
+<h3 id="org533de50">Path Compression</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/compressed2.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org779df1b">
+<h3 id="org779df1b">Path Compression</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/compressed-leaves.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+fully compressed radix tree
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgba89448">
+<h3 id="orgba89448">Data.IntMap</h3>
+<p>
+binary trie with path compression
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc0371d0">
+<h3 id="orgc0371d0">Data.IntMap</h3>
+<ul>
+<li><code>Leaf</code> (path, key, value)</li>
+<li><code>Branch</code> (path, children)</li>
+<li><code>Empty</code></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orga8a88b0">
+<h3 id="orga8a88b0">Data.IntMap</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >type Prefix = Int
+type Mask = Int
+
+data IntMap a = 
+    Branch !Prefix 
+           !Mask 
+           !(IntMap a) !(IntMap a)
+  | Leaf !Prefix a
+  | Empty
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org03b8198">
+<h3 id="org03b8198">lookup</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >lookup _ Empty = Nothing
+lookup k (Leaf k' v)
+  | k == k'   = Just v
+  | otherwise = Nothing
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org3614989">
+<h3 id="org3614989">lookup</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >lookup k (Branch prefix control l r)
+  | getPrefix k control /= prefix = Nothing
+  | k .&amp;. control == 0            = lookup k l
+  | otherwise                     = lookup k r
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >getPrefix k control =
+  key .&amp;. complement ((control `shiftL` 1) - 1)
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org9e186ac" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org9e186ac"><i>Beyond IntMap</i></h2>
+</section>
+</section>
+<section>
+<section id="slide-org9d9873e">
+<h3 id="org9d9873e"><i>Binary</i> Trie</h3>
+<ul>
+<li><b>binary</b>: “bit-by-bit”</li>
+<li><b>binary</b>: “two children”</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org43fa7b6">
+<h3 id="org43fa7b6">Span</h3>
+
+<div class="figure">
+<p><object type="image/svg+xml" data="./img/wtrees.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+n bits = 2ⁿ children
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org705ddda">
+<h3 id="org705ddda"><i>Space</i> vs <i>Height</i></h3>
+
+<div class="figure">
+<p><img src="./img/branching-tradeoff.png" alt="branching-tradeoff.png" />
+</p>
+</div>
+
+<p>
+from ART paper
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org1c417da">
+<h3 id="org1c417da">Adaptive Radix Tree</h3>
+
+<div class="figure">
+<p><img src="./img/art.png" alt="art.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgee9eacb">
+<h3 id="orgee9eacb">Adaptive Radix Tree</h3>
+<p>
+256 children (byte at a time)
+</p>
+
+
+<div class="figure">
+<p><img src="./img/art-nodes.png" alt="art-nodes.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org2ade000">
+<h3 id="org2ade000">Nodes</h3>
+
+<div class="figure">
+<p><img src="./img/art-nodes-details.png" alt="art-nodes-details.png" />
+</p>
+</div>
+
+
+</section>
+</section>
+<section>
+<section id="slide-org2fe2155">
+<h3 id="org2fe2155">Adaptive Radix Tree</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >data ART a = Empty
+           | Leaf !Key a
+           | Node !Mask !Prefix !(Children a)
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org2deff6b">
+<h3 id="org2deff6b">Nodes</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >type Chunk    = Word8
+type Chunks   = UArray Chunk Chunk
+type Values a = Array Chunk a
+type Size     = Word8
+
+data Children a =
+  N4   !Size !Chunks !Values
+| N16  !Size !Chunks !Values
+| N48  !Size !Chunks !Values
+| N256 !Size !(Array Chunk (Maybe a))
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org684687b">
+<h3 id="org684687b"><i>Persistent</i> Adaptive Radix Trees?</h3>
+<ul>
+<li>Java version
+<ul>
+<li><a href="https://github.com/ankurdave/part">by Ankur Dave, on GitHub</a></li>
+
+</ul></li>
+<li>good fit for Haskell?</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org5c8087e" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org5c8087e"><i>Recap</i></h2>
+</section>
+</section>
+<section>
+<section id="slide-org7a8e3ec">
+<h3 id="org7a8e3ec">Tries</h3>
+<ul>
+<li>sorted keys</li>
+<li>prefix operations</li>
+<li>merging</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org5456564">
+<h3 id="org5456564">Data.IntMap</h3>
+<ul>
+<li><i>binary</i> trie</li>
+<li>path compression</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc80b981">
+<h3 id="orgc80b981">Beyond IntMap</h3>
+<ul>
+<li>different spans</li>
+<li>adaptive radix trees</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd3a0316" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orgd3a0316">Questions?</h2>
+</section>
+</section>
+</div>
+</div>
+<p> Created by Tikhon Jelvis. </p>
+<script src="../reveal.js/lib/js/head.min.js"></script>
+<script src="../reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: false,
+history: true,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+width: 1200,
+height: 800,
+margin: 0.10,
+minScale: 0.50,
+maxScale: 2.50,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

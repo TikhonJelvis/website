@@ -20,6 +20,10 @@ My older slides were produced with a customized version of [org-html5presentatio
 
 ## Programming Languages/Haskell
 
+[Lambda World 2018][lambda-world-2018] in Seattle:
+
+  * [Radix Trees: *How IntMap Works*](lambda-world-2018): an overview of radix trees and adaptive radix trees.
+
 [Compose 2017][compose-2017] in NYC:
 
   * [Probability Monad](probability-monad) ([video][compose-2017-video]): simple probabilistic programming in Haskell with monads.
@@ -55,6 +59,7 @@ A longer talk at [Hac φ 2013][hac-phi-2013]:
 
   * [Program synthesis](synthesis-slides.html) ([pdf](synthesis-slides.pdf)): a general overview of program synthesis techniques
 
+[lambda-world-2018]: https://seattle.lambda.world
 [compose-2017]: http://composeconference.org/2017/
 [compose-2017-video]: https://www.youtube.com/watch?v=qZ4O-1VYv4c
 [compose]: http://www.composeconference.com/2016
