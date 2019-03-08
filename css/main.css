@@ -189,7 +189,7 @@ a > img {
 }
 
 /* This is the div that holds images and their captions. */
-.content div.figure {
+.content div.figure, .content figure {
     position : relative;
     left : -2px;
 
@@ -206,7 +206,7 @@ a > img {
 }
 
 @media (max-width : 400px) {
-  .content div.figure {
+  .content div.figure, .content figure {
     margin-left : 2%;
     max-width : 96%;
 
@@ -215,7 +215,7 @@ a > img {
 }
 
 @media (min-width : 400px) and (max-width : 605px) {
-  .content div.figure {
+  .content div.figure, .content figure {
     margin-left : 8%;
     max-width : 84%;
 
@@ -223,31 +223,31 @@ a > img {
   }
 }
 
-.content div.figure a {
+.content div.figure a, .content figure a {
     border : none;
 }
 
-.content div.figure img {
+.content div.figure img, .content figure img {
     position : relative;
     max-width : 90%;
     margin-top : 1ex;
 }
 
-.content div.figure p {
+.content div.figure p, .content figcaption {
     position : relative;
     margin-left : 10%;
     margin-right : 10%;
 }
 
-.content div.figure img + p {
+.content div.figure img + p, .content figure img + p {
   margin-top : 30px;
 }
 
-.content div.figure p:last-child {
+.content div.figure p:last-child, .conent figure p:last-child {
   margin-bottom : 0;
 }
 
-.content div.figure code {
+.content div.figure code, .content figure code {
     background-color : #B3C8E5;
 }
 

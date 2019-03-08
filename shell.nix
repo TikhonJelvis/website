@@ -1,4 +1,4 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "default" }:
+{ nixpkgs ? import <nixpkgs> {}, compiler ? "default", doBenchmark ? false }:
 
 let
 
@@ -18,7 +18,6 @@ let
           array base containers directory filepath hakyll Interpolation mtl
           optparse-applicative pandoc process strict time
         ];
-        buildTools = [ nixpkgs.pkgs.s3cmd ];
         license = stdenv.lib.licenses.unfree;
       };
 
@@ -26,7 +25,9 @@ let
                        then pkgs.haskellPackages
                        else pkgs.haskell.packages.${compiler};
 
-  drv = haskellPackages.callPackage f {};
+  variant = if doBenchmark then pkgs.haskell.lib.doBenchmark else pkgs.lib.id;
+
+  drv = variant (haskellPackages.callPackage f {});
 
 in
 

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Analyzing Programs</title>
+<meta name="author" content="(Tikhon Jelvis)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="/talks/reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="/talks/reveal.js/css/theme/tikhon.css" id="theme"/>
+
+<link rel="stylesheet" href="/talks/reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '/talks/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="An overview of using SMT solvers to build development tools and statically analyze programs.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide" data-background="#052d69" data-background-transition="none"><h2 class='title'>Analyzing Programs</h2> <h2 class='subtitle'>with SMT solvers</h2> <h3 class='author'>Tikhon Jelvis</h3>
+</section>
+
+<section>
+<section id="slide-org5dcd738">
+<h2 id="org5dcd738">Constraint Satisfaction</h2>
+<div class="outline-text-2" id="text-org5dcd738">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgffbc071">
+<h3 id="orgffbc071"></h3>
+
+<div class="figure">
+<p><img src="./img/sudoku.png" alt="sudoku.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0eca59b" data-background="./img/bugs.jpg" data-background-transition="none">
+<h3 id="org0eca59b"></h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb9d2b26">
+<h3 id="orgb9d2b26"></h3>
+
+<div class="figure">
+<p><img src="./img/liquid-haskell.png" alt="liquid-haskell.png" class="no-background" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./img/liquid-haskell-snippet.png" alt="liquid-haskell-snippet.png" width="200%" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org4417f8e">
+<h3 id="org4417f8e"></h3>
+
+<div class="figure">
+<p><img src="./img/type-error-localization.png" alt="type-error-localization.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org3b59ab0">
+<h3 id="org3b59ab0">SMT</h3>
+<p>
+Satisfiability Modulo Theories
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org3fbed18">
+<h3 id="org3fbed18">Satisfiability (SAT)</h3>
+<div>
+\begin{equation}
+  (x_1 \lor \lnot x_2) \land (x_1 \lor x_3 \lor \lnot x_4) \land \cdots 
+\end{equation}
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org02c799d">
+<h3 id="org02c799d">Theories</h3>
+<div>
+\begin{equation}
+  x_1 \le 10 \land x_3 \le x_1 + x_2 \land \cdots
+\end{equation}
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd9304ac">
+<h3 id="orgd9304ac">Theories</h3>
+<ul>
+<li>integers</li>
+<li>reals</li>
+<li>bitvectors</li>
+<li>floating point numbers</li>
+<li>arrays</li>
+<li>&#x2026;</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org51c09e5">
+<h3 id="org51c09e5">Why?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd2ccb07">
+<h3 id="orgd2ccb07">Expressive</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgab1facc">
+<h3 id="orgab1facc">Fast</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org1e995f2">
+<h3 id="org1e995f2"></h3>
+
+<div class="figure">
+<p><img src="./img/sat-graf.png" alt="sat-graf.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0418eec" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org0418eec">Analyzing Programs</h2>
+</section>
+</section>
+<section>
+<section id="slide-org9ec7edc">
+<h3 id="org9ec7edc">Program ⇒ SMT formula</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org8c02bf7">
+<h3 id="org8c02bf7"></h3>
+<ol>
+<li>Inputs</li>
+<li>States</li>
+<li>Outputs</li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-org562d44b">
+<h3 id="org562d44b"></h3>
+<p>
+Inputs ⇒ States + Outputs
+</p>
+
+<p>
+Outputs ⇒ Inputs + States
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfb3612a">
+<h3 id="orgfb3612a"></h3>
+<p>
+P(States) ⇒ Check Invariant
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbfe97b1">
+<h3 id="orgbfe97b1"></h3>
+<p>
+∃ Input. Output₁ ≠ Output₂
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org8ebd357" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org8ebd357">IMP Language</h2>
+</section>
+</section>
+<section>
+<section id="slide-org4cf1f77">
+<h3 id="org4cf1f77"></h3>
+<div class="org-src-container">
+
+<pre><code class="java" >gcd(a, b) {
+  d := 0;
+  while (even(a) && even(b)) {
+    a := a / 2;
+    b := b / 2;
+    d := d + 1;
+  }
+
+  while (a != b) {
+    ...;
+  }
+
+  return d;
+}
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org6ed7569">
+<h3 id="org6ed7569">IMP</h3>
+<div class="org-src-container">
+
+<pre><code class="java" >1 + x * 2
+(x <= 10) && (y == 5) 
+</code></pre>
+</div>
+
+<p>
+side effects:
+</p>
+<div class="org-src-container">
+
+<pre><code class="java" >x := x + 1
+⋯ ; ⋯
+while cond { ⋯ }
+if cond { ⋯ } else { ⋯ }
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orged5ba56">
+<h3 id="orged5ba56"></h3>
+<div>
+\begin{align}
+  A ::&= x & \text{variable}\\
+      &|\quad n & \text{literal} \\
+      &|\quad A + A & \\
+      &|\quad A - A & \\
+      &|\quad A * A & \\
+      &|\quad A / A &
+\end{align}
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org135a6e1">
+<h3 id="org135a6e1"></h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >data AExp = Var Name
+          | Lit Int
+          | AExp :+: AExp
+          | AExp :-: AExp
+          | AExp :*: AExp
+          | AExp :/: AExp
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >data BExp = True' | False' | ⋯
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgacc7fa9">
+<h3 id="orgacc7fa9"></h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >data Cmd = Skip
+         | Set Name AExp
+         | Seq Cmd Cmd
+         | If BExp Cmd Cmd
+         | While BExp Cmd
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgfc27c89" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orgfc27c89">Compiling to SMT</h2>
+</section>
+</section>
+<section>
+<section id="slide-org5308077">
+<h3 id="org5308077">Z3 SMT Solver</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgce91d50">
+<h3 id="orgce91d50">Inline ⇒ Unroll ⇒ SSA</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org4f9e83d">
+<h3 id="org4f9e83d">Inline</h3>
+<div class="org-src-container">
+
+<pre><code class="java" >foo(a, b) { 
+  ⟨BODY⟩; 
+  return x 
+}
+…
+result := foo (1, 2);
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment roll-in"><code class="java" >// fresh names
+foo_a := 1;
+foo_b := 2;
+⟨BODY⟩
+result := foo_x;
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org74c277a">
+<h3 id="org74c277a">Unroll</h3>
+<div class="org-src-container">
+
+<pre><code class="java" >while x < 5 { ⟨BODY⟩ }
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment roll-in"><code class="java" >if x < 5 {
+  ⟨BODY⟩
+  if x < 5 {
+    … /* n times */
+  } else {}
+} else {}
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf1fe249">
+<h3 id="orgf1fe249">SSA</h3>
+<ul>
+<li>Single Static Assignment</li>
+
+</ul>
+
+<div class="org-src-container">
+
+<pre><code class="java" >x := 10;
+a := 11;
+x := x + a;
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment roll-in"><code class="java" >x₀ := 10;
+a₀ := 11;
+x₁ := x₀ + a₀;
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org024c696">
+<h3 id="org024c696"></h3>
+<div class="org-src-container">
+
+<pre><code class="java" >if x < 5 {
+  x := x + 1;
+} else {
+  x := x + 2;
+}
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment roll-in"><code class="java" >if x < 5 {
+  x₁ := x₀ + 1;
+} else {
+  x₂ := x₀ + 2;
+}
+x₃ := φ(x₁, x₂)
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org4865fcc">
+<h3 id="org4865fcc"></h3>
+<ul>
+<li><p>
+Interpreter
+</p>
+<div class="org-src-container">
+
+<pre><code class="haskell" >aexp ∷ (Scope Int) → AExp → Int
+bexp ∷ (Scope Int) → BExp → Bool
+cmd  ∷ (Scope Int) → Cmd  → Scope
+</code></pre>
+</div></li>
+<li><p>
+Compiler
+</p>
+<div class="org-src-container">
+
+<pre><code class="haskell" >aexp ∷ (Scope AST) → AExp → Z3 AST
+bexp ∷ (Scope AST) → BExp → Z3 AST
+cmd  ∷ (Scope AST) → Cmd  → Z3 ()
+</code></pre>
+</div></li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org009a5b8">
+<h3 id="org009a5b8"></h3>
+<div class="org-src-container">
+
+<pre><code class="java" >5 + x
+</code></pre>
+</div>
+
+<div>
+\begin{align}
+  bvAdd(&bv(5, 32),\\ &bv(x_0, 32))
+\end{align}
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org30f2469">
+<h3 id="org30f2469">Expressions</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >Lit n     → n
+Var x     → lookup scope x
+e₁ :+: e₂ → aexp scope e₁ +
+            aexp scope e₂
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >Lit n     → Z3.mkBv 32 n
+Var x     → lookup x scope
+e₁ :+: e₂ → do exp₁ ← aexp scope e₁
+               exp₂ ← aexp scope e₂
+               Z3.mkAdd exp₁ exp₂
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org768aedb">
+<h3 id="org768aedb"></h3>
+<div class="org-src-container">
+
+<pre><code class="java" >x = 5 + x
+</code></pre>
+</div>
+
+<div>
+\begin{align}
+\text{assert}(x_1 = bvAdd(&bv(5, 32), \\ &bv(x_0, 32)))
+\end{align}
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf28fcb0">
+<h3 id="orgf28fcb0">Assignment</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >Set name val →
+  let newVal = aexp scope val in
+  update name newVal scope
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >Set name val →
+  do newVal ← aexp scope val
+     newVar ← Z3.mkFreshBvVar name 32
+     eq     ← Z3.mkEq newVar newVal
+     Z3.assert eq
+     return (update name newVar scope)
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgd2c6c94">
+<h3 id="orgd2c6c94"></h3>
+<div class="org-src-container">
+
+<pre><code class="java" >if x < 5 {
+  x := x + 1
+} else {
+  x := x + 2
+}
+</code></pre>
+</div>
+
+<div>
+\begin{align}
+  &\text{assert}(x_1 = x_0 + 1) \\
+  &\text{assert}(x_2 = x_0 + 2) \\
+  &\text{assert}(x_3 = \phi(x_0 < 5, x_1, x_2)) \\
+\end{align}
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgeaa4012">
+<h3 id="orgeaa4012">If: φ-functions</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >If cond c_1 c_2 →
+  do cond'   ← bexp scope cond
+     scope'  ← compile scope c_1
+     scope'' ← compile scope c_2
+     makePhis cond' scope scope' scope''
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >Z3.mkIte cond (lookup name scope₁)
+              (lookup name scope₂)
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org841ed84" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org841ed84">Now what?</h2>
+</section>
+</section>
+<section>
+<section id="slide-orga43e8b1">
+<h3 id="orga43e8b1">Interpreting</h3>
+<div class="org-src-container">
+
+<pre><code class="java" >f(x) { ...; return y }
+</code></pre>
+</div>
+
+<p>
+⇓
+</p>
+
+<div>
+\begin{align}
+\Rightarrow \quad & \exists y. x_0 = \text{input} \\
+\Leftarrow \quad & \exists x. y_n = \text{output}
+\end{align}
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org56573ca">
+<h3 id="org56573ca">Invariants</h3>
+<div class="org-src-container">
+
+<pre><code class="java" >while (...) {
+  x := x + 1
+  ...
+  assert (x > 0)
+}
+</code></pre>
+</div>
+
+<p>
+⇓
+</p>
+
+<p>
+\((x₁ > 0) ∧ (x₂ > 0) ∧ (x₃ > 0) ∧ …\)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orge048eac">
+<h3 id="orge048eac">Verification</h3>
+<div class="org-src-container">
+
+<pre><code class="java" >f(x) { ...; return y }
+
+g(x) { ...; return y }
+</code></pre>
+</div>
+
+<p>
+⇓
+</p>
+
+<p>
+\(\exists x. y_f \ne y_g\)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org198abdf">
+<h3 id="org198abdf">CEGIS</h3>
+<p>
+<b>counterexample guided inductive synthesis</b>
+</p>
+
+
+<div class="figure">
+<p><img src="./img/cegis.png" alt="cegis.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org68aaa50">
+<h3 id="org68aaa50">Sketching</h3>
+<div class="org-src-container">
+
+<pre><code class="java" >while x <= ?? {
+  x += a * ??
+}
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb5e75a6">
+<h3 id="orgb5e75a6">Refinement Types</h3>
+<div class="org-src-container">
+
+<pre><code class="Haskell" >termination measure len
+  :: List a -&gt; {Int | _v &gt;= 0} where
+  Nil -&gt; 0
+  Cons x xs -&gt; 1 + len xs
+
+replicate :: n: Nat -&gt; x: a -&gt; 
+             {List a | len _v == n}
+replicate = ??
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgca0ce8d">
+<h3 id="orgca0ce8d">Easier for DSLs!</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org8de05fa" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org8de05fa">Questions?</h2>
+</section>
+</section>
+</div>
+</div>
+<p> Created by Tikhon Jelvis. </p>
+<script src="/talks/reveal.js/lib/js/head.min.js"></script>
+<script src="/talks/reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: false,
+progress: false,
+history: true,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+width: 1200,
+height: 800,
+margin: 0.10,
+minScale: 0.50,
+maxScale: 2.50,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: '/talks/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: '/talks/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '/talks/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '/talks/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>

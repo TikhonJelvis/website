@@ -16,7 +16,7 @@ extra-source-files:  README
 cabal-version:       >=1.10
 
 executable website
-  main-is:             hakyll.hs
+  main-is:             website.hs
   -- other-modules:       
   other-extensions:    FlexibleContexts, QuasiQuotes, TemplateHaskell, RankNTypes, RecordWildCards, ViewPatterns, TupleSections, GeneralizedNewtypeDeriving, ParallelListComp, BangPatterns
   build-depends:       base
