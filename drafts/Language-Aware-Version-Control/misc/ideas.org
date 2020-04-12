@@ -1,0 +1,109 @@
+* Language-Aware Version Control
+** Goals
+   - more intelligent diff, merge, analysis
+   - better ergonomics
+   - more automation
+** Spectrum
+   - Not binary! A broad range from:
+     - "text is a string of characters"
+     - parse AST, understand language semantics
+   - examples:
+     - Git/diff/etc: close *but not quite* "text is a string of characters"
+       - understands newlines—line-oriented algorithm presentation
+         - rough line-based grouping heuristic
+       - can ignore whitespace changes
+     - AST-based algorithms (YDiff?)
+       - understand language grammar, but no semantics
+     - SemanticMerge, Semistructured Merge
+       - understands *some* semantics
+         - knows "imports can be reordered"
+         - does not know "this merge will not typecheck"
+       - does not necessarily need to parse entire grammar
+         - fall back on text diff for method bodies, comments… etc
+   - why?
+     - flexibility: language-specific vs work for anything
+     - cost: how hard is it to add a language?
+       - does it matter if parser is exactly standards compliant?
+       - how do we handle language extensions, code preprocessors... etc?
+       - what happens if a file doesn't parse?
+       - can we parse/diff/merge incrementally?
+     - usefulness: how much structure can we use to improve diffing
+       and merging?
+** Interesting points in the design space
+   - what capabilities can we offer?
+     - fewer conflicts
+       - move + rename should not convict
+     - refactorings: moves/renames/etc
+     - invalid merges
+     - better grouping
+     - handle formatting changes
+   - can we expand these ideas to natural language (ie English text)?
+   - writing a custom parser vs using existing tools/compilers/etc
+     - existing parsers:
+       - will keep in sync with the language
+       - already exist!
+       - not designed for this usecase
+       - have complicated ASTs
+       - not always flexible with syntax errors
+     - custom parser:
+       - has to be maintained
+       - can ignore things language cares about but we don't
+         - operator precedence
+       - can parse things we care about but language doesn't
+         - group statements by blank lines
+         - extract structure/grouping from comments
+       - better recovery from syntax errors
+       - directly keep track of whitespace and formatting
+     - some kind of hybrid approach?
+       - reuse *part* of tooling, like lexer but not parser?
+       - normal parser with some kind of pre- and/or post-processing?
+** Diffing parse trees
+   - easier to write
+     - we get the benefit of a diff/merge-specific parser at lower
+       cost
+   - preserve formatting
+   - parser doesn't have to be 100% "correct"
+     - can have better tolerance for and recovery from syntax errors
+     - fast, incremental… etc
+   - *most important*: algorithm is still "1-dimensional" rather than
+     2
+     - include picture to illustrate
+     - lets us reuse string edit-distance ideas and algorithms
+       - tree edit distance and edit scripts are super complicated!
+   - what do we get?
+     - parsing-aware grouping
+       - example with sentence diff?
+       - great for *robust* detection of moved components
+         - doesn't /need/ parsing—could use heuristic to group and
+           detect moves with Git-style diffs—but the extra structure
+           should help, and the parse-tree-paradigm makes tuning easier
+     - structure for further language-specific passes
+       - example: renaming with scope analysis
+** Incremental enhancement
+   - the more we know about a language, the more we can do
+     - reusing as many basic building blocks as we can
+   - base algorithm works for *any* parse tree
+     - parameterized by cost heuristic that could be
+       language-specific, or at least tuned based on language
+   - trees can carry extra language-specific annotations, depending
+     on what we can provide
+     - annotate subtrees with "block", "method", "class"… etc
+     - keep track of types in statically typed langauges
+     - do scope analysis to find renamed variables
+     - other ideas?
+   - we can build a pipeline with multiple steps, depending on which
+     step we can provide for any given languages
+     - each step could be parameterized by language-specific
+       analysis and heuristics
+       - example: generic scope analysis algorithm parameterized by
+         how "scope" is defined in JavaScript vs Scheme vs Python
+** Proof-of-concept
+   - set up proof-of-concept with a few examples
+   - O(n²) time and space?
+     - who cares, it's just a prototype
+     - diff algorithm could definitely be modified
+   - what kinds of shape do "real world" parse trees have?
+     - guess: high-level node that is really broad, with lots of
+       small- to medium-sized trees underneath
+       - we can optimize for this with something similar to Git/diff's
+         algorithm
