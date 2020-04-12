@@ -3,41 +3,49 @@
 
 name:                website
 version:             0.1.0.0
--- synopsis:            
--- description:         
--- license:             
--- license-file:        LICENSE
-author:              Tikhon Jelvis
-maintainer:          tikhon@jelv.is
--- copyright:           
--- category:            
+author:              Tikhon Jelvis <tikhon@jelv.is>
+maintainer:          Tikhon Jelvis <tikhon@jelv.is>
 build-type:          Simple
 extra-source-files:  README
 cabal-version:       >=1.10
 
 executable website
   main-is:             website.hs
-  -- other-modules:       
-  other-extensions:    FlexibleContexts, QuasiQuotes, TemplateHaskell, RankNTypes, RecordWildCards, ViewPatterns, TupleSections, GeneralizedNewtypeDeriving, ParallelListComp, BangPatterns
+
+  other-extensions:    BangPatterns
+                     , FlexibleContexts
+                     , GeneralizedNewtypeDeriving
+                     , ParallelListComp
+                     , QuasiQuotes
+                     , RankNTypes
+                     , RecordWildCards
+                     , TemplateHaskell
+                     , TupleSections
+                     , ViewPatterns
+
   build-depends:       base
-                     , containers
-                     , mtl
+
                      , array
-                     , hakyll
-                     , pandoc
+                     , containers
                      , directory
                      , filepath
-  -- hs-source-dirs:      
+                     , hakyll
+                     , mtl
+                     , pandoc
+
   default-language:    Haskell2010
 
 executable blog-post
   main-is:             blog-post.hs
-  build-depends:       base,
-                       containers,
-                       directory,
-                       filepath,
-                       Interpolation,
-                       optparse-applicative,
-                       process,
-                       strict,
-                       time
+
+  build-depends:       
+                       base
+
+                     , Interpolation
+                     , containers
+                     , directory
+                     , filepath
+                     , optparse-applicative
+                     , process
+                     , strict
+                     , time

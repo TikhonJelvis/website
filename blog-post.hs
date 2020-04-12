@@ -84,7 +84,9 @@ escape str = str >>= \case '\'' -> "'\\''"; s -> [s]
 
 run :: Settings -> IO ()
 run Settings {..} = do
-  Dir.setCurrentDirectory "/home/tikhon/Public/drafts"
+  home <- Dir.getHomeDirectory
+  Dir.setCurrentDirectory $ home <> "/Programming/website/drafts"
+
   let dirName = intercalate "-" $ words name
   putStrLn $ "Dir name: " ++ dirName
   exists <- Dir.doesDirectoryExist dirName
