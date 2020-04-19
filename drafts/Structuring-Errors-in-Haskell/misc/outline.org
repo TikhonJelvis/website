@@ -1,0 +1,180 @@
+* Structure your Errors
+  - inspired by my work on Theta
+* Why structure errors?
+** Separate Responsibilities
+   The part of your code that *raises* an error should not care about
+   how the error will be used. Instead, it should report all the
+   information relevant to the error and not worry further.
+** Uses
+*** Readable Error Messages
+    What information you display to a user and how you format it is a
+    UX concern. You don't have to display *all* the information on an
+    error and the error shouldn't control *how* you display that
+    information. It's also easier to keep message formats consistent
+    if you organize them separately from the main logic of your code
+    (ie do you print names with or without namespaces?).
+
+    This also sets you up for internationalizing your messages in the
+    future.
+*** Different Formats
+    Different contexts require different formats:
+      - Command line tool: readable text
+        - concise vs verbose messages
+      - UI tool: structured, formatted text
+      - Editor integration: structured protocol like JSON or whatever
+      - Log messages ≠ user-facing messages
+        - Structured log messages? Log with a schema and feed into
+          Kibana or whatever. (Structured logging makes sense for
+          basically the same reasons as structured errors, but *how*
+          you do that in code will probably be different.)
+*** Code
+    By keeping values in errors in their original information-rich
+    types, you can interact with them in code:
+      - Code /using/ your components can catch and react to errors.
+      - You can break on an error in a debugger and run functions
+        over the values in the error.
+      - Tests can inspect errors in a way that does not depend on any
+        specific /format/ the errors can take.
+        - The easier it is to test your errors, the more likely you
+          are to do it :).
+** API Design     
+   Errors become part of your public API. Given all these
+   considerations, exactly what you include in an error is a matter
+   of taste.
+
+   You don't have to get it right the first time though—structuring
+   your errors makes it /easier/ to refactor exactly what values you
+   include on each one.
+* Error Type
+  How can we structure errors in Haskell?
+
+  Make it a type!
+** Simplest Example  
+   ADT with all your errors. Each time you have a new source of errors,
+   add it to the ADT.
+
+   The compiler will ensure you keep functions like =renderForUser= up
+   to date.
+
+   I combine this with the =MonadError= class, but you don't have to.
+** Modularity
+   Using a single ADT for all your errors doesn't scale well. It's
+   inherently anti-modular—you have a single type that has to know
+   about *every* possible kind of error in your code, and you run into
+   issues with circular dependencies.
+     - Circular dependencies are awkward in Haskell and always a red
+       flag.
+
+   So how can we make our error type extensible?
+*** Type parameter
+    First thing I tried: =ApplicationError a= where =a= could be
+    module-specific. 
+      - What if you want errors from multiple modules? Build a type
+        level list?
+      - Does having a type parameters really help here? Not that much.
+*** Existential Type
+    Alternate design: an existential type for errors from other
+    modules.
+
+#+BEGIN_SRC haskell
+data ApplicationError = FooError {- ...errors that make sense everywhere. -}
+                      | SpecificError ModuleName SomeError
+
+data SomeError where
+  SomeError :: e -> SomeError
+#+END_SRC
+
+    =ModuleName= is optional, but I found it really useful to include
+    a tag telling me where an error came from. Could just be a =Text=
+    or something more domain-specific.
+
+    (Aside on =GADTSyntax= extension.)
+**** Throwing Errors
+     Define a custom =throw= in each module or component:
+
+#+BEGIN_SRC haskell
+throw :: MonadError ApplicationError m => ModuleError -> m a
+throw moduleError = 
+  MonadError.throwError (SpecificError "Module Name" moduleError)
+#+END_SRC
+**** Using Errors
+     What can we do with =SomeError=? Nothing without some typeclass
+     constraints!
+
+     Examples:
+       - =Show= for use in GHCi and debugger.
+         - you might have to write =Show= instances by hand, since
+           errors should be free to contain values like functions
+       - =Pretty= for displaying to users. (Aside on =Pretty= vs
+         =Show=.)
+       - =LogFormat= for structured logging.
+       - =ToElement= for displaying in UI
+
+#+BEGIN_SRC haskell
+data SomeError where
+  SomeError :: (Pretty e, LogFormat e) => e -> SomeError
+#+END_SRC
+
+     Typeclasses let us support multiple ways to *consume* errors in a
+     modular way.
+**** Catching Errors
+     We can borrow a trick from GHC's standard =Exception= class to
+     let people *catch* errors using =Typeable=. (Remember: in GHC,
+     all types now *automatically* derive =Typeable=; you need a
+     =Typeable= constraint to *use* the instances, but you do not need
+     to change existing types to *provide* instances.)
+
+#+BEGIN_SRC haskell
+class Typeable e => CatchableError e where
+  fromError :: Error -> Maybe e
+  fromError (SpecificError _ (SomeError e)) = Typeable.cast e
+  fromError _                               = Nothing
+#+END_SRC
+
+     Since there's a default implementation that always works, it's
+     easy to provide instances for specific error types:
+
+#+BEGIN_SRC haskell
+data ModuleError = {- ... -}
+
+instance CatchableError e
+#+END_SRC
+
+     With this class, we can write unit tests that pattern match on
+     errors:
+
+#+BEGIN_SRC haskell
+testCase "check specific error" $ do
+  case failingOperation of
+    Left err -> case fromError err of
+      Just (SpecificModuleError whatever) -> 
+        assert (whatever == expected)
+      Nothing -> 
+        fail $ "Wrong sort of error:\n"  <> pretty err
+    Right res -> fail "Expected error but got: " <> show res
+#+END_SRC
+
+     We can also use this class to specify all the other typeclasses
+     errors need to implement:
+
+#+BEGIN_SRC haskell
+class (Pretty e, LogFormat e, Typeable e) => CatchableError e where
+#+END_SRC
+
+     Now our existential type definition doesn't get longer and longer
+     as we add more error typeclasses:
+
+#+BEGIN_SRC haskell
+data SomeError where
+  SomeError :: CatchableError e => e -> SomeError
+#+END_SRC
+
+     This is an alternative to enabling =ConstraintKinds= and defining
+     a type synonym:
+
+#+BEGIN_SRC haskell
+type ErrorConstraint e = (Pretty e, LogFormat e, Typeable e)
+#+END_SRC
+
+     Which approach you choose is a matter of taste.
+
