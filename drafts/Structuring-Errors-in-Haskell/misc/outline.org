@@ -1,5 +1,10 @@
 * Structure your Errors
   - inspired by my work on Theta
+
+* What *are* structured errors?
+  - error type vs string
+  - include relevant values *directly*
+    - use the same types of values you're using in your code
 * Why structure errors?
 ** Separate Responsibilities
    The part of your code that *raises* an error should not care about
@@ -119,8 +124,8 @@ data SomeError where
      modular way.
 **** Catching Errors
      We can borrow a trick from GHC's standard =Exception= class to
-     let people *catch* errors using =Typeable=. (Remember: in GHC,
-     all types now *automatically* derive =Typeable=; you need a
+     let people *catch* errors using =Typeable= . (Remember: in GHC,
+     all types now *automatically* derive =Typeable= ; you need a
      =Typeable= constraint to *use* the instances, but you do not need
      to change existing types to *provide* instances.)
 
