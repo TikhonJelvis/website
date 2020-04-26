@@ -15,6 +15,16 @@ pkgs.haskellPackages.developPackage {
         pkgs.lib.cleanSourceFilter path type;
   }).outPath;
 
+  source-overrides = {
+    http2 = "1.6.5";
+    warp = "3.2.28";
+  };
+
+  overrides = self: super: {
+    warp = pkgs.haskell.lib.dontCheck super.warp;
+    hakyll = pkgs.haskell.lib.enableCabalFlag (pkgs.haskell.lib.enableCabalFlag super.hakyll "watchserver") "previewserver";
+  };
+
   # Disable "smart" Nix-shell detection because it is impure (depends
   # on the IN_NIX_SHELL environment variable), which can cause
   # hard-to-debug Nix issues.
