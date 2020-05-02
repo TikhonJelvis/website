@@ -3,19 +3,23 @@ title: Structure Your Errors
 author: Tikhon Jelvis
 ---
 
-Recently, I've revisited how I represent errors in code. I'm working on a command-line tool that's used by people across multiple teams and I want to ensure the error messages are useful and productive. Error messages should:
+Recently, I've revisited how I represent errors in code.
+
+I'm working on a command-line tool used across multiple teams and I want to make sure it's productive for everyone. Error messages *really matter*. As the codebase grew, *ad hoc* techniques for managing error information were not sufficient, which pushed me towards **structured errors** and some Haskell patterns for managing them.
+
+Everything comes down to generating useful error messages. Error messages should:
 
   * Contain all the information and context a user needs to diagnose and fix the error.
   * Provide enough explanatory text for less-experienced users of the tool.
   * Format this information in a way that's easy to scan at a glance.
 
-Every single error the tool can produce needs a fair amount of code to meet these goals, which means that building error messages as strings right in my domain code does not work—my core logic would get swamped by string formatting code, it would be hard to keep error messages consistent throughout the whole codebase and refactoring error messages *en masse* would be a nightmare.
+Every single error the tool can produce needs a fair amount of code to meet these goals. Building error messages as strings right in my domain logic does not scale—the logic itself would get swamped by string formatting for error messages! Keeping the style of error messages consistent throughout the code would be difficult, and refactoring error messages *en masse* would be a nightmare.
 
-With this in mind, I made the decision to consistently use **structured errors** throughout the codebase. Instead of passing around errors as strings, I would have a custom type to represent errors that could be turned into a string down the line. Structured errors require some up-front work and planning, but I've found that the effort more than paid for itself as the codebase has grown and evolved.
+To handle this effectively, I needed to give my errors *structure*. Instead of using errors from my libraries directly or passing around strings, I needed a dedicated type for my errors. 
 
-Structured errors definitely helped me produce consistent, effective error messages, but I also discovered other advantages as the project progressed. Now that I have practical experience with structured errors, I'm going to use the same techniques across my projects in different languages.
+Structured errors required some up-front work and planning, but it has more than paid for itself over time. Apart from helping me produce useful error messages, I discovered a number of other advantages. Now that I have practical experience with structured errors, I'm going to use the same techniques across my projects in different languages.
 
-The project that first pushed me to think about structured errors is written in Haskell, but the ideas themselves are entirely language-agnostic. I'm going start by covering structured errors and the tradeoffs involved in a way that applies to almost any programming language; after that, I'll dive into the pattern I've settled on for structuring my errors in Haskell code specifically. Other languages will have their own patterns for achieving the same ends, but chances are the details will look pretty distinct from Haskell!
+The project that first pushed me to think about structured errors is written in Haskell, and the whole thing has a distinctly Haskell-esque philosophical feel, but the core ideas are entirely language-agnostic. I'm going start by covering structured errors and the tradeoffs involved in a way that applies to almost any programming language; after that, I'll dive into the pattern I've settled on for structuring my errors in Haskell specifically.
 
 </div>
 
