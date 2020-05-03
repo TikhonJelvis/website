@@ -5,7 +5,7 @@ author: Tikhon Jelvis
 
 Recently, I've revisited how I represent errors in code.
 
-I'm working on a command-line tool used across multiple teams and I want to make sure it's productive for everyone. Error messages *really matter*. As the codebase grew, *ad hoc* techniques for managing error information were not sufficient, which pushed me towards **structured errors** and some Haskell patterns for managing them.
+I'm working on a command-line tool used across multiple teams and I want to make sure it's productive for everyone. Error messages *really matter*. As the codebase grew, *ad hoc* techniques for managing error information were not sufficient, which pushed me towards *structuring my errors*.
 
 Everything comes down to generating useful error messages. Error messages should:
 
@@ -13,7 +13,7 @@ Everything comes down to generating useful error messages. Error messages should
   * Provide enough explanatory text for less-experienced users of the tool.
   * Format this information in a way that's easy to scan at a glance.
 
-Every single error the tool can produce needs a fair amount of code to meet these goals. Building error messages as strings right in my domain logic does not scale—the logic itself would get swamped by string formatting for error messages! Keeping the style of error messages consistent throughout the code would be difficult, and refactoring error messages *en masse* would be a nightmare.
+Every single kind of error we have needs a fair amount of code to meet these goals. Building error messages as strings inside my domain logic does not scale—the logic itself would get swamped by string formatting for error messages! Keeping the style of error messages consistent throughout the code would be difficult, and refactoring error messages *en masse* would be a nightmare.
 
 To handle this effectively, I needed to give my errors *structure*. Instead of using errors from my libraries directly or passing around strings, I needed a dedicated type for my errors. 
 
@@ -27,14 +27,9 @@ The project that first pushed me to think about structured errors is written in 
 
 ## What are structured errors?
 
-Most languages provide *some* way of signaling errors: runtime errors, checked exceptions, error types, rejected promises... Except for limited systems like C-style error codes, all of these methods let us provide additional data that will be available when we handle the error down the line.
+Most languages provide *some* way of signaling errors: runtime errors, checked exceptions, error types, rejected promises... All of these systems let us provide additional information that will be available when we handle the error down the line. When I talk about structured errors, I'm not talking about the mechanism we use to *handle* errors (like exceptions, monads or return types), but rather about how we structure this additional information.
 
-When I talk about structured errors, I'm not talking about the mechanism we use to *handle* errors (like exceptions, monads or return types), but rather about how we structure this additional data.
-
-A program is using **structured errors** if:
-
-  * There is a domain-specific abstraction—like a class or an algebraic data type—that describes different kinds of errors the program can encounter.
-  * Instances of the error abstraction carry *actual values* from the code.
+The exact kind of structure you use for your errors depends on your language. The important idea is that you have *some* abstraction for your errors (a type or a class, for example) that carries actual values from your code rather than string error messages. Extracting specific pieces of information from an error value should not take any parsing or guesswork!
 
 For example, if a function could fail because an API it depends on returned an HTTP error code, a structured error from that function would be a project-specific `ApiError` carrying several pieces of information:
 
@@ -44,15 +39,17 @@ For example, if a function could fail because an API it depends on returned an H
   * The HTTP response itself.
   * Additional data needed to provide *context*, like which inputs to the function caused the failure.
 
-The goal of structuring all this error information is to let code downstream either handle and recover from the error or at least fail in a user-friendly way.
+Contrast this with some less-structured alternatives. We could let the error from our HTTP library bubble up unchanged; this would still be structured to *some* extent, but it would not be specific to our project and would be missing information about the *context* of the API call. This missing context can make debugging much harder if our application is calling the same API for different reasons!
 
-Contrast this with some less-structured alternatives. We could let the error from our HTTP library bubble up unchanged; this would still be structured to *some* extent, but it would not be specific to our project and would be missing information about the *context* of the API call. We could produce a string message (`"API Foo v2 failed with a 400 error code."`) but this contains even *less* information and the only way to extract details (Which API failed? What was the error?) would be to parse the string. We could even simply ignore the error and let our code fail somewhere downstream, giving us something like JavaScript's famous `undefined is not a function` error. All of these options carry *less* information that a structured error would, and make it substantially harder to either recover from the error or fail in a user-friendly way.
+Alternatively, we could produce a string message (`"API Foo v2 failed with a 400 error code."`). This particular message is light on both details and context, but even if we added all that information, we would still struggle to extract that information down the line. Which API failed? What was the exact error code? The only way to get this information out would be to parse the string which is complicated and hard to maintain—the parsing code would break in the future if we rewrote the message at all, even just to improve clarity.
 
-The last example—letting our code fail down the line—illustrates an important principle of structured errors: merely structuring error information is not enough; we also need to *raise the error at the right time*. This requires some measure of defensive programming; when something fails, we need to detect it early enough to supply all the right context with our error. If we call an API whose response has to fulfill a particular contract, we need to check that contract right after calling the API so that we can report *which API* failed on *which request*; if we instead fail on some internal invariant check later in our code, we won't have the context that the failure was caused by a specific API call violating its contract.
+Worse yet, we could simply ignore the error altogether and let our code fail somewhere down the line. I've see in this in real projects! This is how an API error turns into `undefined is not a function` raised from a seemingly unrelated part of the code. The only upside with this style is that you feel like a hero once you figure out where the error was *actually* coming from.
 
-### Why?
+Unlike these alternative approaches, structured errors give us all the information we need to *understand* an error in a format that lets us extract and work with that information in other parts of our code. To make this work, we need to not only think about the *structure* of the errors, but also make sure that we're raising the errors at the right time—usually as early as possible—so that we can attribute the error correctly and provide all the information we need.
 
-Writing with structured errors isn't free. Instead of building error messages on the spot, we have to build a structured value that will eventually get turned into a string message anyway. We have to program defensively, writing extra code to watch for error conditions. We can't let exceptions from libraries and language operations bubble up because they are not structured within the context of our application. We end up with more code and more moving parts than simpler approaches to error handling.
+## Why?
+
+Writing with structured errors isn't free. Instead of building error messages on the spot, we have to build a structured value, and still turn it into a string somewhere down the line. We have to program defensively, writing extra code to watch for error conditions so that we raise errors at the right time. We can't let exceptions from libraries and language operations bubble up because they are not structured within the context of our application. We end up with more code and more moving parts than simpler approaches to error handling.
 
 So why should we pay this cost?
 
@@ -60,7 +57,7 @@ At heart, this is a matter of **code architecture**: structured errors let us se
 
 Like so many matters of code architecture, once we get it right, we end up with a surprising amount of practical consequences that, at first glance, might seem unrelated.
 
-#### Readable Error Messages
+### Readable Error Messages
 
 The first upside I noticed—the reason I started down this path in the first place—is that structured errors made it much easier to produce detailed, readable error messages. The logic to render error messages for the user doesn't have to fight for space and attention with my domain logic; instead, it can be removed to some kind of self-contained unit by itself. I could write a bunch of code to render the components of an error into a detailed multi-line message without adding a bunch of noise to the main parts of my code.
 
@@ -85,7 +82,7 @@ The API call that could produce this error is probably a single line itself, so 
 
 Error rendering ends up decoupled from the rest of the code, with a clear interface defined by the structure of the error. Refactoring the domain code will not touch error rendering at all and vice-versa. To do this effectively, the structure of the error should be designed based on what information it makes sense to *provide*, even if you won't necessarily display all that information to the user. Your error rendering code can always ignore information on the error value if it doesn't need to be part of the user-facing error message.
 
-#### Different Formats
+### Different Formats
 
 It's worth noting that you don't need fully structured errors to accomplish the previous Python example. Instead of having an `ApiError` object, you could have `render_api_error` take a bunch of arguments directly and call it *before* raising the error from your domain code:
 
@@ -98,7 +95,7 @@ Ad-hoc error-formatting functions called directly from your code are less crisp 
 
 Structured errors, however, go further. We can render errors into *multiple* formats and add new formats without touching the domain code at all.
 
-#### Refactoring
+### Refactoring
 
 </div>
 <div class="content">
