@@ -138,9 +138,17 @@ a > img {
   margin-right : 12%;
 }
 
+.content li {
+  display: list-item;
+}
+
+/* Slightly hacky rules to fix how paragraphs look inside list
+   elements. */
 .content li > p {
-  margin-left : 2%;
-  margin-right : 2%;
+  display : block;
+  margin-top: -3ex;
+  margin-left: 2%;
+  margin-right: 0;
 }
 
 /* Nested lists. */
@@ -172,11 +180,10 @@ a > img {
 
 .content p, .footnotes p {
     margin-top : 10px;
-    margin-bottom : 8px;
+    margin-bottom : 18px;
 }
 
 .content p + p, .footnotes p + p {
-    text-indent : 1.5em;
     margin-top : -4px;
 }
 
@@ -406,7 +413,7 @@ a > img {
   margin : 0 2% 20px 2%;
 }
 
-a.footnoteRef sup {
+a.footnoteRef sup, a.footnote-ref sup {
   position : relative;
   bottom : 0.75ex;
 }
