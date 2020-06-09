@@ -7,7 +7,7 @@ let
   website = import ./. {};
 in
 pkgs.lib.overrideDerivation website.env (old: {
-  nativeBuildInputs = old.nativeBuildInputs ++ haskellDevelopmentTools;
+  nativeBuildInputs = old.nativeBuildInputs ++ haskellDevelopmentTools ++ [ pkgs.s3cmd ];
 
   # Nix's glibc has weird locale settings on Linux, which make Haskell
   # binaries unable to handle UTF-8 by default. This fixes that
