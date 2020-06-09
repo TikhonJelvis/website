@@ -33,11 +33,11 @@ It comes down to three core factors:
 
   * Clean code is not substantially slower to write.
 
-    Clean code is less a matter of extra work and more a matter of having the right habits. People avoid writing quality code because they don't have and don't want to build these habits, not because it's inherently harder.
+    Clean code is less a matter of extra work and more a matter of having the right habits. People avoid writing quality code because they don't have and don't want to build these habits, not because it's inherently harder. Learning new habits is hard and the human mind loves taking shortcuts, but that just ends up wasting time overall.
 
   * You'll spend less time debugging.
 
-    Mentally, it's easy to separate how long it takes to write the "initial" version of the code from how long it takes to iron out the "obvious" bugs. But you aren't done until the code (mostly) works! If you account for debugging, extra time spent writing code will be canceled out.
+    Mentally, it's easy to separate how long it takes to write the "initial" version of the code from how long it takes to iron out the "obvious" bugs. But you aren't done until the code (mostly) works! If you account for debugging, extra time spent writing cleaner code will be canceled out.
 
   * Adding features and making changes is *far* easier.
 
@@ -98,11 +98,11 @@ Annoyingly, I can't give you a 100% complete definition.
 
 It's not a matter of blindly applying "best practices". A lot of "best practices" *are* overkill for smaller projects, and over-engineering from the beginning can be fatal for a project.
 
-So is my advice just "it's better to write *good* code than to write *bad* code"? I mean, yes, that is the advice. If you can do that you're golden, and the only way to learn this is through experience[^experience].
+So is my advice just "it's better to write *good* code than to write *bad* code"? I mean, yes, that is the advice. If you can do that you're golden, and the only way to learn this is through experience[^experience]. At the end of the day, writing good code is a skill you can and should learn, but it will take time and practice.
 
-But I can give you some hints and guidelines to get you started.
+At the very least, I can give you some hints and guidelines to get you started.
 
-The easiest place to start is to focus on **code hygiene**. By "hygiene", I mean factors that make your code readable but don't require much extra work. You're changing *how* you write code, but you're not writing much *more* code:
+The first place to focus on **code hygiene**. By "hygiene", I mean factors that make your code readable but don't require extra work. You're changing *how* you write code, but you're not writing much *more* code:
 
   * Always use clear, intuitive names for variables and functions. At most, this costs a bit of extra thinking each time you introduce a new idea, and it never hurts. Just do it.
 
@@ -132,7 +132,7 @@ On top of this, there are a few practices that go beyond "hygiene"—they defini
 
 Should you do *all* of these things? Is this *all* you should do?
 
-I doubt it. I just hope it gives you a solid starting point.
+You will encounter design questions with no clear answers. Just following these practices isn't enough to write great code. But it's a starting point. Realize you made the wrong design decision two months ago? The cleaner your code, the easier it will be to fix.
 
 [Nix]:https://nixos.org/
 [Docker]: https://www.docker.com/
