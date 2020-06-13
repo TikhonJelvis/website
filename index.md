@@ -7,19 +7,13 @@ author: Tikhon Jelvis
 
 <div class="announcement">
 
-[BayHac 2017][bh] is coming up in April—I'll be giving a talk about stochastic optimization in Haskell at Target.
-
-[bh]: https://wiki.haskell.org/BayHac2017
-
-<div> </div>
-
-I'm giving a talk about GHCJS and Reflex FRP at [a meetup][frb] hosted by First Republic Bank on Thursday, February 2nd.
-
-[frb]: https://www.meetup.com/Bay-Area-Haskell-Users-Group/events/236725835/
+<img src="img/haskell-love-logo.jpg" alt="Haskell.Love Logo" class="icon" /> 
+ 
+I'll be giving a talk at the [Haskell Love][haskell-love] conference, July 31–Aug 1 2020.
 
 </div>
 
-[shattered-worlds]: http://alexnisnevich.github.io/ld30/
+[haskell-love]: https://haskell.love
 
 I'm a programmer with a background in functional programming and programming languages. I'm applying ideas from these fields to operations research at Target—we're developing a framework for expressing and solving large-scale stochastic optimization problems.
 

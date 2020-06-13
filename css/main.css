@@ -333,6 +333,13 @@ a > img {
 
     margin-right : 5px;
 }
+
+.content div.announcement img.icon {
+  margin-top : 10px;
+  border-radius : 50%;
+  max-width : 50px;
+  float: right;
+}
     
 /* Special kinds of text: code, ui elements...etc */
 .content .uiElement {
