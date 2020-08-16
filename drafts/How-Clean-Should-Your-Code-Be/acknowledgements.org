@@ -1,8 +1,9 @@
 * Read
   - Ashwin Rao
   - Jun Qin
+  - Paritosh Desai
+  - Jimmy Koppel
+  - Subbu Iyer
 
 * Asked
   - Kaveh
-  - Paritosh Desai
-  - Jimmy Koppel

@@ -138,3 +138,8 @@ You will encounter design questions with no clear answers. Just following these 
 [Docker]: https://www.docker.com/
 
 [^experience]: Experience is *necessary* but not *sufficient* to learn how to write clean code reliably. I've worked with plenty of experienced people who *don't* have the right habits and make a mess for themselves and others. But I still think that experience, coupled with mentorship, is the only way to *really* learn this.
+
+</div>
+<div class="content">
+
+Thanks to Ashwin Rao, Jimmy Koppel, Jun Qin, Paritosh Desai and Subbu Iyer for feedback on this post.
