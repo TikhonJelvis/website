@@ -1,4 +1,7 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ sources ? import nix/sources.nix {} }:
+let
+  pkgs = import sources.nixpkgs {};
+in
 pkgs.haskellPackages.developPackage {
   name = "website";
   root = (pkgs.lib.cleanSourceWith {
@@ -14,11 +17,6 @@ pkgs.haskellPackages.developPackage {
         !pkgs.lib.hasPrefix ".ghc.environment" name &&
         pkgs.lib.cleanSourceFilter path type;
   }).outPath;
-
-  source-overrides = {
-    http2 = "1.6.5";
-    warp = "3.2.28";
-  };
 
   overrides = self: super: {
     warp = pkgs.haskell.lib.dontCheck super.warp;
