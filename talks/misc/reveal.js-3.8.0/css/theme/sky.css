@@ -1,81 +1,46 @@
 /**
- * The blue theme I use for most of my personal talks.
+ * Sky theme for reveal.js.
  *
- * Based on Beige theme for reveal.js by Hakim El Hattab <hakim.se>
+ * Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se
  */
-@import url(tikhon-fonts.css);
+@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,400italic,700italic);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+.reveal a {
+  line-height: 1.3em; }
 
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
 body {
-  background: #C0D9FB;
-  background: -moz-radial-gradient(center, circle cover, #FFF 0%, #C0D9FB 100%);
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #FFF), color-stop(100%, #C0D9FB));
-  background: -webkit-radial-gradient(center, circle cover, #FFF 0%, #C0D9FB 100%);
-  background: -o-radial-gradient(center, circle cover, #FFF 0%, #C0D9FB 100%);
-  background: -ms-radial-gradient(center, circle cover, #FFF 0%, #C0D9FB 100%);
-  background: radial-gradient(center, circle cover, #FFF 0%, #C0D9FB 100%);
-}
+  background: #add9e4;
+  background: -moz-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f7fbfc), color-stop(100%, #add9e4));
+  background: -webkit-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: -o-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: -ms-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background-color: #f7fbfc; }
 
 .reveal {
-  font-family: Junction, Helvetica, Arial, sans-serif;
-  font-size: 65px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 40px;
   font-weight: normal;
-  color: #3f3f3f; }
+  color: #333; }
 
 ::selection {
   color: #fff;
-  background: none;
+  background: #134674;
   text-shadow: none; }
 
-.reveal .slides > section,
-.reveal .slides > section > section {
+::-moz-selection {
+  color: #fff;
+  background: #134674;
+  text-shadow: none; }
+
+.reveal .slides section,
+.reveal .slides section > section {
   line-height: 1.3;
   font-weight: inherit; }
-
-/*********************************************
- * TITLE PAGE
- *********************************************/
-.reveal .title {
-    position : relative;
-    top : 50px;
-}
-
-.reveal .has-dark-background {
-    color : #C0D9FB;
-}
-
-.reveal h1.title {
-    font-size : 160px;
-    margin-bottom : -2%;
-}
-
-.reveal h2.title {
-    font-size : 120px;
-}
-
-.reveal .subtitle {
-    position : relative;
-    top : 50px;
-
-    font-family : "Kaushan Script";
-    font-size : 90px;
-}
-
-.reveal .author {
-    position : relative;
-    top : 250px;
-
-    font-size : 70px;
-}
-
-/*********************************************
- * SECTION SLIDES
- *********************************************/
-.reveal section.section-slide h2 {
-    color : #C0D9FB;
-}
 
 /*********************************************
  * HEADERS
@@ -87,33 +52,20 @@ body {
 .reveal h5,
 .reveal h6 {
   margin: 0 0 20px 0;
-  color: #052d69;
-  font-family: Aller;
+  color: #333;
+  font-family: "Quicksand", sans-serif;
   font-weight: normal;
   line-height: 1.2;
-  letter-spacing: normal;
-  text-transform: none;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
   text-shadow: none;
   word-wrap: break-word; }
 
-/* Render italics in headers in a script typeface. */
-.reveal h1 i,
-.reveal h2 i,
-.reveal h3 i,
-.reveal h4 i,
-.reveal h5 i,
-.reveal h6 i {
-    font-family : "Kaushan Script";
-    font-style : normal;
-    letter-spacing : -0.04em;
-    margin-right : 0.2em;
-}
-
 .reveal h1 {
-  font-size: 140px; }
+  font-size: 3.77em; }
 
 .reveal h2 {
-  font-size: 120px; }
+  font-size: 2.11em; }
 
 .reveal h3 {
   font-size: 1.55em; }
@@ -177,10 +129,6 @@ body {
 .reveal dd {
   margin-left: 40px; }
 
-.reveal q,
-.reveal blockquote {
-  quotes: none; }
-
 .reveal blockquote {
   display: block;
   position: relative;
@@ -208,18 +156,18 @@ body {
   font-family: monospace;
   line-height: 1.2em;
   word-wrap: break-word;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); }
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15); }
 
 .reveal code {
-  font-family: monospace; }
+  font-family: monospace;
+  text-transform: none; }
 
 .reveal pre code {
   display: block;
-  padding: 20px;
-  max-height: 600px;
-  word-wrap: normal;
-  background: #3F3F3F;
-  color: #DCDCDC; }
+  padding: 5px;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal; }
 
 .reveal table {
   margin: auto;
@@ -243,14 +191,17 @@ body {
 .reveal table td[align="right"] {
   text-align: right; }
 
-.reveal table tr:last-child td {
+.reveal table tbody tr:last-child th,
+.reveal table tbody tr:last-child td {
   border-bottom: none; }
 
 .reveal sup {
-  vertical-align: super; }
+  vertical-align: super;
+  font-size: smaller; }
 
 .reveal sub {
-  vertical-align: sub; }
+  vertical-align: sub;
+  font-size: smaller; }
 
 .reveal small {
   display: inline-block;
@@ -265,39 +216,33 @@ body {
  * LINKS
  *********************************************/
 .reveal a {
-  color: #0a57ca;
+  color: #3b759e;
   text-decoration: none;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
   transition: color .15s ease; }
 
 .reveal a:hover {
-  color: #052d69;
+  color: #74a7cb;
   text-shadow: none;
   border: none; }
 
 .reveal .roll span:after {
   color: #fff;
-  background: #063781; }
+  background: #264c66; }
 
 /*********************************************
  * IMAGES
  *********************************************/
-
-/* Images with transparent backgrounds that don't need a border or
-   box-shadow. */
-.reveal img.no-background {
-    margin-top : -3%;
-    border : none;
-    box-shadow : none;
-    background : none;
-}
-
 .reveal section img {
   margin: 15px 0px;
   background: rgba(255, 255, 255, 0.12);
-  border: 4px solid #3f3f3f;
+  border: 4px solid #333;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
+
+.reveal section img.plain {
+  border: 0;
+  box-shadow: none; }
 
 .reveal a img {
   -webkit-transition: all .15s linear;
@@ -306,79 +251,30 @@ body {
 
 .reveal a:hover img {
   background: rgba(255, 255, 255, 0.2);
-  border-color: #0a57ca;
+  border-color: #3b759e;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
 
 /*********************************************
  * NAVIGATION CONTROLS
  *********************************************/
-.reveal .controls div.navigate-left,
-.reveal .controls div.navigate-left.enabled {
-  border-right-color: #0a57ca; }
-
-.reveal .controls div.navigate-right,
-.reveal .controls div.navigate-right.enabled {
-  border-left-color: #0a57ca; }
-
-.reveal .controls div.navigate-up,
-.reveal .controls div.navigate-up.enabled {
-  border-bottom-color: #0a57ca; }
-
-.reveal .controls div.navigate-down,
-.reveal .controls div.navigate-down.enabled {
-  border-top-color: #0a57ca; }
-
-.reveal .controls div.navigate-left.enabled:hover {
-  border-right-color: #052d69; }
-
-.reveal .controls div.navigate-right.enabled:hover {
-  border-left-color: #052d69; }
-
-.reveal .controls div.navigate-up.enabled:hover {
-  border-bottom-color: #052d69; }
-
-.reveal .controls div.navigate-down.enabled:hover {
-  border-top-color: #052d69; }
+.reveal .controls {
+  color: #3b759e; }
 
 /*********************************************
  * PROGRESS BAR
  *********************************************/
 .reveal .progress {
-  background: rgba(0, 0, 0, 0.2); }
+  background: rgba(0, 0, 0, 0.2);
+  color: #3b759e; }
 
 .reveal .progress span {
-  background: #0a57ca;
   -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
 
 /*********************************************
- * SLIDE NUMBER
+ * PRINT BACKGROUND
  *********************************************/
-.reveal .slide-number {
-  color: #0a57ca; }
-
-.reveal h2 > a {
-  font-size: 70%; }
-
-.reveal code, .reveal pre {
-  font-family: "DejaVu Sans Mono";
-  border-radius: 12px;
-  border: 2px solid rgba(100, 0, 150, 0.2);
-}
-
-// .reveal pre {
-//   padding: 15px 30px;
-//   line-height: 125%; }
-
-.reveal code {
-  padding: 5px 10px; }
-
-.reveal ul {
-  margin-top: 30px; }
-
-.reveal ul li {
-  width: 110%;
-  margin-bottom: 20px; }
-
-.MathJax_Display { margin-top : 2ex !important; margin-bottom : 2ex !important }
+@media print {
+  .backgrounds {
+    background-color: #f7fbfc; } }

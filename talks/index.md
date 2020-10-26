@@ -20,6 +20,10 @@ My older slides were produced with a customized version of [org-html5presentatio
 
 ## Programming Languages/Haskell
 
+[Haskell Love 2020][haskell-love-2020]:
+
+  * [Reasoning under Uncertainty](haskell-love-2020): an introduction to Markov Decision Processes in Haskell.
+
 [Lambda World 2018][lambda-world-2018] in Seattle:
 
   * [Radix Trees: *How IntMap Works*](lambda-world-2018): an overview of radix trees and adaptive radix trees.
@@ -59,6 +63,7 @@ A longer talk at [Hac φ 2013][hac-phi-2013]:
 
   * [Program synthesis](synthesis-slides.html) ([pdf](synthesis-slides.pdf)): a general overview of program synthesis techniques
 
+[haskell-love-2020]: https://haskell.love
 [lambda-world-2018]: https://seattle.lambda.world
 [compose-2017]: http://composeconference.org/2017/
 [compose-2017-video]: https://www.youtube.com/watch?v=qZ4O-1VYv4c

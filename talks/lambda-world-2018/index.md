@@ -12,7 +12,9 @@ author: Tikhon Jelvis
 I gave a talk at [Lambda World 2018][lambda-world] about the radix tree, the data structure behind Haskell's `Data.IntMap` as well as recently published variant on the same structure called the *adaptive* radix tree.
 
   * [slides](slides.html)
+  * [video]
   
+  [video]: https://www.youtube.com/watch?v=0udjkEiCjog
   [lambda-world]: https://seattle.lambda.world
   [picture]: img/me-presenting-at-lambda-world.jpg
 
