@@ -1,5 +1,5 @@
 ---
-title: Structure Your Errors
+title: Structure your Errors
 author: Tikhon Jelvis
 ---
 
