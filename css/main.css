@@ -150,7 +150,7 @@ a > img {
 }
 
 /* Nested lists. */
-.content li ul {
+.content li ul, .footnotes li ul {
   margin-left : 8%;
 }
 
@@ -320,12 +320,12 @@ a > img {
     color : var(--background);
 }
 
-.content div.announcement ul, .content ul, .content ol {
+.content div.announcement ul, .content ul, .content ol, .footnotes ul {
     margin-left : 17%;
     list-style : none;
 }
 
-.content div.announcement ul li:before, .content ul li:before {
+.content div.announcement ul li:before, .content ul li:before, .footnotes ul li:before {
     content : "■";
 
     position : relative;
