@@ -112,6 +112,8 @@ data Error = ParseError Parsec.ParseError
 
 Each of the constructors of `Error` captures the context for one kind of error, giving you enough information to handle the problem. Any functions you write that might cause errors would signal using `Error`[^monad-error]:
 
+[^monad-error]: I used [`MonadError`][MonadError] in this example because that's what I use in my own code, but this works just as well with any other error mechanism including plain old `Either Error a`.
+
 ```haskell
 parseConfig ∷ MonadError Error m ⇒ FilePath → Text → m Config
 parseConfig source body = case Parsec.parse config source body of
@@ -153,6 +155,18 @@ So how can we make our `Error` type extensible?
 
 The cleanest solution would be some kind of structural subtyping similar to [OCaml's polymorphic variants][polymorphic-variants][^structural-subtyping]. Unfortunately, we do not have anything like this built into the language, and my experience with libraries implementing extensible types has been uniformly poor[^poor-experience].
 
+[^structural-subtyping]: Polymorphic variants are probably *the* single feature I miss the most in Haskell compared to OCaml. Extensible records and sum types—coupled with some kind of row polymorphism—are *the* number one feature I want added to Haskell, but I understand that both the design and implementation of row polymorphism in Haskell are substantially more difficult than they seem. 
+
+    Still, one can dream...
+
+[^poor-experience]: I should note that I have *not* used extensible type libraries extensively, but I've evaluated a few in the past. In my experience, these libraries:
+
+      * are far more awkward to use than "normal" algebraic data types
+      * have complex type-level implementations that leak into their APIs and error messages
+      * have inconsistent and generally poor performance
+
+    While Haskell is theoretically expressive enough to provide extensible types as a library, I believe it is not possible to make them *efficient* or *ergonomic* without language-level support.
+
 So the first thing I tried—the first thing I try whenever I need to make a Haskell type more flexible—was adding a type parameter:
 
 ```haskell
@@ -184,7 +198,7 @@ But how would this extend to multiple modules with their own error type? Would I
 
 This did not seem like a fruitful design direction.
 
-Instead, I decided to make the "other error" variable *existential*[^existential]:
+Instead, I decided to make the "other error" variable existential[^existential]:
 
 ```haskell
 data Error = ParseError Parsec.ParseError
@@ -195,23 +209,6 @@ data SomeError where
   SomeError ∷ e → SomeError
 ```
 
-I could have combined `Error` and `SomeError` into a single type, but I found that separating the two made the code a bit easier to understand—purely a matter of preference. 
-
-This approach lets me wrap *any* type into `SomeError`, so I can include module-specific error types from any number of different modules in our base `Error` type.
-
-[^monad-error]: I used [`MonadError`][MonadError] in this example because that's what I use in my own code, but this works just as well with any other error mechanism including plain old `Either Error a`.
-
-[^structural-subtyping]: Polymorphic variants are probably *the* single feature I miss the most in Haskell compared to OCaml. Extensible records and sum types—coupled with some kind of row polymorphism—are *the* number one feature I want added to Haskell, but I understand that both the design and implementation of row polymorphism in Haskell are substantially more difficult than they seem. 
-
-    Still, one can dream...
-
-[^poor-experience]: I should note that I have *not* used extensible type libraries extensively, but I've evaluated a few in the past. In my experience, these libraries:
-
-      * are far more awkward to use than "normal" algebraic data types
-      * have complex type-level implementations that leak into their APIs and error messages
-      * have inconsistent and generally poor performance
-    
-    While Haskell is theoretically expressive enough to provide extensible types as a library, I believe it is not possible to make them *efficient* or *ergonomic* without language-level support.
     
 [^existential]: If you aren't familiar with existential types, I recommend reading [Mark Karpov's introduction][mark-karpov-existential-types].
 
@@ -222,6 +219,16 @@ This approach lets me wrap *any* type into `SomeError`, so I can include module-
     ```
     
     While this is strictly a matter of style—both declarations define the same type—I believe the GADT-style syntax is *so much clearer* (and more flexible to boot) that the older existential type syntax should be considered obsolete.
+
+I could have combined `Error` and `SomeError` into a single type, but I found that separating the two made the code a bit easier to understand—purely a matter of preference. 
+
+This approach lets me wrap *any* type into `SomeError`, so I can include module-specific error types from any number of different modules in our base `Error` type. In practice, I found it was also useful to include a human-readable tag telling me which module a specific error type came from:
+
+```haskell
+data Error = ParseError Parsec.ParseError
+           | ...
+           | OtherError ModuleName SomeError
+```
 
 [mark-karpov-existential-types]: https://markkarpov.com/post/existential-quantification.html
 [Avro]: https://avro.apache.org/
