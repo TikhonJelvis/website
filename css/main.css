@@ -322,7 +322,14 @@ a > img {
 
 .content div.announcement ul, .content ul, .content ol, .footnotes ul {
     margin-left : 17%;
+}
+
+.content div.announcement ul, .content ul, .footnotes ul {
     list-style : none;
+}
+
+.content ol {
+    list-style : decimal;
 }
 
 .content div.announcement ul li:before, .content ul li:before, .footnotes ul li:before {
