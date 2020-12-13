@@ -9,6 +9,9 @@ Recently, I've revisited how I represent errors in code.
 
 I'm working on a command-line tool used across multiple teams and I want to keep its error messages consistent and readable. As the codebase has grown, I've moved from *ad hoc* error strings throughout my code to a structured error type.
 
+![I never want to see this in my software!](./img/generic-error-message.png "An error 
+popup with the message “An error occurred.”")
+
 Useful error messages need to:
 
   * Contain the information and context to diagnose and fix the problem.
