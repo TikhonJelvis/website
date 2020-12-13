@@ -42,7 +42,7 @@ Contrast this with some less structured alternatives:
   * We could produce a string: `"API Foo v2 failed with a 400 error code."`. But this is missing useful information—we need more details about exactly how the HTTP call failed—and the information it has is hard to extract. If we ever wanted to log or render the error in a new way we would have to parse details out of the string, which would then break if we ever rewrote the ostensibly human-readable string.
 
   * We could ignore the HTTP error and just let the code fail somewhere down the line. I've see in this in real projects! This is how an API error turns into `undefined is not a function`. The only upside with this style is that you feel like a hero once you figure out where the error was *actually* coming from.
-  
+
 These alternatives are easier up-front but limit our information and flexibility in the future. It's almost a stock picture of technical debt: we're making our life marginally easier today in return for harder debugging and refactoring tomorrow.
 
 At heart, this is a matter of **code architecture**: structured errors let us separate the parts of the code are responsible for *producing* errors from the parts that *handle* errors. When we encounter a condition in our code that requires an error, we do not need to think about how the error information will be used. Will it be logged? Will it be displayed to the user as text? Will it be displayed in a UI widget? Will it be caught and handled silently without alerting anyone? We don't answer any of these questions; instead, we raise an error with all the context information that we can and let downstream parts of the code handle it as needed.
@@ -58,10 +58,10 @@ renderApiError ∷ ApiError → Text
 renderApiError e = [__i|
   API response from #{apiName e} (#{apiVersion e}) for customer
   #{customerId e} was missing required fields.
-  
+
   Missing fields:
   #{bulletedList (missingFields e)}
-  
+
   Raw response:
   #{encodeJson (apiResponse e)}
 |]
@@ -155,7 +155,7 @@ So how can we make our `Error` type extensible?
 
 The cleanest solution would be some kind of structural subtyping similar to [OCaml's polymorphic variants][polymorphic-variants][^structural-subtyping]. Unfortunately, we do not have anything like this built into the language, and my experience with libraries implementing extensible types has been uniformly poor[^poor-experience].
 
-[^structural-subtyping]: Polymorphic variants are probably *the* single feature I miss the most in Haskell compared to OCaml. Extensible records and sum types—coupled with some kind of row polymorphism—are *the* number one feature I want added to Haskell, but I understand that both the design and implementation of row polymorphism in Haskell are substantially more difficult than they seem. 
+[^structural-subtyping]: Polymorphic variants are probably *the* single feature I miss the most in Haskell compared to OCaml. Extensible records and sum types—coupled with some kind of row polymorphism—are *the* number one feature I want added to Haskell, but I understand that both the design and implementation of row polymorphism in Haskell are substantially more difficult than they seem.
 
     Still, one can dream...
 
@@ -187,7 +187,7 @@ parseConfig = ...
 Functions in new modules with their own kinds of errors would specify their error type for `a`. For example, if we added support for reading config values from [Avro] records, we would write something like:
 
 ```haskell
-avroConfig ∷ MonadError (Error AvroError) m 
+avroConfig ∷ MonadError (Error AvroError) m
            ⇒ FilePath → Avro.Value → m Config
 avroConfig = ...
 ```
@@ -196,9 +196,10 @@ avroConfig = ...
 
 But how would this extend to multiple modules with their own error type? Would I have to add a parameter to each type (ie `AvroError a`) and chain them together like a type-level list? That sounds tedious and error-prone! Besides, what does specifying each error type in the type variable really get us?
 
-This did not seem like a fruitful design direction.
 
-Instead, I decided to make the "other error" variable existential[^existential]:
+### Existential Types
+
+Using a type variable did not seem like a fruitful design direction. Instead, I decided to make the "other error" variable existential[^existential]:
 
 ```haskell
 data Error = ParseError Parsec.ParseError
@@ -209,20 +210,25 @@ data SomeError where
   SomeError ∷ e → SomeError
 ```
 
-    
+
 [^existential]: If you aren't familiar with existential types, I recommend reading [Mark Karpov's introduction][mark-karpov-existential-types].
 
-    Both my code and Mark's post use the [GADTSyntax] extension for writing existential types. In older code and documentation, you might run into the "normal" syntax instead:
-    
+    Both my code and Mark's post use the [GADTSyntax] extension for writing existential types. In older code and documentation, you might run into the older existential type syntax instead:
+
     ```haskell
     data SomeError = forall e. SomeError e
     ```
-    
-    While this is strictly a matter of style—both declarations define the same type—I believe the GADT-style syntax is *so much clearer* (and more flexible to boot) that the older existential type syntax should be considered obsolete.
 
-I could have combined `Error` and `SomeError` into a single type, but I found that separating the two made the code a bit easier to understand—purely a matter of preference. 
+    While this is strictly a matter of style—both declarations define the same type—I believe the GADT-style syntax is *so much clearer* (and more flexible to boot) that the other syntax should be considered obsolete.
 
-This approach lets me wrap *any* type into `SomeError`, so I can include module-specific error types from any number of different modules in our base `Error` type. In practice, I found it was also useful to include a human-readable tag telling me which module a specific error type came from:
+The `SomeError` type lets me wrap a value of *any* type into an `Error` without needing to manage any visible type variables. Going back to my Avro example, if I have an error `e ∷ AvroError`, I can wrap that into our base `Error` type with `OtherError (SomeError e)`. Now functions in the `AvroConfig` module can have types compatible with the rest of our codebase:
+
+```haskell
+avroConfig ∷ MonadError Error m ⇒ FilePath → Avro.Value → m Config
+avroConfig = ...
+```
+
+In practice, I found it was also useful to include a human-readable tag telling me which module a specific error type came from:
 
 ```haskell
 data Error = ParseError Parsec.ParseError
@@ -230,6 +236,143 @@ data Error = ParseError Parsec.ParseError
            | OtherError ModuleName SomeError
 ```
 
+This led me to a pretty simple pattern for adding new modules: each module defines a dedicated error type as well as a function to throw errors of that type, taking care of all the details to wrap it into an `Error` value:
+
+```haskell
+throw ∷ MonadError Error m ⇒ AvroError → m a
+throw avroError =
+  MonadError.throwError (OtherError "Avro" (SomeError avroError))
+```
+
+### Using Existential Errors
+
+Now that I have a way to *throw* errors of arbitrary structured types, what can I do with them?
+
+With the code I've shown so far? **Nothing**.
+
+The problem is that `SomeError`, as written, can take values of *any* type—and then gives me no way to know what type it contains! That is fundamental to how existential types work, but it means I need to place some restrictions on `SomeError` to make it useful. For every operation I want to perform on errors—rendering to the user, debugging in the interpreter, logging—I need to know that whatever type is hidden inside `SomeError` supports that operation. In Haskell, the best option is to add typeclass constraints to `SomeError`; for example, if I needed to return errors as JSON from some API, I could constrain `SomeError` to only accept arguments of type `e` if the type implemented [`Aeson.ToJSON`][ToJSON]:
+
+```haskell
+data SomeError where
+  SomeError ∷ (Aeson.ToJSON e) ⇒ e → SomeError
+```
+
+One way to think about this is that every single function that consumed `Error` in our original (non-modular) design needs to become a typeclass, because we need to handle values of specific errors added by unknown modules in the future as well as the base `Error` type. So
+
+```haskell
+renderError ∷ Error → Text
+renderError = \case
+  ParseError parseError → [__i|
+    Failed to parse #{sourceName (sourcePos parseError)}:
+    #{show parseError }
+  |]
+  ...
+```
+
+Would be replaced with:
+
+```haskell
+class RenderError e where
+  renderError ∷ e → Text
+
+instance RenderError Error where
+  renderError = \case
+    ParseError parseError → [__i|
+      Failed to parse #{sourceName (sourcePos parseError)}:
+      #{show parseError }
+    |]
+    ...
+    OtherError moduleName error → [__i|
+      #{show moduleName} error:
+      #{renderError error}
+    |]
+```
+
+A typeclass is more complex than a plain function but is also extensible. As a bonus, we can define instances for other common types like `Avro.Value`; this not only avoids code duplication but also helps keep the format of our error messages consistent across the entire codebase.
+
+Apart from rendering to users or to external formats like JSON, we might need a few other classes:
+
+  * `Show` for GHCi and debugging
+  * `LogFormat` if we're using structured logging
+  * `ToElement` if we're displaying errors in an HTML UI
+  * whatever else you need to process errors
+
+Typeclasses let us support multiple ways of consuming errors in a modular way. This makes it reasonably easy to *both* add new error types *and* add new ways of consuming errors. If we add a new error type, the compiler will tell us what instances we need to implement when we wrap the type with `SomeError`; if we add a new typeclass to consume errors, adding that constraint to `SomeError` will point us to all the existing error types across the codebase that need new instances.
+
+### Catching Existential Errors
+
+The last part of the puzzle came up when I went to write tests for my new exceptions. If I have some function in my `AvroConfig` module that I expect to raise a specific `AvroError`, how do I check that it's behaving correctly? I could catch the error, pattern match on `OtherError` and convert the underlying error object to JSON, but this is deeply unsatisfying. The point of using structured errors was that I could use them as normal Haskell values for things like testing; converting to JSON defeats the whole purpose.
+
+To solve this, I borrowed a trick from Haskell's own exception system in [Control.Exception][^simon-marlow-paper]. Our goal is to have a function that tries to extract a specific type of error from `SomeError`; if the `SomeError` is carrying a value of the right type we get `Just` that value and otherwise we get `Nothing`:
+
+```haskell
+fromError ∷ Error → Maybe e
+```
+
+Note how the type variable `e` only exists in the *return* value of `fromError` (just like `read` or `fromInteger`). This isn't a problem if we can infer a concrete type when using `fromError`, but if the context leaves `e` ambiguous, we might need to specify the type explicitly using [`TypeApplications`][TypeApplications]:
+
+```haskell
+fromError @AvroError err
+```
+
+To implement this `fromError` type, we're going to rely on a bit of `Typeable` magic—a capability added to GHC for just this sort of use:
+
+```haskell
+class Typeable e ⇒ CatchableError e where
+  fromError ∷ Error → Maybe e
+  fromError (OtherError _ (SomeError e)) = Typeable.cast e
+  fromError _                            = Nothing
+```
+
+Since we have a default implementation for the only method in this class, writing instances is as simple as:
+
+```
+data AvroError = ...
+
+instance CatchableError AvroError
+```
+
+Finally, we need to add this class to the `SomeError` type. Since `CatchableError` is pretty generic, I also found it was convenient to move every other constraint I had on `SomeError`—`Show`, `RenderError`, `ToJSON`... etc—to be a superclass of `CatchableError`. This is purely a stylistic choice and you could accomplish exactly the same kind of consolidation with a type constraint synonym instead.
+
+These changes give us the following definition of `SomeError`:
+
+```haskell
+data SomeError where
+  SomeError ∷ (CatchableError e) ⇒ e → SomeError
+```
+
+With all the `CatchableError` machinery in place, we can write tests for specific types of errors:
+
+```haskell
+testCase "check specific error" $$ do
+  case failingOperation of
+    Left err → case fromError @ModuleError err of
+      Just got → assert (got == expected)
+      Nothing  → fail "Wrong type of error!"
+    Right res → fail "Expected error but got: " <> show res
+```
+
+This mechanism isn't just there to make tests cleaner—it also lets us catch and handle any type of error. We can write code to catch, inspect and recover from errors that were introduced in domain-specific modules.
+
+### An Error Pattern
+
+With all these pieces in place, we have a pattern for structured extensible errors in Haskell:
+
+  1. Start by defining an `Error` type for your core code.
+  2. When you need modularity, add an existentially typed `SomeError` type.
+  3. In new modules, define module-specific `Error` types and `throw` functions.
+  4. Add typeclasses for each operation you want to perform on your structured errors.
+  5. Define a `CatchableError` class using `Typeable` so that you can extract errors of specific types at runtime.
+
+I did not actually start writing my code with this approach in mind. A single centralized `Error` type served me perfectly well for a long time, and the final pattern evolved after a number of iterations. Getting all the pieces into place required some setup and complexity and I'm not sure this is the "best" design for extensible errors in Haskell, but I've had a great experience using this pattern so far and will use a similar pattern on future projects.
+
+[^simon-marlow-paper]: The design of `Control.Exception` goes back to a paper by Simon Marlow published in *Haskell '06*: [*An Extensible Dynamically-Typed Hierarchy of Exceptions*][haskell-06]
+
+
+[TypeApplications]: https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/glasgow_exts.html#extension-TypeApplications
+[haskell-06]: https://simonmar.github.io/bib/papers/ext-exceptions.pdf
+[Control.Exception]: https://hackage.haskell.org/package/base-4.14.0.0/docs/Control-Exception.html
+[ToJSON]: https://hackage.haskell.org/package/aeson-1.5.4.1/docs/Data-Aeson.html#t:ToJSON
 [mark-karpov-existential-types]: https://markkarpov.com/post/existential-quantification.html
 [Avro]: https://avro.apache.org/
 [polymorphic-variants]: https://caml.inria.fr/pub/docs/manual-ocaml/lablexamples.html#s%3Apolymorphic-variants
