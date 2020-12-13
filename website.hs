@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase                #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE NamedFieldPuns            #-}
 {-# LANGUAGE OverloadedStrings         #-}
@@ -5,7 +6,7 @@
 
 module Main where
 
-import           Control.Monad        (mapM)
+import           Control.Monad        ((>=>), mapM)
 
 import           Data.Char            (toUpper)
 import           Data.Functor         ((<$>))
@@ -17,6 +18,7 @@ import qualified System.Directory     as Dir
 import qualified System.FilePath      as Path
 import           System.FilePath      ((</>))
 
+import           Text.HTML.TagSoup    (Tag (..))
 import qualified Text.Pandoc.Options  as P
 import           Text.Printf          (printf)
 
@@ -97,8 +99,10 @@ defaultPage content = do
     >>= relativizeUrls
 
 runPandoc :: Item String -> Compiler (Item String)
-runPandoc = renderPandocWith readerOptions writerOptions
-  where writerOptions = defaultHakyllWriterOptions
+runPandoc = pandoc >=> titleToAlt
+  where pandoc = renderPandocWith readerOptions writerOptions
+
+        writerOptions = defaultHakyllWriterOptions
          { P.writerHTMLMathMethod = P.MathJax ""
          , P.writerExtensions     = exts
          }
@@ -109,6 +113,25 @@ runPandoc = renderPandocWith readerOptions writerOptions
         exts = P.enableExtension P.Ext_tex_math_single_backslash $
                P.enableExtension P.Ext_all_symbols_escapable $
                P.pandocExtensions
+
+-- | Set the @alt@ of each @img@ tag to the text in its @title@ and
+-- remove the @title@ attribute altogether.
+--
+-- Pandoc doesn't support specifying alt tags and captions separately,
+-- but it does support specifying an img tag's title. This hack lets
+-- me repurpose the title functionality to specify alt tags instead.
+titleToAlt :: Item String -> Compiler (Item String)
+titleToAlt item = pure $ withTags fixImg <$> item
+  where fixImg = \case
+          TagOpen "img" attributes -> TagOpen "img" $ swapTitle attributes
+          other                    -> other
+
+        swapTitle attributes = ("alt", titleText) : clean attributes
+          where clean = filter $ not . oneOf ["alt", "title"]
+                titleText = case List.find (oneOf ["title"]) attributes of
+                  Just ("title", titleText) -> titleText
+                  Nothing                   -> ""
+                oneOf atts (att, _) = att `elem` atts
 
 postContext :: Context String
 postContext = mapContext Path.takeDirectory (urlField "url")

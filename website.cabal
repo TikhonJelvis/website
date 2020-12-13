@@ -12,6 +12,8 @@ cabal-version:       >=1.10
 executable website
   main-is:             website.hs
 
+  ghc-options:         -threaded
+
   other-extensions:    BangPatterns
                      , FlexibleContexts
                      , GeneralizedNewtypeDeriving
@@ -32,6 +34,7 @@ executable website
                      , hakyll
                      , mtl
                      , pandoc
+                     , tagsoup
 
   default-language:    Haskell2010
 
