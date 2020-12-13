@@ -3,6 +3,7 @@ title: Structure your Errors
 author: Tikhon Jelvis
 published: 2020-12-13 00:31:29
 modified: 2020-12-13 00:31:46
+modified: 2020-12-13 13:02:14
 ---
 
 Recently, I've revisited how I represent errors in code.
