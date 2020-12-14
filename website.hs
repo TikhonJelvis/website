@@ -6,7 +6,7 @@
 
 module Main where
 
-import           Control.Monad        ((>=>), mapM)
+import           Control.Monad        ((<=<), forM, mapM)
 
 import           Data.Char            (toUpper)
 import           Data.Functor         ((<$>))
@@ -40,33 +40,24 @@ main = hakyll $ do
   match ("blog/*/*.md" .||. "drafts/*/*.md") $ do
     route $ setExtension "html"
     compile $ getResourceString
-      >>= saveSnapshot "content"
+      >>= saveSnapshot "blurb"
       >>= loadAndApplyTemplate "templates/blog-post.md" context
       >>= defaultPage
 
   match "blog/index.html" $ do
     route   $ setExtension "html"
     compile $ do
-      content <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
-      posts   <- mapM runPandoc content
-      let blogContext = listField "posts" postContext (return posts) <>
-                        constField "title" "Blog" <>
-                        context
+      let blogContext =
+            listField "posts" postContext blogBlurbs <>
+            constField "title" "Blog" <>
+            context
       getResourceString
         >>= applyAsTemplate blogContext
         >>= loadAndApplyTemplate "templates/default.html" blogContext
         >>= relativizeUrls
 
-  let feed render = do
-        route idRoute
-        compile $ do
-          let feedContext = postContext <> bodyField "description"
-          posts    <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "content"
-          pandoced <- mapM runPandoc posts
-          render blogFeedConfig feedContext pandoced
-
-  create ["blog/atom.xml"] $ feed renderAtom
-  create ["blog/rss.xml"]  $ feed renderRss
+  create ["blog/atom.xml"] $ blogFeed renderAtom
+  create ["blog/rss.xml"]  $ blogFeed renderRss
 
   let supportFiles = alternates $ map deep ["img", "js", "fonts", "images"]
   match (supportFiles .||. "*.html" .||. "**/*.html") $ do
@@ -81,14 +72,40 @@ main = hakyll $ do
     route $ setExtension "html"
     compile $ getResourceString >>= defaultPage
  
-blogFeedConfig :: FeedConfiguration
-blogFeedConfig = FeedConfiguration
-    { feedTitle       = "blog | jelv.is" -- TODO: come up with better title!
-    , feedDescription = "My technical blog containing articles about programming languages, functional programming and general CS."
-    , feedAuthorName  = "Tikhon Jelvis"
-    , feedAuthorEmail = "tikhon@jelv.is"
-    , feedRoot        = "http://jelv.is"
-    }
+-- | Render an Atom or RSS feed for my blog.
+blogFeed :: ( FeedConfiguration ->
+              Context String    ->
+              [Item String]     ->
+              Compiler (Item String)
+            )
+         -> Rules ()
+blogFeed render = do
+  route idRoute
+  compile $ render config feedContext =<< blogBlurbs
+  where feedContext = postContext <> bodyField "description"
+        config = FeedConfiguration
+          { feedTitle       = "blog | jelv.is" -- TODO: come up with better title!
+          , feedDescription =
+            "My technical blog containing articles about programming languages, \
+            \functional programming and general CS."
+          , feedAuthorName  = "Tikhon Jelvis"
+          , feedAuthorEmail = "tikhon@jelv.is"
+          , feedRoot        = "http://jelv.is"
+          }
+
+blogBlurbs :: Compiler [Item String]
+blogBlurbs = do
+  blurbs <- recentFirst =<< loadAllSnapshots "blog/*/*.md" "blurb"
+  forM blurbs $ \ blurb ->
+    adjustUrls <$> runPandoc blurb
+  where adjustUrls item = do
+          let path = toFilePath (itemIdentifier item)
+              base = "/" </> Path.takeDirectory path
+          withUrls (toAbsolute base) <$> item
+
+        toAbsolute base path
+          | Path.isRelative path = base </> path
+          | otherwise            = path
 
 defaultPage :: Item String -> Compiler (Item String)
 defaultPage content = do
@@ -99,7 +116,7 @@ defaultPage content = do
     >>= relativizeUrls
 
 runPandoc :: Item String -> Compiler (Item String)
-runPandoc = pandoc >=> titleToAlt
+runPandoc = titleToAlt <=< pandoc
   where pandoc = renderPandocWith readerOptions writerOptions
 
         writerOptions = defaultHakyllWriterOptions
