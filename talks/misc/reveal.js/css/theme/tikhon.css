@@ -42,7 +42,7 @@ body {
     top : 50px;
 }
 
-.reveal .has-dark-background {
+.reveal .has-dark-background h1, .reveal .has-dark-background h2, .reveal .has-dark-background h3 {
     color : #C0D9FB;
 }
 
