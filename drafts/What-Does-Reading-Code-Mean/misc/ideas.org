@@ -1,0 +1,217 @@
+* What does reading code mean?
+** "Code is read more than it is written"
+   - common programming aphorism
+     - cursory search attributes this to a [[https://www.goodreads.com/quotes/835238-indeed-the-ratio-of-time-spent-reading-versus-writing-is][quote by Robert C. Martin
+       in /Clean Code/]]
+
+       #+begin_quote
+       Indeed, the ratio of time spent reading versus writing is well
+       over 10 to 1. We are constantly reading old code as part of the
+       effort to write new code. ...[Therefore,] making it easy to
+       read makes it easier to write.
+       #+end_quote
+
+       I'm sure other people had similar ideas before, but there's a
+       good chance this is what propelled the shorter version of the
+       saying into hacker folklore.
+
+   - general idea: it is worth spending extra thought, time and energy
+     to make code /readable/ when you're writing
+     - this is a generally great idea!
+     - aside: this depends on context, but it's worth spending /some/
+       attention on making even /completely "throw-away" code/ readable
+       - should be a post of its own...
+
+   - however: what does "readable" actually mean?
+     - "easy to understand" is a definite goal but covers more than
+       just readability
+       - aside: conceptual design + mapping between code and
+         concepts/mental models
+     - *people do not read code how they would read a novel*
+       - code is closer to a math textbook than a novel
+       - I have three broad modes for reading code:
+         1. *skimming*
+         2. *reading*
+         3. *close reading*
+            - see [[https://en.wikipedia.org/wiki/Close_reading]["Close Reading" on Wikipedia]]
+     - this should change how we /write/ code
+** People read code in different ways
+   1. skim to navigate
+      - understand logical layout of codebase
+      - find area they're looking for
+   2. read to understand concepts
+      - what is the code supposed to do?
+      - what do constructs /mean/?
+      - how should we /think/ about the system?
+        - concepts
+   3. deep read for details
+      - what does the code /actually/ do?
+      - why is it doing X instead of Y?
+        - debugging
+      - how do we change or improve it?
+        - performance optimization
+        - extending functionality
+        - closely related with high-level reading
+* What does this tell us about /writing/ code?
+  We read code differently than we would read a novel, and in
+  different ways depending on context. We should consider this when
+  writing code.
+** How we should write code
+*** Reading at a glance
+    "Code is read more than it is written, but it's skimmed even more
+    than it's read."
+
+    Code can be read at a glance if we can get a good idea of what the
+    code /means/[fn:1] without:
+      - needing to read the exact code token-by-token
+      - needing to combine a bunch of details in our mind to figure
+        out it out
+
+    Being able to read code at a glance is critical for skimming and
+    important for reading[fn:2] but can be at cross-purposes with
+    close reading.
+
+    Aside: reading code at a glance is why I find syntax highlighting
+    valuable—I can quickly distinguish semantic information
+    (identifiers/etc) from structural elements
+    (syntax/"punctuation"/etc)
+**** Example
+     Java BigNum vs operators[fn:3]
+
+     #+begin_src java
+       final BigDecimal result = a.multiply(x.pow(2)).plus(b.multiply(x.plus(c)));
+     #+end_src
+
+     vs
+
+     #+begin_src java
+       final BigDecimal result = a * (x * x) + b * x + c;
+     #+end_src
+
+     vs
+
+     \begin{equation}
+     \text{result} = ax^2 + bx + c
+     \end{equation}
+
+     General thoughts on operators:
+       - operators are great for giving expressions structure
+         - can control what we emphasize and deemphasize
+         - work well as custom "punctuation"—something that makes
+           sense for code but not for prose
+         - can fade into the background
+           - for a polynomial, it's the terms and coefficients that
+             matter—the operators are there to tell us that it /is/ a
+             polynomial and to visual split up the terms
+
+*** Context
+   General observation: people are good at tracking context.
+     - note about polysemy?
+
+   This maps to the three modes of code reading:
+
+   1. Rely on the /least/ context for skimming
+   2. Rely on /broad/ context for reading
+   3. Rely on /local/ context for close reading
+
+**** Example
+     Haskell allows /qualified imports/.
+
+     /Within/ a module dedicated to a specific concept, we can use
+     shorter identifiers.
+
+     #+begin_src haskell
+       module Theta.Target.Python where
+
+       toReference :: Maybe Python -> Theta.ModuleName -> Theta.Type -> Python
+       toReference = {- ... -}
+
+       toModule :: Theta.Error m => Theta.Module -> Maybe Python -> m Python
+       toModule = {- ... -}
+     #+end_src
+
+     Inside ~Theta.Target.Python~, we know /from context/ that
+     ~toReference~ means "to Python reference"; calling the function
+     ~toPythonReference~ would just make the code harder to read at a
+     glance.
+
+     On the other hand, in a different module—for example the CLI
+     code—we would do:
+
+     #+begin_src haskell
+       module Main where
+
+       import qualified Theta.Target.Python as Python
+
+       runPython :: IO ()
+       runPython = do
+         {- ... -}
+         modules <- traverse Python.toModule moduleFiles
+         {- ... -}
+     #+end_src
+
+** How we /shouldn't/ write code
+*** Code reading like prose is not *inherently* valuable
+    - we don't read code like prose—so why would we want to /write/
+      code like prose?
+    - prose is not great for reading at a glance
+      - skimming paragraphs is much harder than skimming an outline
+      - note how math texts mix text, equations /and/ diagrams/etc
+        - when doing mathy work, I often skim through math texts by
+          looking at equations until I find the area I'm looking for
+      - example: we capitalize (or highlight) SQL keywords /because
+        SQL users with any experience do not read queries like
+        "normal" sentences/!
+    - prose that works like a language is stilted and unnatural to
+      both read and write
+      - we can express the same[fn:4] content in /many/ different ways
+        in prose: prose can /flow/ and gives the writer the
+        flexibility to present ideas in different orders and manners
+        - language-style DSLs—the ones I've seen, at least!—do not
+          have anywhere near this expressiveness!
+      - examples: complex SQL query, COBOL, some Ruby nonsense?
+    - does this mean prose-style DSLs are /always/ bad?
+      - not necessarily—we just need to be cognizant of what the style
+        is accomplishing, rather than aiming for prose-like syntax for
+        its own sake
+      - good example: something in Infer?
+*** Verbose ≠ readable
+    - some communities really do seem to value verbose code for its
+      own sake!
+      - Objective-C, Java... etc
+    - "readable" is not a single atomic concept
+    - what does more verbose code accomplish?
+      - less context needed—/sometimes/ helpful, often unnecessary
+        - maybe we just need better tooling?
+      - harder to read code at a glance
+      - distracting for reading or even /close/ reading
+**** Example
+     #+begin_src objective-c
+       str = [str stringByReplacingOccurrencesOfString:@"string" withString:@"duck"];
+     #+end_src
+
+     vs
+
+     #+begin_src python
+       str = str.replace("string", "duck")
+     #+end_src
+
+     Objective-C snippet from [[https://stackoverflow.com/questions/668228/string-replacement-in-objective-c][StackOverflow]]
+
+* Footnotes
+
+[fn:4] Or /almost/ the same—the exact way we phrase a sentence is a
+surprisingly rich channel for metadata: subtext, emphasis, tone or
+even the author's background (class/education/etc).
+
+[fn:3] Example from [[https://blogs.oracle.com/javamagazine/post/is-it-time-for-operator-overloading-in-java][Is it time for operator overloading in Java?]] in
+Java Magazine
+ 
+[fn:2] How well code reads at a glance depends on what the code
+emphasizes and deemphasizes—doing this well will help people focus on
+the right thing when reading the code.
+
+[fn:1] Each time I say "means", I mean something like "what the code
+/represents/ in the mental model we use to understand the system" or,
+at least, "what the code is /supposed/ to do"—which may or may not be
+identical to what it /actually/ does!
