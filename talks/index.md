@@ -20,6 +20,10 @@ My older slides were produced with a customized version of [org-html5presentatio
 
 ## Programming Languages/Haskell
 
+[Scale by the Bay 2023][sbtb-2023]:
+
+  * [Better Code Design with Types and Concepts](types-and-concepts-2023): how type systems can be a tool for conceptual design, not just correctness.
+
 [Haskell Love 2020][haskell-love-2020]:
 
   * [Reasoning under Uncertainty](haskell-love-2020): an introduction to Markov Decision Processes in Haskell.
@@ -63,7 +67,8 @@ A longer talk at [Hac φ 2013][hac-phi-2013]:
 
   * [Program synthesis](synthesis-slides.html) ([pdf](synthesis-slides.pdf)): a general overview of program synthesis techniques
 
-[haskell-love-2020]: https://haskell.love
+[sbtb-2023]: https://scale.bythebay.io/
+[haskell-love-2020]: https://twitter.com/_haskellove
 [lambda-world-2018]: https://seattle.lambda.world
 [compose-2017]: http://composeconference.org/2017/
 [compose-2017-video]: https://www.youtube.com/watch?v=qZ4O-1VYv4c

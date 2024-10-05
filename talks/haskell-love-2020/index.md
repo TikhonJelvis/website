@@ -14,7 +14,7 @@ My first-ever virtual talk! I gave an introduction to Markov Decision Processes 
   * [slides](slides.html)
   * [video]
 
-[haskell-love]: https://haskell.love
+[haskell-love]: https://twitter.com/_haskellove
 [screenshot]: img/haskell-love-screenshot.png
 [video]: https://www.youtube.com/watch?v=LHlZNYFraAs
 
