@@ -88,6 +88,12 @@
     - look at the code and the type error
       - remember: read the error message!
       - this becomes your starting point
+    - add more type signatures!
+      - "fence in" which parts of the code you are looking at
+      - great way to use information you've figured out
+        - "oh, now I *know* that I wanted a value of type X here, so
+          let me add a type signature..."
+      - this is why it's worth writing top-level type signatures
 **** Two Sides
      - type errors (generally) have two sides:
        - what you /have/
