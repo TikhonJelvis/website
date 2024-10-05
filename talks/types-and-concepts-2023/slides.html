@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Types ⇔ Design</title>
+<meta name="author" content="Tikhon Jelvis"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="../reveal.js-3.8.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="../reveal.js-3.8.0/css/theme/tikhon.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '../reveal.js-3.8.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<meta name="description" content="Static types aren't just about preventing bugs and errors, they can be a powerful tool for code design.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide" data-background="#052d69" data-background-transition="none"><h1 class='title'>Types ⇔ Design</h1> <h2 class='subtitle'></h2> <h3 class='author'>Tikhon Jelvis</h3>
+</section>
+
+<section>
+<section id="slide-orgf8d148b" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orgf8d148b">What <i>is</i> code design?</h2>
+</section>
+</section>
+<section>
+<section id="slide-org7629b0c">
+<h3 id="org7629b0c"></h3>
+<ul class="stacked">
+  <li> <img src="img/clean-code.jpg">
+  <li> <img src="img/domain-driven-design.jpg">
+  <li> <img src="img/design-patterns.jpg">
+  <li> <img src="img/the-pragmatic-programmer.jpg">
+  <li> <img src="img/philosophy-of-software.jpg">
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org900bf89">
+<h3 id="org900bf89"></h3>
+
+<div id="org1b4c700" class="figure">
+<p><img src="./img/essence-of-software.jpg" alt="essence-of-software.jpg" width="400px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org2d5f83b">
+<h3 id="org2d5f83b"></h3>
+
+<div id="org70bbed1" class="figure">
+<p><img src="./img/code-design.svg" alt="code-design.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0134ec4">
+<h3 id="org0134ec4"></h3>
+
+<div id="orgfcba220" class="figure">
+<p><img src="./img/code-design-concepts.svg" alt="code-design-concepts.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org657e38a">
+<h3 id="org657e38a"></h3>
+
+<div id="org2257a81" class="figure">
+<p><img src="./img/code-design-feedback.svg" alt="code-design-feedback.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgce003d2">
+<h3 id="orgce003d2"></h3>
+<p>
+“Programming <i>is</i> planning.”
+</p>
+
+<p class="fragment roll-in">
+Programming <i>is</i> design.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org3b67628">
+<h3 id="org3b67628"></h3>
+
+<div id="org75e20fb" class="figure">
+<p><img src="./img/code-design-point-code.svg" alt="code-design-point-code.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org410e4ac">
+<h3 id="org410e4ac"></h3>
+
+<div id="org409adaa" class="figure">
+<p><img src="./img/code-design-point-concepts.svg" alt="code-design-point-concepts.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgea0f596">
+<h3 id="orgea0f596"></h3>
+
+<div id="org99cb63f" class="figure">
+<p><img src="./img/code-design-distance.svg" alt="code-design-distance.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org8a88487">
+<h3 id="org8a88487"></h3>
+
+<div id="orgaeb2407" class="figure">
+<p><img src="./img/rsync-delete-files.png" alt="rsync-delete-files.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orga694f64">
+<h3 id="orga694f64"></h3>
+<pre class="manual-highlight">
+rsync -r --delete ~/path/a ~/path/b
+</pre>
+
+</section>
+</section>
+<section>
+<section id="slide-org327f945">
+<h3 id="org327f945"></h3>
+<pre class="manual-highlight">
+<span class="a">rsync</span> <span class="b">-r</span> <span class="b">--delete</span> <span class="c">~/path/a</span> <span class="c">~/path/b</span>
+</pre>
+
+</section>
+</section>
+<section>
+<section id="slide-orgeb51e82">
+<h3 id="orgeb51e82"></h3>
+<pre class="manual-highlight">
+<span class="a">rsync</span> -r --delete ~/path/a ~/path/b
+</pre>
+
+</section>
+</section>
+<section>
+<section id="slide-org8a58740">
+<h3 id="org8a58740"></h3>
+<pre class="manual-highlight">
+<span class="a">rsync</span> <span class="b">-r</span> <span class="c">*</span> <span class="c">~/out</span>
+</pre>
+
+<pre class="manual-highlight">
+<span class="a">rsync</span> <span class="b">-r</span> <span class="c">~/path/a</span> <span class="c">~/path/b</span>
+</pre>
+
+</section>
+</section>
+<section>
+<section id="slide-orgeceb353">
+<h3 id="orgeceb353"></h3>
+
+<div id="orge467db8" class="figure">
+<p><img src="./img/delete-file-directory-listing.png" alt="delete-file-directory-listing.png" class="no-background" width="400" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgec9f030">
+<h3 id="orgec9f030"></h3>
+
+<div id="org47e6fe0" class="figure">
+<p><img src="./img/frustrated.svg" alt="frustrated.svg" class="no-background" />
+</p>
+</div>
+
+
+</section>
+</section>
+<section>
+<section id="slide-org437ed1e" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org437ed1e">What are types <i>for</i>?</h2>
+<aside class="notes">
+<p>
+Do we <i>need</i> static types for good design?
+</p>
+
+<p>
+If we don't, what are types <i>for</i>?
+</p>
+
+</aside>
+</section>
+</section>
+<section>
+<section id="slide-org82f2749">
+<h3 id="org82f2749"></h3>
+<div class="horizontal-gallery">
+  <div class="figure">
+    <img src="./img/barrier.svg" class="icon" width="275">
+    <p>bugs</p>
+  </div>
+  <div class="figure">
+    <img src="./img/scaffolding.svg" class="icon" width="275">
+    <p>structure</p>
+  </div>
+  <div class="figure">
+    <img src="./img/blueprint.svg" class="icon" width="275">
+    <p>design</p>
+  </div>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0913c3f">
+<h3 id="org0913c3f"></h3>
+
+<div id="orgc21e167" class="figure">
+<p><img src="./img/barrier.svg" alt="barrier.svg" class="no-background" width="400px" />
+</p>
+</div>
+
+<p>
+“Types catch mistakes”
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org3ff20e3">
+<h3 id="org3ff20e3"></h3>
+
+<div id="orgfca5686" class="figure">
+<p><img src="./img/code-design-point-code.svg" alt="code-design-point-code.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org49c0a1a">
+<h3 id="org49c0a1a"></h3>
+
+<div id="orgf040ecb" class="figure">
+<p><img src="./img/scaffolding.svg" alt="scaffolding.svg" class="no-background" width="400px" />
+</p>
+</div>
+
+<p>
+“Types structure my code”
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb987166">
+<h3 id="orgb987166"></h3>
+
+<div id="org3a0c19e" class="figure">
+<p><img src="./img/code-design-point-code-distance.svg" alt="code-design-point-code-distance.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org9586cb3">
+<h3 id="org9586cb3"></h3>
+
+<div id="orgee31e91" class="figure">
+<p><img src="./img/blueprint.svg" alt="blueprint.svg" class="no-background" width="400px" />
+</p>
+</div>
+
+<p>
+“Types help me think”
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org06df6a4">
+<h3 id="org06df6a4"></h3>
+
+<div id="orge00f1eb" class="figure">
+<p><img src="./img/code-design-types-concepts-feedback.svg" alt="code-design-types-concepts-feedback.svg" class="no-background" width="800px" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org9ba93ec">
+<h3 id="org9ba93ec"></h3>
+<div class="horizontal-gallery">
+
+
+<div id="org074c201" class="figure">
+<p><img src="./img/barrier.svg" alt="barrier.svg" class="icon" />
+</p>
+</div>
+
+
+
+<div id="org1b6ba8f" class="figure">
+<p><img src="./img/scaffolding.svg" alt="scaffolding.svg" class="icon" />
+</p>
+</div>
+
+
+<div id="orgb4364fd" class="figure">
+<p><img src="./img/blueprint.svg" alt="blueprint.svg" class="icon" />
+</p>
+</div>
+
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc6cbd6a">
+<h3 id="orgc6cbd6a"></h3>
+<p>
+Information hiding:
+</p>
+
+<p>
+abstract over <b>implementation</b>
+</p>
+
+<p>
+::
+</p>
+
+<p>
+Static types:
+</p>
+
+<p>
+abstract over <b>runtime</b>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org8587255">
+<h3 id="org8587255"></h3>
+
+<div id="org4a9098d" class="figure">
+<p><img src="./img/abstract-interpretation-traces.svg" alt="abstract-interpretation-traces.svg" class="no-background" width="600" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org0037cd8">
+<h3 id="org0037cd8"></h3>
+
+<div id="org7e336bb" class="figure">
+<p><img src="./img/abstract-interpretation-approximation.svg" alt="abstract-interpretation-approximation.svg" class="no-background" width="600" />
+</p>
+</div>
+
+<p>
+a different sort of abstraction
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orga9c5132">
+<h3 id="orga9c5132"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FF6400;">encode</span> <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Image</span> <span style="color: #8DA6CE;">RGB</span> <span style="color: #FF6400;">-&gt;</span> <span style="color: #8DA6CE;">ByteString</span>
+<span style="color: #FF6400;">encode</span> <span style="color: #FF6400;">=</span> <span style="color: #FBDE2D;">_</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb550b3b">
+<h3 id="orgb550b3b"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FF6400;">encode</span> <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Image</span> <span style="color: #8DA6CE;">RGB</span> <span style="color: #FF6400;">-&gt;</span> <span style="color: #8DA6CE;">ByteString</span>
+<span style="color: #FF6400;">encode</span> <span style="color: #FF6400;">=</span> <span style="color: #FBDE2D;">_</span>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FF6400;">colorSpace</span> <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Image</span> <span style="color: #8DA6CE;">RGB</span> <span style="color: #FF6400;">-&gt;</span> <span style="color: #8DA6CE;">Image</span> <span style="color: #8DA6CE;">YCbCr</span>
+<span style="color: #FF6400;">colorSpace</span> <span style="color: #FF6400;">=</span> <span style="color: #FBDE2D;">_</span>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FF6400;">downsample</span> <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Image</span> <span style="color: #8DA6CE;">YCbCr</span> 
+           <span style="color: #FF6400;">-&gt;</span> <span style="color: #8DA6CE;">Downsampled</span>
+<span style="color: #FF6400;">downsample</span> <span style="color: #FF6400;">=</span> <span style="color: #FBDE2D;">_</span>
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FF6400;">blocks</span> <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Downsampled</span> 
+       <span style="color: #FF6400;">-&gt;</span> [<span style="color: #8DA6CE;">Downsampled</span>]
+<span style="color: #FF6400;">blocks</span> <span style="color: #FF6400;">=</span> <span style="color: #FBDE2D;">_</span>
+</code></pre>
+</div>
+
+<p>
+&#x2026;
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org0f8f175">
+<h3 id="org0f8f175"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">Image</span> space <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">Image</span>
+  { pixels <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Vector</span> space }
+
+<span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">Downsampled</span> <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">Downsampled</span>
+  { y  <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Vector</span> <span style="color: #8DA6CE;">Word8</span>
+  , cb <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Vector</span> <span style="color: #8DA6CE;">Word8</span>
+  , cr <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">Vector</span> <span style="color: #8DA6CE;">Word8</span>
+  }
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org096519d">
+<h3 id="org096519d"></h3>
+
+<div id="org0e75f98" class="figure">
+<p><img src="./img/foundations-of-rl.jpg" alt="foundations-of-rl.jpg" width="500" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orge468bf9">
+<h3 id="orge468bf9"></h3>
+
+<div id="orge9e6a8c" class="figure">
+<p><img src="./img/mdp-definition.jpg" alt="mdp-definition.jpg" width="900" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orga1da987">
+<h3 id="orga1da987"></h3>
+
+<div id="org60b40d0" class="figure">
+<p><img src="./img/mp-definition.jpg" alt="mp-definition.jpg" width="500" />
+</p>
+</div>
+
+
+<div id="org3c98032" class="figure">
+<p><img src="./img/mrp-definition.jpg" alt="mrp-definition.jpg" width="500" />
+</p>
+</div>
+
+
+</section>
+</section>
+<section>
+<section id="slide-orge73a26d">
+<h3 id="orge73a26d"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MarkovProcess</span> m s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> m s
+}
+
+<span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MarkovRewardProcess</span> m s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MRP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> m (r, s)
+}
+
+<span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MDP</span> m a s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MDP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> a <span style="color: #FF6400;">-&gt;</span> m (r, s)
+}
+
+<span style="color: #FBDE2D;">type</span> <span style="color: #8DA6CE;">Policy</span> s a <span style="color: #FF6400;">=</span> s <span style="color: #FF6400;">-&gt;</span> a
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf1a87e4">
+<h3 id="orgf1a87e4"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MarkovProcess</span> m s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> m s
+}
+
+<span style="color: #FBDE2D;">type</span> <span style="color: #8DA6CE;">MarkovRewardProcess</span> m s <span style="color: #FF6400;">=</span>
+  <span style="color: #8DA6CE;">MarkovProcess</span> (<span style="color: #8DA6CE;">WriterT</span> <span style="color: #8DA6CE;">Reward</span> m) s
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orge32e9c2">
+<h3 id="orge32e9c2"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim><span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MDP</span> m a s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MDP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> a <span style="color: #FF6400;">-&gt;</span> m s
+}
+
+<span style="color: #FF6400;">apply</span> <span style="color: #FF6400;">::</span> <span style="color: #8DA6CE;">MDP</span> m a s 
+      <span style="color: #FF6400;">-&gt;</span> <span style="color: #8DA6CE;">Policy</span> s a 
+      <span style="color: #FF6400;">-&gt;</span> <span style="color: #8DA6CE;">MarkovProcess</span> m s
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org414544e">
+<h3 id="org414544e"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim>         <span style="color: #FF6400;">&#9663;</span>
+<span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MDP</span> m a s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MDP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> a <span style="color: #FF6400;">-&gt;</span> m s
+}
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc1a6180">
+<h3 id="orgc1a6180"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim>           <span style="color: #FF6400;">&#9663;</span>
+<span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MDP</span> m a s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MDP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> a <span style="color: #FF6400;">-&gt;</span> m s
+}
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org009e94a">
+<h3 id="org009e94a"></h3>
+<div class="org-src-container">
+
+<pre  class="src src-haskell"   ><code trim>             <span style="color: #FF6400;">&#9663;</span>
+<span style="color: #FBDE2D;">data</span> <span style="color: #8DA6CE;">MDP</span> m a s <span style="color: #FF6400;">=</span> <span style="color: #8DA6CE;">MDP</span> {
+  step <span style="color: #FF6400;">::</span> s <span style="color: #FF6400;">-&gt;</span> a <span style="color: #FF6400;">-&gt;</span> m s
+}
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgbf22254">
+<h3 id="orgbf22254"></h3>
+<p>
+So, what did static typing get us?
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orge56d7ba">
+<h3 id="orge56d7ba"></h3>
+<p class="fragment roll-in">
+simplify our <b>conceptual model</b>
+</p>
+
+<p class="fragment roll-in">
+feedback <b>before we had runnable code</b>
+</p>
+
+<p class="fragment roll-in">
+<b>interactive</b> support as we program
+</p>
+
+<p class="fragment roll-in">
+<b>high-level</b> guide to our conceptual model
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org101f41c" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org101f41c">Where does this take us?</h2>
+</section>
+</section>
+<section>
+<section id="slide-org31f9c9a">
+<h3 id="org31f9c9a">Type-Driven Development</h3>
+<p class="fragment roll-in">
+Concepts ⇒ Types ⇒ Code
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org567c429">
+<h3 id="org567c429"></h3>
+
+<div id="org5e5d33e" class="figure">
+<p><img src="./img/how-statically-typed-programmers-write-code.png" alt="how-statically-typed-programmers-write-code.png" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org13db966">
+<h3 id="org13db966">Domain Driven Design?</h3>
+
+<div id="org606c302" class="figure">
+<p><img src="./img/domain-driven-design-made-functional.jpg" alt="domain-driven-design-made-functional.jpg" width="600" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf921223">
+<h3 id="orgf921223">Dependent Types?</h3>
+
+<div id="orgd178f1e" class="figure">
+<p><img src="./img/type-driven-development-with-idris.jpg" alt="type-driven-development-with-idris.jpg" width="600" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org9bacf10">
+<h3 id="org9bacf10">LLM Code Generation</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org61e3fb3">
+<h3 id="org61e3fb3"></h3>
+<p>
+Today: boilerplate, bad code, no design, no verification
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc9def2b">
+<h3 id="orgc9def2b"></h3>
+<p>
+Tomorrow: better tools, good design, verification?
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgcb496e1" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orgcb496e1">Our tools should help us think</h2>
+</section>
+</section>
+</div>
+</div>
+<p> Created by Tikhon Jelvis. </p>
+<script src="../reveal.js-3.8.0/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+controls:false, center:true, progress:false, transition:"none", autoAnimate: false,
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: '../reveal.js-3.8.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js-3.8.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js-3.8.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+
+</script>
+</body>
+</html>
