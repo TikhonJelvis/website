@@ -73,9 +73,14 @@
         - instead, think about:
           - what constrains the types in this part of the code
           - what you might want to change to make them consistent
-    - note: this is especially visible with typeclasses
+    - note: this is especially visible (and important!) with
+      typeclasses
       - we even talk about "typeclass constraints"!
       - TODO typeclass example
+      - some common "typeclass traps":
+        - numeric literals (Num/etc)
+        - ~Foldable~
+        - overloaded lists/strings/etc?
 ** Divide and Conquer
 *** Why?
     - Okay, so you're thinking in constraints... but what do you
