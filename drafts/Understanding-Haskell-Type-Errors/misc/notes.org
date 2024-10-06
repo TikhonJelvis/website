@@ -4,3 +4,8 @@
      - see also: [[https://github.com/haskell/error-messages][Haskell Errors on GitHub]]
 ** "Why is Haskell so Hard?" presentation
    - [[https://www.slideshare.net/slideshow/why-is-haskell-so-hard-and-how-to-deal-with-it-194330350/194330350#28][See slides on type inference and error messages]]
+** Error Message Research
+   - [[https://dl.acm.org/doi/10.1145/3138818]["Learning to blame: localizing novice type errors with data-driven diagnosis"]]
+   - [[https://dl.acm.org/doi/10.1145/3344429.3372508]["Compiler Error Messages Considered Unhelpful: The Landscape of
+     Text-Based Programming Error Message Research"]]
+     - big survey paper on compiler error messages, lots of references
