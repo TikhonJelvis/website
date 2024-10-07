@@ -9,3 +9,10 @@
    - [[https://dl.acm.org/doi/10.1145/3344429.3372508]["Compiler Error Messages Considered Unhelpful: The Landscape of
      Text-Based Programming Error Message Research"]]
      - big survey paper on compiler error messages, lots of references
+** Edge Cases
+   - Num/etc
+   - Monad instance for (->)
+     - thanks to [[https://discourse.haskell.org/u/atravers][atravers]] on Discord
+   - scoped type variable off by default
+     - [[https://github.com/haskell/error-messages/issues/6][extended example on GitHub]]
+     - Thanks to [[https://discourse.haskell.org/u/olf][olf]] on Discord
