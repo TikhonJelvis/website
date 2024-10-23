@@ -68,13 +68,13 @@ Haskell errors are verbose because they try to present all the information you'd
 Here's a simple type error message from one of my projects with its three distinct parts highlighted in different colors:
 
 <pre class="error">
-  <code>
-    <span class="error-heading">src/Theta/Target/Python.hs:130:50: warning: [-Wdeferred-type-errors] …</span>
-        <span class="error-message">• Couldn't match expected type ‘Theta.Type’ with actual type ‘()’</span>
-        <span class="error-location">• In the third argument of ‘toReference’, namely ‘()’</span>
-          <span class="error-location">In the expression: toReference prefix currentModule ()</span>
-          <span class="error-location">In an equation for ‘type_’:</span>
-              <span class="error-location">type_ = toReference prefix currentModule ()</span>
+<code>
+<span class="error-heading">src/Theta/Target/Python.hs:130:50: warning: [-Wdeferred-type-errors] …</span>
+    <span class="error-message">• Couldn't match expected type ‘Theta.Type’ with actual type ‘()’</span>
+    <span class="error-location">• In the third argument of ‘toReference’, namely ‘()’</span>
+      <span class="error-location">In the expression: toReference prefix currentModule ()</span>
+      <span class="error-location">In an equation for ‘type_’:</span>
+      <span class="error-location">type_ = toReference prefix currentModule ()</span>
   </code>
 </pre>
 
@@ -173,9 +173,8 @@ However, sometimes even "normal" errors are confusing in context. Here are a few
 
 Haskell's interpreter implicitly uses `show` to turn Haskell values into strings. If you evaluate an expression that does not have a `Show` instance, you get an error. The most common case is forgetting a function parameter:
 
-``` haskell
+``` ghci
 λ> foldr (+) 0
-
 <interactive>:3:1: error:
     • No instance for (Show ([Integer] -> Integer))
         arising from a use of ‘print’
@@ -191,9 +190,8 @@ Haskell numeric literals are *overloaded* by default: the expression `42` does n
 
 This means that if you write an arithmetic expression involving some non-numeric type, you get an error about a missing instance:
 
-``` haskell
+``` ghci
 λ> 1 + True
-
 <interactive>:4:3: error:
     • No instance for (Num Bool) arising from a use of ‘+’
     • In the expression: 1 + True
@@ -202,13 +200,12 @@ This means that if you write an arithmetic expression involving some non-numeric
 
 And hey, in principle, you *could* write a `Num` instance for `Bool`! It would just be an awful idea. What this really means is that `Bool` is not a number so you can't use it in arithmetic. And this error message was even *more* confusing in older versions of GHC—GHC is improving all the time so, unless you have a specific reason, it's worth using one of the latest releases.
 
-[^num-instances-discourse]: The common problem with `Num` instnces was suggested by [jackdk on Discourse](https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/8)
+[^num-instances-discourse]: The common problem with `Num` instances was suggested by [jackdk on Discourse](https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/8)
 
 Extensions like `OverloadedStrings` and `OverloadedLists` make their corresponding literals behave in similar ways.
 
-``` haskell
+``` ghci
 λ> "abc" && True
-
 <interactive>:13:1: error:
     • No instance for (Data.String.IsString Bool)
         arising from the literal ‘"abc"’
@@ -219,10 +216,9 @@ Extensions like `OverloadedStrings` and `OverloadedLists` make their correspondi
 
 As a general rule, error messages get worse as code gets more polymorphic. It's easy to accidentally run into this problem with overloaded literals.
 
-``` haskell
+``` ghci
 λ> :set -XOverloadedStrings
 λ> "abc" + 1
-
 <interactive>:15:1: error:
     • Ambiguous type variable ‘a0’ arising from a use of ‘print’
       prevents the constraint ‘(Show a0)’ from being solved.
@@ -240,10 +236,9 @@ As a general rule, error messages get worse as code gets more polymorphic. It's 
 
 Good rule of thumb: if you run into a confusing error message involving weird type variables and class constraints, and it's pointing to an expression involving a string, list or numeric literal, the literal could be the problem. If you know what the type *should* be, you can add an explicit type signature:
 
-``` haskell
+``` ghci
 λ> :set -XOverloadedStrings
 λ> ("abc" :: String) + 1
-
 <interactive>:17:19: error:
     • No instance for (Num String) arising from a use of ‘+’
     • In the expression: ("abc" :: String) + 1
