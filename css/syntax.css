@@ -43,3 +43,11 @@ pre.sourceCode span.al { color: red; }
 pre.sourceCode span.fu { color: #380A7D; }
 pre.sourceCode span.re { }
 pre.sourceCode span.er { color: red; }
+
+/* Manual syntax highlighting for error messages */
+pre.error span { padding-left: 2px; padding-right: 2px; }
+
+pre.error span.error-heading { background: #E6D4B3; }
+pre.error span.error-message { background: #DBE6B3; }
+pre.error span.error-suggestion { background: #B3D8E6; }
+pre.error span.error-location { background: #E6B9B3; }
