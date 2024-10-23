@@ -1,28 +1,32 @@
 {-# LANGUAGE LambdaCase                #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE NamedFieldPuns            #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE ViewPatterns              #-}
 
 module Main where
 
-import           Control.Monad        ((<=<), forM, mapM)
+import           Control.Monad          (forM, mapM, (<=<))
 
-import           Data.Char            (toUpper)
-import           Data.Functor         ((<$>))
-import qualified Data.List            as List
-import           Data.Monoid          ((<>), mconcat)
-import           Data.String          (fromString)
+import qualified Data.Char              as Char
+import           Data.Functor           ((<$>))
+import qualified Data.List              as List
+import           Data.Monoid            (mconcat, (<>))
+import           Data.String            (fromString)
 
-import qualified System.Directory     as Dir
-import qualified System.FilePath      as Path
-import           System.FilePath      ((</>))
+import qualified System.Directory       as Dir
+import           System.FilePath        ((</>))
+import qualified System.FilePath        as Path
 
-import           Text.HTML.TagSoup    (Tag (..))
-import qualified Text.Pandoc.Options  as P
-import           Text.Printf          (printf)
+import           Text.HTML.TagSoup      (Tag (..))
+import           Text.Pandoc.Definition (Block (..), Pandoc)
+import qualified Text.Pandoc.Generic    as Pandoc
+import qualified Text.Pandoc.Options    as P
+import           Text.Printf            (printf)
 
 import           Hakyll
+
+import           Debug.Trace
 
 infixl 1 <&>
 (<&>) :: Functor f => f a -> (a -> b) -> f b
@@ -67,11 +71,11 @@ main = hakyll $ do
   match (deep "css") $ do
     route   idRoute
     compile compressCssCompiler
-      
+
   match ("*.md" .||. "**/*.md") $ do
     route $ setExtension "html"
     compile $ getResourceString >>= defaultPage
- 
+
 -- | Render an Atom or RSS feed for my blog.
 blogFeed :: ( FeedConfiguration ->
               Context String    ->
@@ -117,7 +121,10 @@ defaultPage content = do
 
 runPandoc :: Item String -> Compiler (Item String)
 runPandoc = titleToAlt <=< pandoc
-  where pandoc = renderPandocWith readerOptions writerOptions
+  where pandoc item = writePandocWith writerOptions
+                  <$> (fmap pandocFilters <$> readPandocWith readerOptions item)
+
+        pandocFilters = ghciCodeBlocks
 
         writerOptions = defaultHakyllWriterOptions
          { P.writerHTMLMathMethod = P.MathJax ""
@@ -130,6 +137,43 @@ runPandoc = titleToAlt <=< pandoc
         exts = P.enableExtension P.Ext_tex_math_single_backslash $
                P.enableExtension P.Ext_all_symbols_escapable $
                P.pandocExtensions
+
+-- | Have custom processing for @ghci@ code blocks as part of pandoc
+-- compilation.
+ghciCodeBlocks :: Pandoc -> Pandoc
+ghciCodeBlocks = Pandoc.topDown renderBlock
+  where renderBlock :: Block -> Block
+        renderBlock block@(CodeBlock (_, classes, _) contents)
+          | "ghci" `elem` classes =
+            RawBlock "html" $ ghciHtml contents
+          | otherwise             = block
+        renderBlock block = block
+
+        ghciHtml :: String -> String
+        ghciHtml contents = "<pre class='ghci'><code>" <> wrap contents <> "</code></pre>"
+
+        prompt = "λ>"
+
+        wrap = trimNewlines' . unlines . map (highlight . escape) . lines
+        highlight line
+          | List.isPrefixOf (escape prompt) line = wrapSpan "ghci-input" line
+          | all Char.isSpace line                = line
+          | otherwise                            = wrapSpan "ghci-output" line
+        wrapSpan class_ line =
+          "<span class='" <> class_ <> "'>" <> line <> "</span>"
+        trimNewlines' text = trimNewlines text
+        trimNewlines "" = ""
+        trimNewlines text
+          | head text == '\n' && last text == '\n' = tail (init text)
+          | head text == '\n'                      = tail text
+          | last text == '\n'                      = init text
+          | otherwise                              = text
+
+        escape :: String -> String
+        escape = concatMap $ \case
+          '<' -> "&lt;"
+          '>' -> "&gt;"
+          x   -> [x]
 
 -- | Set the @alt@ of each @img@ tag to the text in its @title@ and
 -- remove the @title@ attribute altogether.
@@ -147,7 +191,7 @@ titleToAlt item = pure $ withTags fixImg <$> item
           where clean = filter $ not . oneOf ["alt", "title"]
                 titleText = case List.find (oneOf ["title"]) attributes of
                   Just ("title", titleText) -> titleText
-                  Nothing                   -> ""
+                  _                         -> ""
                 oneOf atts (att, _) = att `elem` atts
 
 postContext :: Context String
