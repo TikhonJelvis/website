@@ -26,8 +26,6 @@ import           Text.Printf            (printf)
 
 import           Hakyll
 
-import           Debug.Trace
-
 infixl 1 <&>
 (<&>) :: Functor f => f a -> (a -> b) -> f b
 (<&>) = flip (<$>)
@@ -152,15 +150,17 @@ ghciCodeBlocks = Pandoc.topDown renderBlock
         ghciHtml :: String -> String
         ghciHtml contents = "<pre class='ghci'><code>" <> wrap contents <> "</code></pre>"
 
-        prompt = "λ>"
+        prompt = escape "λ>"
 
         wrap = trimNewlines' . unlines . map (highlight . escape) . lines
         highlight line
-          | List.isPrefixOf (escape prompt) line = wrapSpan "ghci-input" line
-          | all Char.isSpace line                = line
-          | otherwise                            = wrapSpan "ghci-output" line
+          | List.isPrefixOf prompt line = wrapSpan "ghci-input" $ highlightPrompt line
+          | all Char.isSpace line       = line
+          | otherwise                   = wrapSpan "ghci-output" line
         wrapSpan class_ line =
           "<span class='" <> class_ <> "'>" <> line <> "</span>"
+        highlightPrompt line =
+          "<span class='ghci-prompt'>" <> prompt <> "</span>" <> drop (length prompt) line
         trimNewlines' text = trimNewlines text
         trimNewlines "" = ""
         trimNewlines text

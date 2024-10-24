@@ -49,14 +49,23 @@ pre.ghci {
   padding: 0px;
   line-height: 15px;
 }
-pre.ghci span {
+pre.ghci span.ghci-input, pre.ghci span.ghci-output {
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
   padding: 4px 20px;
 }
-pre.ghci span.ghci-input { background: #B3D8E6; }
-pre.ghci span.ghci-output { background: #E6D4B3; }
+
+pre.ghci span.ghci-prompt {
+  font-weight: bold;
+  color: #053d89;
+}
+pre.ghci span.ghci-input {
+  background: #B3D8E6;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+pre.ghci span.ghci-output { }
 
 /* Manual syntax highlighting for error messages */
 pre.error span { padding-left: 2px; padding-right: 2px; }
