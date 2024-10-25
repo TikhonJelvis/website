@@ -189,11 +189,11 @@ a > img {
     margin-top : -4px;
 }
 
-.content strong {
+strong {
     font-weight : bold;
 }
 
-.content em {
+em {
     font-style : italic;
 }
 
