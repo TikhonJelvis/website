@@ -3,15 +3,15 @@ title: Debugging Haskell Type Errors
 author: Tikhon Jelvis
 ---
 
-Fixing Haskell type errors can be *hard*. Back when I was learning Haskell, dealing with type errors was the first real obstacle I had to overcome. I've seen exactly the same tendency with every Haskell beginner I've taught since.
+Fixing Haskell type errors can be *hard*. Learning how to understand and fix type errors was the first real obstacle I faced when I first picked up the language. I've seen the same tendency with every Haskell beginner I've taught.
 
 With a bit of experience, I got used to the quirks of GHC's typechecker and Haskell's standard library so most errors became easy to resolve. Most *but not all*. Worse yet, the intuition that helped me in easier cases did not scale to harder errors; instead, fixing these hard errors took a frustrating amount of time, thinking and trial-and-error. I did not have a mental toolkit for debugging confusing type errors.
 
 Haskell type errors are not unique in this regard—I had exactly the same experience with debugging in general. When I started programming all bugs were hard; I quickly built up an intuition for fixing *most* bugs; but I did not have the mental tools to deal with hard bugs, leaving me hitting my head against a metaphorical wall when I couldn't guess the cause of a bug up-front.
 
-Once I realized that debugging *was a skill I could learn*, I improved substantially by approaching bugs systematically. I slowed down, stopped making baseless assumptions and instead approached problems step-by-step, following some simple principles.
+I was missing one key insight: **you can approach debugging systematically**. Debugging is a skill you can learn. Realizing this, my approach to debugging improved significantly: I slowed down, stopped making baseless assumptions and instead approached problems step-by-step, following some simple principles.
 
-There is an important parallel here. Just like other sorts of bugs, **we can solve Haskell type errors systematically**. Fixing type errors is a skill, and it's a skill we can improve by slowing down and leaning on three simple principles:
+Just like general debugging, **we can approach Haskell type errors systematically**. Fixing type errors is a skill you can learn. Let's look at a simple framework for fixing type errors by following three principles:
 
  1. **Read the error**
  2. **Think in constraints**
@@ -22,7 +22,11 @@ There is an important parallel here. Just like other sorts of bugs, **we can sol
 </div>
 <div class="content">
 
-Systematic debugging is something I only learned after years and years of programming. At first, I did not even realize debugging was a skill that could be learned—or taught. At some point I learned[^js-talk] to debug systematically, along with some principles[^nine-rules] I could follow to solve problems step-by-step rather than thrashing around until I stumbled onto the solution. We can approach Haskell type errors with the same mindset.
+Systematic debugging is something I only learned almost a decade after I first started programming. In hindsight, it's a bit surprising—none of the tutorials, books, online discussions or college courses I took ever treated debugging as a concrete skill, much less taught any techniques or approaches. At the same time, debugging is easily one of the most important skills for any sort of programmer; everyone from the hobbyist to the academic to the professional spends at least as much time and effort debugging as they do writing code.
+
+The first time I heard anyone talk about debugging as a systematic skill was during a learning session as part of an internship.[^js-talk] Shortly afterwards, somebody recommended a book[^nine-rules] which had nine “rules”—more like general principles—for debugging. By following these principles, I could solve problems step-by-step rather than thrashing around until I stumbled onto the solution.
+
+We can approach Haskell type errors with the same mindset.
 
 [^js-talk]: The first time I saw anybody talk about debugging *as a skill* was in a talk as part of Jane Street's internship program—unfortunately, more than a decade later, I don't remember exactly who gave the talk. At that point I had taken three years of CS courses at Berkeley and none of them ever touched on debugging like this; in hindsight, I would say this was the biggest missing piece in my CS education.
 
@@ -30,7 +34,7 @@ Systematic debugging is something I only learned after years and years of progra
 
 [debugging-book]: https://debuggingrules.com/?page_id=31
 
-In this spirit, here are the three principles—rules—I use to deal with harder type errors:
+In this spirit, here are the three principles I use to deal with harder type errors:
 
   1. **Read the error**: when you load your code and see a bunch of red text, don't panic. Stop and read the errors—the error messages are the compiler's best attempt to tell you what's going on, and they're where we will start our debugging process.
   2. **Think in constraints**: Haskell's type system works like a set of constraints (and type *inference* works like constraint solving). When you see an error, read it as “here is an *inconsistency* in your code's type” and not “here is exactly where your code is *wrong*”.
@@ -46,9 +50,9 @@ Let's dive into each principle and see how to put them into action.
 
 First step: when you see an error, *read the error*.
 
-If there are multiple errors, *read all of them*. Or at least give them a skim. The first error you get is not necessarily the best error to start with.
+If there are multiple errors, *read all of them*—or at least give them a skim. The first error you get is not necessarily the best error to start with.
 
-This might sound obvious but, in practice, it isn't. Everyone I've mentored started out with a tendency to jump straight to their code as soon as they saw any errors. I've caught myself doing the same thing sometimes! Error messages are a bit intimidating; it feels like you've done something wrong. Wanting to fix it immediately is a natural instinct.
+This might sound obvious but, in practice, it isn't. Everyone I've mentored started out with a tendency to jump straight to their code as soon as they saw any errors. I've caught myself doing the same thing! Error messages are a bit intimidating; it feels like you've done something wrong. Wanting to fix it immediately is a natural impulse.
 
 Instead of seeing errors as criticism, we should see them as *hints*—the compiler is trying to help us! There's an interesting UX challenge here: can we design an interface that makes errors seem helpful by default?
 
@@ -58,7 +62,7 @@ Unfortunately, Haskell error messages are not prefect—they can be hard to read
 
 Haskell error messages get verbose *quickly*. Each error produces a lot of noise.
 
-Haskell errors are verbose because they try to present all the information you'd need in a vacuum. An error message may have a number of parts:
+Haskell errors are verbose because they try to present all the information you'd need in a vacuum. Most error messages will have several parts giving distinct information, like:
 
  * the error itself
  * additional context about the error
@@ -93,7 +97,7 @@ If you're using an editor that highlights errors in place, none of the location 
 
 So: the first trick to reading Haskell type errors is to mentally filter out the bits that don't matter—which is often *most* of the message! Hopefully we will get a flag to slim down error messages in the future.
 
-More involved code can produce even more noise. A slightly different type error in the same `Python.hs` file, for example, produce *42 lines of localization information*[^42-lines]—none of which was useful because my editor highlighted the exact part of the code I needed to look at!
+More involved code can produce even more noise. A slightly different type error in the same `Python.hs` file, for example, produced *42 lines of localization information*[^42-lines]—none of which was useful because my editor highlighted the exact part of the code I needed to look at!
 
 [^deferred-errors]: This type error is actually a *warning* because I have the `-Wdeferred-type-errors` flag turned on. This flag is great for development because it lets the compiler surface more type errors and lets you experiment with the working parts of your code even if other parts don't typecheck.
 
@@ -151,136 +155,131 @@ More involved code can produce even more noise. A slightly different type error 
     </code>
   </pre>
 
-Once you cut through the noise, most Haskell type errors are pretty good. This example is pretty clear: I need to replace the `()` value with a `Theta.Type` value.
+Once you cut through the noise, most Haskell type errors are pretty good. For example this—somewhat artificial—error is clear: I need to replace the `()` with a value of the type `Theta.Type`.
 
-### Localization is hard
+Of course, some errors will not be nearly as clear. Perhaps the message itself is confusing or there are several errors and it is not clear which one to start from. Other times, the error *attribution* is wrong: either the error is pointing to the wrong part of the code, or the error cause itself is misleading. (We'll talk more about attribution and localization in later sections.)
 
-And even if we're dealing with a tricky case—the error points to the wrong part of the code or perhaps the message itself makes no sense—the error message gives us our only real starting point. We can only apply our other principles *after reading the message*. The error tells us **which constraints are inconsistent** and gives us a launching point **to divide and conquer**.
+However, even in those cases, the error messages are still worth reading. The messages might not point us to a solution directly, but they still give us information. One of my personal debugging principles is to start debugging by getting all the information I can out of a system; for Haskell type errors, the error messages are the only starting information we get.
 
-<!-- TODO: Some sort of example here? Or not.-->
-
-### Common edge cases
-
-Haskell has some rough edges which can lead to confusing error messages.
-
-When the error *itself* is weird—not just a "normal" type error but something else—the [Haskell error index][haskell-error-index] is a great resource. You can search for the exact error you're seeing and get a detailed explanation of what's going on.
-
-[haskell-error-index]: https://errors.haskell.org/
-
-However, sometimes even "normal" errors are confusing in context. Here are a few that you might encounter (sourced [from the community][error-discourse-thread]).
-
-#### No `Show` instance
-
-Haskell's interpreter implicitly uses `show` to turn Haskell values into strings. If you evaluate an expression that does not have a `Show` instance, you get an error. The most common case is forgetting a function parameter:
-
-``` ghci
-λ> foldr (+) 0
-<interactive>:3:1: error:
-    • No instance for (Show ([Integer] -> Integer))
-        arising from a use of ‘print’
-        (maybe you haven't applied a function to enough arguments?)
-    • In a stmt of an interactive GHCi command: print it
-```
-
-In GHCi, `it` is a variable that refers to the expression you just entered and `print` is a function that GHCi implicitly calls on `it` in order to render the result.
-
-#### Overloaded literals
-
-Haskell numeric literals are *overloaded* by default: the expression `42` does not have to be an `Integer`, it can be *any* type that has a `Num` instance[^num-instances-discourse].
-
-This means that if you write an arithmetic expression involving some non-numeric type, you get an error about a missing instance:
-
-``` ghci
-λ> 1 + True
-<interactive>:4:3: error:
-    • No instance for (Num Bool) arising from a use of ‘+’
-    • In the expression: 1 + True
-      In an equation for ‘it’: it = 1 + True
-```
-
-And hey, in principle, you *could* write a `Num` instance for `Bool`! It would just be an awful idea. What this really means is that `Bool` is not a number so you can't use it in arithmetic. And this error message was even *more* confusing in older versions of GHC—GHC is improving all the time so, unless you have a specific reason, it's worth using one of the latest releases.
-
-[^num-instances-discourse]: The common problem with `Num` instances was suggested by [jackdk on Discourse](https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/8)
-
-Extensions like `OverloadedStrings` and `OverloadedLists` make their corresponding literals behave in similar ways.
-
-``` ghci
-λ> "abc" && True
-<interactive>:13:1: error:
-    • No instance for (Data.String.IsString Bool)
-        arising from the literal ‘"abc"’
-    • In the first argument of ‘(&&)’, namely ‘"abc"’
-      In the expression: "abc" && True
-      In an equation for ‘it’: it = "abc" && True
-```
-
-As a general rule, error messages get worse as code gets more polymorphic. It's easy to accidentally run into this problem with overloaded literals.
-
-``` ghci
-λ> :set -XOverloadedStrings
-λ> "abc" + 1
-<interactive>:15:1: error:
-    • Ambiguous type variable ‘a0’ arising from a use of ‘print’
-      prevents the constraint ‘(Show a0)’ from being solved.
-      Probable fix: use a type annotation to specify what ‘a0’ should be.
-      These potential instances exist:
-        instance (Show a, Show b) => Show (Either a b)
-          -- Defined in ‘Data.Either’
-        instance Show Ordering -- Defined in ‘GHC.Show’
-        instance Show a => Show (Maybe a) -- Defined in ‘GHC.Show’
-        ...plus 24 others
-        ...plus 47 instances involving out-of-scope types
-        (use -fprint-potential-instances to see them all)
-    • In a stmt of an interactive GHCi command: print it
-```
-
-Good rule of thumb: if you run into a confusing error message involving weird type variables and class constraints, and it's pointing to an expression involving a string, list or numeric literal, the literal could be the problem. If you know what the type *should* be, you can add an explicit type signature:
-
-``` ghci
-λ> :set -XOverloadedStrings
-λ> ("abc" :: String) + 1
-<interactive>:17:19: error:
-    • No instance for (Num String) arising from a use of ‘+’
-    • In the expression: ("abc" :: String) + 1
-      In an equation for ‘it’: it = ("abc" :: String) + 1
-```
-
-#### `Foldable` instances
-
-Core list functions on Haskell like `foldr` have been generalized to the [`Foldable`][haskell-foldable] class, leading to weird error messages for simple mistakes[^foldable-instances-discourse]:
-
-<!-- TODO: foldable example -->
-
-[haskell-foldable]: https://hackage.haskell.org/package/base-4.20.0.1/docs/Data-Foldable.html
-
-[^foldable-instances-discourse]: The common problem with `Foldable` instances was suggested by [f-a](https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/4) as well as [jackdk](https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/8) on Discourse
-
-#### Functions and do notation
-
-The Haskell function type (`->`) has `Functor`, `Applicative` and `Monad` instances. These work the same way as the [`Reader`][haskell-reader] type but without the newtype wrapper. Unfortunately, this means that forgetting a function argument when using do-notation can give a weird error message[^reader-instance-discourse]:
-
-[^reader-instance-discourse]: This edge case was suggested by [atravers on Discousrse](https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/15)
-
-[haskell-reader]: https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Reader.html
-
-#### Scoped type variables
-
-Haskell type variables do not carry over into nested type signatures by default; for example, if you have a type variable `a` at the top level of a definition and then use `a` inside a `where` clause, the two variables will be totally separate, leading to weird errors[^scoped-type-variables-discourse]:
-
-[^scoped-type-variables-discourse]: The common problem with scoped type variables was suggested by [olf on Discourse](https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/18)
-
-<!-- TODO: scoped type variable -->
-
-To be able to reuse `a` in a `where` clause, you have to enable `ScopedTypeVariables` and bind `a` with an explicit `forall`:
-
-<!-- TODO: fixed example -->
+More importantly, error messages give us a valuable *starting point* letting us [divide and conquer](#divide-and-conquer) to find the real cause of the error.
 
 ### Multiple error messages
 
-When you have multiple similar errors, that is an additional signal by itself. (Did some other part of the code cause *all* of those errors?) And if the errors are different rather than repeating, the first error is not necessarily the best one to start with. But there's no way to know this if you don't read all of them!
+What should you do when you write some new code—or just make a single innocuous change—and see two screens of error messages?
 
-<!-- TODO: multiple error message example -->
+**Don't panic**.
 
+Remember that *Haskell error messages are verbose*; once you cut through the noise, those two screens of errors turn into a handful of distinct errors.
+
+Instead of jumping into the first error in the list, take a step back and read *all* of the errors. The first error you see may not be the best starting point. Moreover, patterns in the errors can be a useful indicator for where the problem came from.
+
+Often, several errors group together into a single “logical” error. For example, if we change the type of a function parameter, we'll get an error for every callsite. A slightly contrived example:
+
+``` haskell
+render :: Int -> String
+render x = show x
+
+add :: Int -> Int -> String
+add a b = render $$ a + b
+
+sub :: Int -> Int -> String
+sub a b = render $$ a - b
+```
+
+If we change the type signature of `render` to `render :: Integer -> String` we will get *two* errors for that *one* change:
+
+<pre class="error">
+<code>
+<span class="error-heading">src/Example.hs:7:20: warning: [-Wdeferred-type-errors] …</span>
+    <span class="error-message">• Couldn't match expected type ‘Integer’ with actual type ‘Int’</span>
+    <span class="error-location">• In the second argument of ‘($$)’, namely ‘a + b’</span>
+      <span class="error-location">In the expression: render $$ a + b</span>
+      <span class="error-location">In an equation for ‘add’: add a b = render $$ a + b</span>
+  |
+<span class="error-heading">src/Example.hs:10:20: warning: [-Wdeferred-type-errors] …</span>
+    <span class="error-message">• Couldn't match expected type ‘Integer’ with actual type ‘Int’</span>
+    <span class="error-location">• In the second argument of ‘($$)’, namely ‘a - b’</span>
+      <span class="error-location">In the expression: render $$ a - b</span>
+      <span class="error-location">In an equation for ‘sub’: sub a b = render $$ a - b</span>
+   |
+</code>
+</pre>
+
+Real-world code is not going to be quite this clean; in one of my projects, changing a function from taking a `Maybe AST` value to an `AST` value resulted in 16 type errors with a couple of variations on the actual error message—all stemming from a single change to a type signature!
+
+Was the mistake in the change to the function's type signature, or was the change intentional and now all the call sites need fixing? 
+
+The compiler fundamentally has now way to know that without reading your mind. 
+
+In lieu of mind-reading, the compiler treats type signatures as sources of truth and gives you a ton of errors. When you're making the change intentionally this is actively useful: you get a checklist of every location in your program that you need to update. But if the change to the function was a typo, it's a bit confusing—you get a ton of errors and none point to the actual mistake—so you have to read all the errors and notice the pattern in order to diagnose and fix the actual problem.
+
+A similar pattern to watch out for is when a single change leads to several different errors pointing to the same place. I ran into this with some of my own code recently, which had the following call to `mapM`—don't worry about the details:
+
+``` haskell
+toModule Theta.Module {..} prefix = do
+  definitions <- mapM (toDefinition prefix moduleName) types
+  ...
+```
+
+What would happen if I left out the `moduleName` argument in `toDefinition`? 
+
+``` haskell
+toModule Theta.Module {..} prefix = do
+  definitions <- mapM (toDefinition prefix) types
+  ...
+```
+
+Because Haskell functions are curried by default, `toDefinition prefix` would still be a function, but it would not match the type `mapM` expected. However, instead of getting an error that pointed out the missing argument directly, I got several type errors instead (noisy output skipped up for readability):
+
+<pre class="error">
+<code>
+<span class="error-heading">src/Theta/Target/Python.hs:64:24: warning: [-Wdeferred-type-errors] …</span>
+    <span class="error-message">• Couldn't match type ‘m’ with ‘(->) (Theta.Definition Theta.Type)’</span>
+      <span class="error-message">Expected: Name.ModuleName -> m (m0 Python)</span>
+        <span class="error-message">Actual: Name.ModuleName</span>
+                <span class="error-message">-> Theta.Definition Theta.Type -> m0 Python</span>
+    <span class="error-location">...</span>
+<hr>
+<span class="error-heading">src/Theta/Target/Python.hs:64:45: warning: [-Wdeferred-type-errors] …</span>
+    <span class="error-message">• Couldn't match type ‘Theta.Definition Theta.Type’</span>
+                     <span class="error-message">with ‘Name.ModuleName’</span>
+      <span class="error-message">Expected: Data.Map.Internal.Map Name.Name Name.ModuleName</span>
+        <span class="error-message">Actual: Data.Map.Internal.Map</span>
+                  <span class="error-message">Name.Name (Theta.Definition Theta.Type)</span>
+    <span class="error-location">...</span>
+<hr>
+<span class="error-heading">src/Theta/Target/Python.hs:65:41: warning: [-Wdeferred-type-errors] …</span>
+    <span class="error-message">• Couldn't match type ‘m0 Python’ with ‘Python’</span>
+      <span class="error-message">Expected: [Python]</span>
+        <span class="error-message">Actual: [m0 Python]</span>
+    <span class="error-location">...</span>
+<hr>
+</code>
+</pre>
+
+The three error messages—with all their text—were definitely a bit intimidating, but I gave them a quick scan and noticed that they were all pointing to roughly the same part of my code, a hint that they share the same underlying cause.
+
+In this case, it turned out that the first error *was* the one to start with. Reading the error message carefully, we can see that `Couldn't match type ‘m’ with ‘(->) (Theta.Definition Theta.Type)` is actually telling us that we are missing an argument—which becomes much clearer if you read the next two lines in the error:
+
+<pre class="error">
+<code>
+      <span class="error-message">Expected: Name.ModuleName -> m (m0 Python)</span>
+        <span class="error-message">Actual: Name.ModuleName</span>
+                <span class="error-message">-> Theta.Definition Theta.Type -> m0 Python</span>
+</code>
+</pre>
+
+(Another quick heuristic: the `Expected:` and `Actual:` lines are often more useful than the “actual” error message.)
+
+</div>
+
+<div class="content">
+
+## Think in Constraints
+
+What aspect of Haskell's type system leads to confusing type errors?
+
+<!-- Some old footnotes, may or may not fit into this sections -->
 [^type-error-localization]: Type error localization in Haskell (and similar languages) is [an active area of research][localization-research] as is [the quality of compiler error messages more broadly][error-message-research]. David Binder pointed this research out to me [on Discourse][david-binder-discourse-post], including additional links and context.
 
 [localization-research]: https://dl.acm.org/doi/10.1145/3138818
@@ -288,12 +287,6 @@ When you have multiple similar errors, that is an additional signal by itself. (
 [error-message-research]: https://dl.acm.org/doi/10.1145/3344429.3372508
 
 [david-binder-discourse-post]: https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/9
-
-</div>
-
-<div class="content">
-
-## Think in Constraints
 
 </div>
 

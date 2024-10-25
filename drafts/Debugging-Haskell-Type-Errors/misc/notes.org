@@ -16,3 +16,9 @@
    - scoped type variable off by default
      - [[https://github.com/haskell/error-messages/issues/6][extended example on GitHub]]
      - Thanks to [[https://discourse.haskell.org/u/olf][olf]] on Discord
+* Examples
+** Misleading location/cause
+   - found a decent example in ~Theta.Target.Python~ (line 64)
+     - remove ~moduleName~ argument from ~mapM (toDefinition prefix
+       moduleName) types~
+     - results in several errors, two of which are weird/misleading
