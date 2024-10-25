@@ -48,15 +48,11 @@ Let's dive into each principle and see how to put them into action.
 
 ## Read the error
 
-First step: when you see an error, *read the error*.
+First step: when you see an error, **read the message**.
 
-If there are multiple errors, *read all of them*—or at least give them a skim. The first error you get is not necessarily the best error to start with.
+If there are multiple errors, **read all of them**—or at least give them a skim. The first error you get is not necessarily the best starting point.
 
-This might sound obvious but, in practice, it isn't. Everyone I've mentored started out with a tendency to jump straight to their code as soon as they saw any errors. I've caught myself doing the same thing! Error messages are a bit intimidating; it feels like you've done something wrong. Wanting to fix it immediately is a natural impulse.
-
-Instead of seeing errors as criticism, we should see them as *hints*—the compiler is trying to help us! There's an interesting UX challenge here: can we design an interface that makes errors seem helpful by default?
-
-Unfortunately, Haskell error messages are not prefect—they can be hard to read and understand. Let's look through a few common issues and how to deal with them:
+This might sound obvious but, in practice, it isn't. Everyone I've mentored started out with a tendency to jump straight to their code as soon as they saw an error. I've caught myself doing the same thing! Error messages are a bit intimidating; it feels like you've done something wrong. Wanting to fix the error immediately is a natural impulse.
 
 ### Cutting through the noise
 
@@ -84,7 +80,7 @@ Here's a simple type error message from one of my projects with its three distin
 
 This message has three parts:
 
- 1. The first line tells us the location[^file-locations] as well as the type of error (a deferred type error warning in this case)[^deferred-errors]
+ 1. The first line tells us the location[^file-locations] as well as the type of error (a deferred type error warning)[^deferred-errors]
  2. The second line is the actual error message.
  3. The third, fourth, fifth *and* sixth lines all tell us *where* the error is in our code.
 
@@ -95,7 +91,7 @@ If you're using an editor that highlights errors in place, none of the location 
   1. It's a type error.
   2. We expected a `Theta.Type` but got a `()`
 
-So: the first trick to reading Haskell type errors is to mentally filter out the bits that don't matter—which is often *most* of the message! Hopefully we will get a flag to slim down error messages in the future.
+So: the first trick to reading Haskell type errors is to mentally filter out the bits that don't matter—often *most* of the message^[Hopefully we'll get a flag to filter out the extra noise, but I don't believe that exists as of October 2024.]!
 
 More involved code can produce even more noise. A slightly different type error in the same `Python.hs` file, for example, produced *42 lines of localization information*[^42-lines]—none of which was useful because my editor highlighted the exact part of the code I needed to look at!
 

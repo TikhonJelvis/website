@@ -134,6 +134,7 @@ runPandoc = titleToAlt <=< pandoc
 
         exts = P.enableExtension P.Ext_tex_math_single_backslash $
                P.enableExtension P.Ext_all_symbols_escapable $
+               P.enableExtension P.Ext_inline_notes $
                P.pandocExtensions
 
 -- | Have custom processing for @ghci@ code blocks as part of pandoc
