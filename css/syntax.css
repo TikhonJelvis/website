@@ -65,7 +65,9 @@ pre.ghci span.ghci-input {
   padding-top: 8px;
   padding-bottom: 8px;
 }
-pre.ghci span.ghci-output { }
+pre.ghci :nth-child(1 of span.ghci-output) {
+  padding-top: 8px;
+}
 
 /* Manual syntax highlighting for error messages */
 pre.error span { padding-left: 2px; padding-right: 2px; }
