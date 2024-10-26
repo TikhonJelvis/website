@@ -37,8 +37,8 @@ We can approach Haskell type errors with the same mindset.
 In this spirit, here are the three principles I use to deal with harder type errors:
 
   1. **Read the error**: when you load your code and see a bunch of red text, don't panic. Stop and read the errors—the error messages are the compiler's best attempt to tell you what's going on, and they're where we will start our debugging process.
-  2. **Think in constraints**: Haskell's type system works like a set of constraints (and type *inference* works like constraint solving). When you see an error, read it as “here is an *inconsistency* in your code's type” and not “here is exactly where your code is *wrong*”.
-  3. **Divide and conquer**: if the fix is not immediately clear from the error message, you either need to *change some other part of the code* or, at the very least, you need to *understand some other part of the code* to figure out a fix. Use the compiler, the types and the structure of the code to find which other parts are relevant.
+  2. **Think in constraints**: Haskell's type system works like a set of constraints (and type *inference* works like constraint solving). When you see an error, read it as “here is an *inconsistency* in your code's types” and not “here is exactly where your code is *wrong*”.
+  3. **Divide and conquer**: if the fix is not immediately clear from the error message, you need to *understand other parts of the code* to figure out a fix. Use the compiler, the types and the structure of the code to find which other parts are relevant.
 
 Let's dive into each principle and see how to put them into action.
 
@@ -151,13 +151,13 @@ More involved code can produce even more noise. A slightly different type error 
     </code>
   </pre>
 
-Once you cut through the noise, most Haskell type errors are pretty good. For example this—somewhat artificial—error is clear: I need to replace the `()` with a value of the type `Theta.Type`.
+Once you cut through the noise, most Haskell type errors are pretty good. For example this (somewhat contrived) error message is clear: I need to replace the `()` with a value of the type `Theta.Type`.
 
-Of course, some errors will not be nearly as clear. Perhaps the message itself is confusing or there are several errors and it is not clear which one to start from. Other times, the error *attribution* is wrong: either the error is pointing to the wrong part of the code, or the error cause itself is misleading. (We'll talk more about attribution and localization in later sections.)
+Of course, some errors will not be nearly as clear. Perhaps the message itself is confusing or there are several errors and it is not clear which one to start from. Other times, the error *attribution* is wrong: either the error is pointing to the wrong part of the code, or the type of error itself is misleading. (We'll talk more about attribution and localization in later sections.)
 
-However, even in those cases, the error messages are still worth reading. The messages might not point us to a solution directly, but they still give us information. One of my personal debugging principles is to start debugging by getting all the information I can out of a system; for Haskell type errors, the error messages are the only starting information we get.
+However, even in those cases, the error messages are still worth reading. A message might not point us to a solution directly but still give us useful information. One of my personal debugging principles is to start debugging by getting all the information I can out of a system before doing anything else; for Haskell type errors, the error messages are the starting information we get.
 
-More importantly, error messages give us a valuable *starting point* letting us [divide and conquer](#divide-and-conquer) to find the real cause of the error.
+Moreover, the error messages we get give us *starting points* for understanding what's going on and starting our [divide and conquer](#divide-and-conquer) process to find the real cause of the error.
 
 ### Multiple error messages
 
