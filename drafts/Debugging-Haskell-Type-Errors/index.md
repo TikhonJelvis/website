@@ -191,15 +191,13 @@ If we change the type signature of `render` to `render :: Integer -> String` we 
     <span class="error-location">• In the second argument of ‘($$)’, namely ‘a + b’</span>
       <span class="error-location">In the expression: render $$ a + b</span>
       <span class="error-location">In an equation for ‘add’: add a b = render $$ a + b</span>
-  |
+<hr>
 <span class="error-heading">src/Example.hs:10:20: warning: [-Wdeferred-type-errors] …</span>
     <span class="error-message">• Couldn't match expected type ‘Integer’ with actual type ‘Int’</span>
     <span class="error-location">• In the second argument of ‘($$)’, namely ‘a - b’</span>
       <span class="error-location">In the expression: render $$ a - b</span>
       <span class="error-location">In an equation for ‘sub’: sub a b = render $$ a - b</span>
-   |
-</code>
-</pre>
+<hr></code></pre>
 
 Real-world code is not going to be quite this clean; in one of my projects, changing a function from taking a `Maybe AST` value to an `AST` value resulted in 16 type errors with a couple of variations on the actual error message—all stemming from a single change to a type signature!
 
@@ -249,9 +247,7 @@ Because Haskell functions are curried by default, `toDefinition prefix` would st
       <span class="error-message">Expected: [Python]</span>
         <span class="error-message">Actual: [m0 Python]</span>
     <span class="error-location">...</span>
-<hr>
-</code>
-</pre>
+<hr></code></pre>
 
 The three error messages—with all their text—were definitely a bit intimidating, but I gave them a quick scan and noticed that they were all pointing to roughly the same part of my code, a hint that they share the same underlying cause.
 
