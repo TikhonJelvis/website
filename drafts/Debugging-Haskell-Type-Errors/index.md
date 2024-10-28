@@ -151,7 +151,7 @@ More involved code can produce even more noise. A slightly different type error 
     </code>
   </pre>
 
-Once you cut through the noise, most Haskell type errors are pretty good. For example this (somewhat contrived) error message is clear: I need to replace the `()` with a value of the type `Theta.Type`.
+Once you cut through the noise, most Haskell type errors are pretty good. For example the message for this (somewhat contrived) error is clear: I need to replace the `()` with a value of the type `Theta.Type`.
 
 Of course, some errors will not be nearly as clear. Perhaps the message itself is confusing or there are several errors and it is not clear which one to start from. Other times, the error *attribution* is wrong: either the error is pointing to the wrong part of the code, or the type of error itself is misleading. (We'll talk more about attribution and localization in later sections.)
 
