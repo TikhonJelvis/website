@@ -169,7 +169,7 @@ Remember that *Haskell error messages are verbose*; once you cut through the noi
 
 Instead of jumping into the first error in the list, take a step back and read *all* of the errors. The first error you see may not be the best starting point. Moreover, patterns in the errors can be a useful indicator for where the problem came from.
 
-Often, several errors group together into a single “logical” error. For example, if we change the type of a function parameter, we'll get an error for every callsite. A slightly contrived example:
+Often, several errors group together into a single “logical” error. For example, if we change the type of a function parameter, we'll get an error for every call site. A slightly contrived example:
 
 ``` haskell
 render :: Int -> String
