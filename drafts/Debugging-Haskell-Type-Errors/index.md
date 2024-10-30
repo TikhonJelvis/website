@@ -5,7 +5,7 @@ author: Tikhon Jelvis
 
 Fixing Haskell type errors can be *hard*. Learning how to understand and fix type errors was the first real obstacle I faced when I first picked up the language. I've seen the same tendency with every Haskell beginner I've taught.
 
-With a bit of experience, I got used to the quirks of GHC's typechecker and Haskell's standard library so most errors became easy to resolve. Most *but not all*. Worse yet, the intuition that helped me in easier cases did not scale to harder errors; instead, fixing these hard errors took a frustrating amount of time, thinking and trial-and-error. I did not have a mental toolkit for debugging confusing type errors.
+With a bit of experience, I got used to the quirks of GHC's typechecker and Haskell's standard library so most errors became easy to resolve. Most *but not all*. Worse yet, the intuition that helped me in easier cases did not scale to harder errors; instead, fixing hard errors took a frustrating amount of time, thinking and trial-and-error. I did not have a mental toolkit for debugging confusing type errors.
 
 Haskell type errors are not unique in this regard—I had exactly the same experience with debugging in general. When I started programming all bugs were hard; I quickly built up an intuition for fixing *most* bugs; but I did not have the mental tools to deal with hard bugs, leaving me hitting my head against a metaphorical wall when I couldn't guess the cause of a bug up-front.
 
@@ -34,7 +34,7 @@ We can approach Haskell type errors with the same mindset.
 
 [debugging-book]: https://debuggingrules.com/?page_id=31
 
-In this spirit, here are the three principles I use to deal with harder type errors:
+In this spirit, here are three principles I use to deal with harder type errors:
 
   1. **Read the error**: when you load your code and see a bunch of red text, don't panic. Stop and read the errors—the error messages are the compiler's best attempt to tell you what's going on, and they're where we will start our debugging process.
   2. **Think in constraints**: Haskell's type system works like a set of constraints (and type *inference* works like constraint solving). When you see an error, read it as “here is an *inconsistency* in your code's types” and not “here is exactly where your code is *wrong*”.
@@ -46,7 +46,7 @@ Let's dive into each principle and see how to put them into action.
 
 <div class="content">
 
-## Read the error
+## Read the Error
 
 First step: when you see an error, **read the message**.
 
@@ -54,7 +54,13 @@ If there are multiple errors, **read all of them**—or at least give them a ski
 
 This might sound obvious but, in practice, it isn't. Everyone I've mentored started out with a tendency to jump straight to their code as soon as they saw an error. I've caught myself doing the same thing! Error messages are a bit intimidating; it feels like you've done something wrong. Wanting to fix the error immediately is a natural impulse.
 
-### Cutting through the noise
+As you get a bit more experience, you'll learn to quickly recognize the most common types of errors you'll encounter. Some errors are clear right away; others are confusing, but understandable once you learn the pattern[^error-patterns-post]. And then there's the minority of errors that point your in the wrong direction or are plain *weird*; it's these final errors where slowing down and proceeding systematically is the most important.
+
+[^error-patterns-post]: I recently asked the community [for examples of confusing error messages][discourse-error-messages] and got a ton of great examples. There were too many good examples to include in this post—which is already a bit too long—so I'm planning to write a follow-up post focused just on common patterns of confusing type errors.
+
+[discourse-error-messages]: https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468
+
+### Cutting Through the Noise
 
 Haskell error messages get verbose *quickly*. Each error produces a lot of noise.
 
@@ -159,7 +165,7 @@ However, even in those cases, the error messages are still worth reading. A mess
 
 Moreover, the error messages we get give us *starting points* for understanding what's going on and starting our [divide and conquer](#divide-and-conquer) process to find the real cause of the error.
 
-### Multiple error messages
+### Multiple Error Messages
 
 What should you do when you write some new code—or just make a single innocuous change—and see two screens of error messages?
 
