@@ -275,16 +275,140 @@ In this case, it turned out that the first error *was* the one to start with. Re
 
 ## Think in Constraints
 
-What aspect of Haskell's type system leads to confusing type errors?
+While Haskell's error *messages* can be confusing, I've found that **error attribution** is actually a larger problem. It doesn't matter how well-written and well-formatted your error messages are if the error is pointing in the wrong place!
+
+At the same time, some level of error misattribution is inevitable. The core problem is that types can't tell us that some code is *right* or *wrong*; **types can only point out inconsistencies**.
+
+You always have multiple parts of your code that you can change to fix a type error: if you pass an invalid argument to a function, you can change the argument, change the argument's type, change the function's definition or use a different function altogether. Or maybe it's a sign you need an even larger refactoring!
+
+Which change is “correct” *depends on your intentions*. The compiler does not know what your code is *supposed* to do; it cannot read your mind and it does not know anything about the world outside your code.
+
+This is fundamentally true for all languages but it's exacerbated in Haskell because Haskell's type system is so flexible and expressive, and because Haskell has *global type inference* à la [Hindley Milner][hm].
+
+To understand what Haskell's type errors are telling us, we need to understand how Haskell's types act like constraints and how Haskell's type inference and type checking act as constraint resolution.
+
+### Haskell Types as Constraints
+
+How does Haskell determine what type an expression should have?
+
+A good mental model is that Haskell *starts* by treating an expression or variable as able to have *any* type (`x :: a`) then looks through the code for anything that would force (*constrain*) `x` to have a more specific type.
+
+A constraint could be:
+
+  - an explicit type signature: if Haskell sees `x :: Int` in the code, it will proceed with the assumption that `x` has type `Int`
+  - an implicit constraint: using `x` in a context that restricts its type; if Haskell sees `x && False` in the code, it will proceed with the requirement that `x` has type `Bool`
+  - an implicit constraint that lets `x` be polymorphic: if Haskell sees `x + 1`, it will assume `x` has the type `Num a => a`
+  
+Ideally, all the constraints on `x` will be *consistent*. If `x` has the type `Int` everywhere in your code, everything is good. Alternatively, if `x` is constrained to `Int` at one point and `Num a => a` at another, things are still good because `Int` is an instance of `Num`, so the two signatures are compatible (and we can treat `x` as having type `Int` specifically).
+
+A type error is what we get when these constraints are not compatible. For example:
+
+ 1. We see `x + 1` on line 10, constraining `x` to `Num a => a`
+ 2. We see `x && y` on line 20, constraining `x` to `Bool`
+ 3. `Bool` is not an instance of `Num`, so these two types are incompatible
+ 
+So now we need to generate a type error. Should the error point to line 10 or line 20?
+
+There's no real way to know. Perhaps you meant to write `x' + 1` at line 10. Perhaps you meant to write `even x && y` on line 20, or maybe even `x + y'`. Or maybe you meant to define a `Num` instance for `Bool`![^num-instance-for-bool]
+
+All that the compiler knows is that you have to change *some* part of the code in order to make the types consistent. There are multiple places you could change, but an error message can only point to *one*, so it has to choose somehow. And the way it chooses is more-or-less arbitrary, an implementation detail of the typechecking algorithm; this works surprisingly well in practice but it isn't—fundamentally can't be—perfect.[^type-error-localization]
+
+So if you're looking at a type error for a line of code that seems totally correct, don't panic! There's a good chance that the problem is in some other line of code that introduces an incorrect constraint, and GHC's typechecker just chose the “wrong” line to mark the inconsistency.
+
+Understanding Haskell's types as constraints will also help us to [divide and conquer](#divide-and-conquer) by giving us *candidates* for which part of the code might be wrong: we need to look for which parts of our code *introduce the constraints that led to the type error we are fixing*.
+
+[^num-instance-for-bool]: This would require an [orphan instance][orphans] and would be an awful idea in practice, but it *would* be valid Haskell, and, hey, it even makes sense conceptually: if we have 8/16/etc-bit integers as `Num` instances, why *not* make `Bool` a 1-bit integer?
+
+    That would be bad from a UX point of view—treating a `Bool` value as a number is almost definitely a programming mistake, and if it's intentional you can use the `enum` function to make it explicit—but it would be conceptually coherent. 
+
+[orphans]: https://wiki.haskell.org/Orphan_instance
+
+[hm]: https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system
+
+### Type Signatures as Assertions
+
+An important aspect of Haskell's type checking and type inference is that type signatures act like *assertions*. That is, when Haskell sees `x :: Int`, it will take this *as given* for the rest of the code. This is true even if `x` is defined to be something that can't be an `Int`.
+
+If we load the following code, we'll get two type errors:
+
+``` haskell
+x = False
+
+y = x + 1
+
+z = 2 * x + y
+```
+
+```
+src/Theta/Misc.hs:3:7: warning: [-Wdeferred-type-errors] …
+    • No instance for (Num Bool) arising from a use of ‘+’
+    • In the expression: x + 1
+      In an equation for ‘y’: y = x + 1
+  |
+src/Theta/Misc.hs:5:11: warning: [-Wdeferred-type-errors] …
+    • No instance for (Num Bool) arising from a use of ‘+’
+    • In the expression: 2 * x + y
+      In an equation for ‘z’: z = 2 * x + y
+  |
+```
+
+(Side note: that second error is a great example of arbitrary attribution: why does it point to `+` and not `*` as the reason we need a `Num` instance? Either choice would have been totally valid!)
+
+Now let's add a type signature to `x`:
+
+``` haskell
+x :: Int
+x = False
+
+y = x + 1
+
+z = 2 * x + y
+```
+
+With this type signature, we've *asserted* that `x` has the type `Int`. Now Haskell will treat `x` as an `Int` everywhere in the code even though `x` is defined as `False`. We will only get a single error for the definition itself, but no errors for `y` or `z`:
+
+```
+src/Theta/Misc.hs:2:5: warning: [-Wdeferred-type-errors] …
+    • Couldn't match expected type ‘Int’ with actual type ‘Bool’
+    • In the expression: False
+      In an equation for ‘x’: x = False
+  |
+```
+
+Type signatures are Haskell's way of letting us explicitly specify our intentions. By telling the compiler that `x :: Int`, it knows that `y` and `z` are fine, but that the definition `x = False` is inconsistent. The code is still semantically the same, but we get a better error message.
+
+Type signatures can also constrain code *more* than it would be otherwise. A definition `x = []` will have the type `x :: [a]`, but if we add an explicit signature like `x :: [Int]`, the code will compile with the more specific type. Just like the previous example this can give you more specific type error messages, as well as avoiding weird edge cases like the [monomorphism restriction][monomorphism-restriction].
+
+[monomorphism-restriction]: https://wiki.haskell.org/Monomorphism_restriction
+
+In principle, Haskell type signatures are—mostly—optional. You can write entire Haskell programs without annotating any types yourself, relying entirely on type inference. But in practice, including top-level type signatures *is a really good idea* because it communicated your intent to both the compiler and to anybody else reading your code. You will consistently get much clearer type error messages if you write explicit type signatures.
+
+The more types you specify as type signatures, the more specific your type errors will be—but don't forget that it can be the type signature that is wrong!
+
+A simple technique for improving confusing type errors is to add type signatures. Apart from top-level definitions, you can also add explicit signatures for:
+
+  - `let` and `where` definitions
+  - variables bound in do-notation
+  - pattern-match variables
+  - arbitrary sub-expressions (`x + (y * 10 :: Double)`)
+  - typeclass implementations (with the `InstanceSigs` extension)
+  
+I've repeatedly had confusing type-errors in real-world code get cleared up by adding a type signature or two to helper functions defined in `where` clauses. And there's nothing wrong about leaving that type signature in the `where` clause even once you've fixed the code! If it helped once, it could well help again; and, regardless, the explicit type signature will help anybody reading the code in the future.
 
 <!-- Some old footnotes, may or may not fit into this sections -->
-[^type-error-localization]: Type error localization in Haskell (and similar languages) is [an active area of research][localization-research] as is [the quality of compiler error messages more broadly][error-message-research]. David Binder pointed this research out to me [on Discourse][david-binder-discourse-post], including additional links and context.
+
+[^type-error-localization]: Type error localization in Haskell (and similar languages) is [an active area of research][localization-research] as is [the quality of compiler error messages more broadly][error-message-research]. 
+David Binder pointed this research out to me [on Discourse][david-binder-discourse-post], including additional links and context.
+
+    Some of the research approaches are promising and seem to wor well in practice, but require some heavyweight algorithmic work: for example, [one promising approach][type-error-localization-smt] required solving a MaxSMT problem to find the "best" error location. That works well, but do we really want our compiler to depend on an SMT solver (in a fairly non-trivial way, at that!) just for better error messages?
 
 [localization-research]: https://dl.acm.org/doi/10.1145/3138818
 
 [error-message-research]: https://dl.acm.org/doi/10.1145/3344429.3372508
 
 [david-binder-discourse-post]: https://discourse.haskell.org/t/examples-of-haskell-type-errors/10468/9
+
+[type-error-localization-smt]: https://cs.nyu.edu/~wies/publ/practical_smt-based_type_error_localization.pdf
 
 </div>
 
