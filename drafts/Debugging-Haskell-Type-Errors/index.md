@@ -347,7 +347,6 @@ src/Theta/Misc.hs:3:7: warning: [-Wdeferred-type-errors] …
     • In the expression: x + 1
       In an equation for ‘y’: y = x + 1
   |
-<hr>
 src/Theta/Misc.hs:5:11: warning: [-Wdeferred-type-errors] …
     • No instance for (Num Bool) arising from a use of ‘+’
     • In the expression: 2 * x + y
