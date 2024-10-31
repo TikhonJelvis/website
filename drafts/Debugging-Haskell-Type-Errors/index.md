@@ -211,7 +211,7 @@ Real-world code is not going to be quite this clean; in one of my projects, chan
 
 Was the mistake in the change to the function's type signature, or was the change intentional and now all the call sites need fixing? 
 
-The compiler fundamentally has now way to know that without reading your mind. 
+The compiler fundamentally has no way to know without reading your mind.
 
 In lieu of mind-reading, the compiler treats type signatures as sources of truth and gives you a ton of errors. When you're making the change intentionally this is actively useful: you get a checklist of every location in your program that you need to update. But if the change to the function was a typo, it's a bit confusing—you get a ton of errors and none point to the actual mistake—so you have to read all the errors and notice the pattern in order to diagnose and fix the actual problem.
 
