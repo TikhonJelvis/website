@@ -39,6 +39,10 @@ a > img {
     font-size : 2ex;
 }
 
+.no-border {
+  border: none !important;      /*TODO: better way to do this?*/
+}
+
 /* CONTENT */
 
 /* This div has the actual content of the site in it. */
