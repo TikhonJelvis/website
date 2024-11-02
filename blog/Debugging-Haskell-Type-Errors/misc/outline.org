@@ -1,0 +1,154 @@
+* Understand Haskell Type Errors
+** Why?
+   - hard for beginners
+     - was hard for me starting out!
+   - slow down, follow simple steps
+* Steps
+** Read the Error Message
+*** Why?
+    - beginners often don't read error messages
+      - not just in Haskell, everywhere!
+      - speculate on why?
+        - "easier" to make assumptions
+        - errors are intimidating:
+          - lots of information
+          - makes you feel like you did something wrong
+    - the error message will almost always help
+      - especially if you follow the other rules in this article!
+      - true in all debugging: more information, more better
+        - quote debugging rules ("quit thinking and look")
+        - don't assume: wrong assumptions will lead you on wild goose
+          chases
+*** What makes it hard?
+    - seeing lots of errors at once
+      - this *doesn't* mean you made lots of mistakes or have lots of
+        places to fix!
+      - a single change can cause a cascade of errors
+        - TODO find example
+    - Haskell errors are verbose and inconsistent in style
+      - TODO find a couple of examples
+        - at least 2–3 different styles
+        - highlight different parts
+          - got
+          - expected
+          - location information
+            - largely irrelevant!
+          - suggestions/etc?
+** Think in Constraints
+*** Why?
+    - Haskell has a special kind of type system designed for global
+      inference
+    - practical upside: error localization is /hard/
+      - the error does not always point to (or even /close/!)  to the
+        part of the code you have to fix
+      - my experience: the hardest type errors have been, say, 95%
+        because of error localization
+        - when people say "Haskell error messages are bad" and compare
+          them to Rust, they are conflating the surface-level aspects
+          of the message (text + formatting) with what actually
+          matters (localization, mostly)
+          - text + formatting still matters, of course, but I bet
+            better localization would improve the Haskell experience
+            for beginners 10× more than text + formatting
+      - footnote about error localization research?
+*** How?
+    - imagine each type annotation and each concrete function as
+      introducing constraints
+      - TODO basic example
+    - a type error points to /inconsistent constraints/:
+      - "you said that x had to be an Int but also that x had to be a
+        Bool, something is not right
+      - but: this doesn't mean that exact line with x is wrong!
+        - it just means that we have some constraints across the code
+          that are mutually exclusive
+        - the "mistake" can come from any part of the code
+          - silly example: maybe we have C envy meant to /change all
+            of our logic operations to work on Ints/!
+          - there are going to be multiple parts of the code you could
+            change to make the constraints consistent again
+            - /any/ of them would "fix" the type error...
+            - but they might not /fix your code/!
+      - so:
+        - a type error does not mean "fix this exact line"
+        - instead, think about:
+          - what constrains the types in this part of the code
+          - what you might want to change to make them consistent
+    - note: this is especially visible (and important!) with
+      typeclasses
+      - we even talk about "typeclass constraints"!
+      - TODO typeclass example
+      - some common "typeclass traps":
+        - numeric literals (Num/etc)
+        - ~Foldable~
+        - overloaded lists/strings/etc?
+** Divide and Conquer
+*** Why?
+    - Okay, so you're thinking in constraints... but what do you
+      actually /do/ with that?
+    - Let's apply another universal debugging technique: divide and
+      conquer
+      - lots of people naturally take this approach
+      - the debugging book has a rule for this as well!
+*** How
+    - look at the code and the type error
+      - remember: read the error message!
+      - this becomes your starting point
+    - add more type signatures!
+      - "fence in" which parts of the code you are looking at
+      - great way to use information you've figured out
+        - "oh, now I *know* that I wanted a value of type X here, so
+          let me add a type signature..."
+      - this is why it's worth writing top-level type signatures
+**** Two Sides
+     - type errors (generally) have two sides:
+       - what you /have/
+       - what the code /expects/
+     - sometimes this is very explicit
+       - TODO simple example
+     - the line the message points to becomes your starting point
+       - divide into two halves:
+         - figure out why /you have the type you have/
+         - figure out why /you need the type you need/
+         - if either side is difficult, continue exploring in a
+           similar fashion
+           - TODO extended example?
+     - sometimes, you have to investigate a bit to figure out the two
+       sides at all
+       - some error messages are superficially worse than others, but
+         have the same structure
+       - some error messages have a different structure, but follow
+         the same conceptual lines
+       - but don't be dogmatic:
+         - think in constraints
+         - divide and conquer based on those constraints
+           - fine if you break into more than two parts!
+           - if there's too much to track mentally, keep notes!
+             - you'll only need this for the worst cases, but, trust
+               me, it /will/ help
+* Conclusion
+  - Haskell type errors are intimidating
+    - the error text is not great, but
+    - localization is the biggest problem
+  - debug them systematically:
+    - read the error
+      - read /all/ the errors!
+    - think in constraints
+      - that's what makes Haskell type errors "weird"!
+    - divide and conquer
+      - why do you have what you have?
+      - why do you need what you need?
+  - start out following these steps explicitly
+    - print out a little reminder card!
+      - TODO reminder PDF?
+  - soon enough, this will become second nature
+    - most type errors will become "obvious"
+    - some will be harder, but you'll solve them naturally
+    - for the rare remainder:
+      - feel free to fall back on explicit steps
+      - take your time
+      - take notes!
+  - most of this is just good general-purpose debugging advice
+    /applied to Haskell type errors specifically/
+    - debugging is just another skill you can learn
+    - learn it! it's worth it
+      - plug debugging book again?

@@ -1,0 +1,24 @@
+* Resources
+** Haskell Errors
+   - [[https://errors.haskell.org][Haskell Errrors Project]]
+     - see also: [[https://github.com/haskell/error-messages][Haskell Errors on GitHub]]
+** "Why is Haskell so Hard?" presentation
+   - [[https://www.slideshare.net/slideshow/why-is-haskell-so-hard-and-how-to-deal-with-it-194330350/194330350#28][See slides on type inference and error messages]]
+** Error Message Research
+   - [[https://dl.acm.org/doi/10.1145/3138818]["Learning to blame: localizing novice type errors with data-driven diagnosis"]]
+   - [[https://dl.acm.org/doi/10.1145/3344429.3372508]["Compiler Error Messages Considered Unhelpful: The Landscape of
+     Text-Based Programming Error Message Research"]]
+     - big survey paper on compiler error messages, lots of references
+** Edge Cases
+   - Num/etc
+   - Monad instance for (->)
+     - thanks to [[https://discourse.haskell.org/u/atravers][atravers]] on Discord
+   - scoped type variable off by default
+     - [[https://github.com/haskell/error-messages/issues/6][extended example on GitHub]]
+     - Thanks to [[https://discourse.haskell.org/u/olf][olf]] on Discord
+* Examples
+** Misleading location/cause
+   - found a decent example in ~Theta.Target.Python~ (line 64)
+     - remove ~moduleName~ argument from ~mapM (toDefinition prefix
+       moduleName) types~
+     - results in several errors, two of which are weird/misleading
