@@ -5,15 +5,17 @@ author: Tikhon Jelvis
 
 Fixing Haskell type errors can be *hard*. Learning how to understand and fix type errors was the first real obstacle I faced when I first picked up the language. I've seen the same tendency with every Haskell beginner I've taught.
 
-![An intimidating block of error messages for a single mistake!](many-type-errors.png "A screenshot of some Haskell code side-by-side with a whole screen full of error messages."){.no-border}
+With a bit of experience, I got so used to the quirks of GHC's typechecker and Haskell's standard library that I could resolve most type errors intuitively. Most *but not all*. Worse yet, the intuition that helped me in easier cases did not scale to harder errors; instead, fixing hard errors required frustrating trial-and-error. I did not have a mental toolkit for debugging confusing type errors.
 
-With a bit of experience, I got used to the quirks of GHC's typechecker and Haskell's standard library so most errors became easy to resolve. Most *but not all*. Worse yet, the intuition that helped me in easier cases did not scale to harder errors; instead, fixing hard errors took a frustrating amount of time, thinking and trial-and-error. I did not have a mental toolkit for debugging confusing type errors.
+![An intimidating block of error messages for a single mistake!](many-type-errors.png "A screenshot of some Haskell code side-by-side with an intimidating screenful of bright orange error messages."){.no-border}
 
-Haskell type errors are not unique in this regard—I had exactly the same experience with debugging in general. When I started programming all bugs were hard; I quickly built up an intuition for fixing *most* bugs; but I did not have the mental tools to deal with hard bugs, leaving me hitting my head against a metaphorical wall when I couldn't guess the cause of a bug up-front.
+At the same time, I was going through the same story with debugging in general. When I started programming all bugs were hard; gradually, I developed an intuition for fixing *most* bugs; but I did not have the mental tools to deal with hard bugs, leaving me thrashing around when my initial assumptions about a bug were wrong.
 
-I was missing one key insight: **you can approach debugging systematically**. Debugging is a skill you can learn. Realizing this, my approach to debugging improved significantly: I slowed down, stopped making baseless assumptions and instead approached problems step-by-step, following some simple principles.
+I was missing one key insight: **you can debug systematically**. Debugging is a skill you can learn—not just glorified guess-and-check. Realizing this, my approach to debugging improved significantly. I slowed down, stopped jumping in based on my initial assumptions and instead approached problems step-by-step, following some simple principles.
 
-Just like general debugging, **we can approach Haskell type errors systematically**. Fixing type errors is a skill you can learn. Let's look at a simple framework for fixing type errors by following three principles:
+This insight translated to Haskell. **We can fix Haskell type errors systematically.** It's a skill you can learn.
+
+Let's look at a simple framework for fixing type errors by following three principles:
 
  1. **Read the error**
  2. **Think in constraints**
@@ -24,11 +26,13 @@ Just like general debugging, **we can approach Haskell type errors systematicall
 </div>
 <div class="content">
 
-Systematic debugging is something I only learned almost a decade after I first started programming. In hindsight, it's a bit surprising—none of the tutorials, books, online discussions or college courses I took ever treated debugging as a concrete skill, much less taught any techniques or approaches. At the same time, debugging is easily one of the most important skills for any sort of programmer; everyone from the hobbyist to the academic to the professional spends at least as much time and effort debugging as they do writing code.
+Systematic debugging is something I only learned almost a decade after I first started programming. In hindsight, it's a bit surprising—none of the tutorials, books, online discussions or college courses I took ever treated debugging as a concrete skill and never covered any specific debugging techniques or principles.
 
-The first time I heard anyone talk about debugging as a systematic skill was during a learning session as part of an internship.[^js-talk] Shortly afterwards, somebody recommended a book[^nine-rules] which had nine “rules”—more like general principles—for debugging. By following these principles, I could solve problems step-by-step rather than thrashing around until I stumbled onto the solution.
+At the same time, debugging is easily one of the most important skills for any sort of programmer; everyone from the hobbyist to the academic to the professional spends at least as much time and effort debugging as they do writing code.
 
-We can approach Haskell type errors with the same mindset.
+The first time I heard anyone talk about debugging as a systematic skill was in a lecture during an internship.[^js-talk] Shortly afterwards, somebody recommended a book[^nine-rules] which had nine “rules”—really rules-of-thumb or general principles—for debugging. By following these principles, I could solve problems step-by-step rather than thrashing around until I stumbled onto the solution.
+
+We can approach Haskell type errors with the same mindset, with some variations on general debugging principles tailored to Haskell's style of type system specifically. (The principles apply just as well to other [Hindley-Milner][hm] languages like OCaml.)
 
 [^js-talk]: The first time I saw anybody talk about debugging *as a skill* was in a talk as part of Jane Street's internship program—unfortunately, more than a decade later, I don't remember exactly who gave the talk. At that point I had taken three years of CS courses at Berkeley and none of them ever touched on debugging like this; in hindsight, I would say this was the biggest missing piece in my CS education.
 
@@ -36,7 +40,7 @@ We can approach Haskell type errors with the same mindset.
 
 [debugging-book]: https://debuggingrules.com/?page_id=31
 
-In this spirit, here are three principles I use to deal with harder type errors:
+Here are three principles I use to deal with harder type errors:
 
   1. **Read the error**: when you load your code and see a bunch of red text, don't panic. Stop and read the errors—the error messages are the compiler's best attempt to tell you what's going on, and they're where we will start our debugging process.
   2. **Think in constraints**: Haskell's type system works like a set of constraints (and type *inference* works like constraint solving). When you see an error, read it as “here is an *inconsistency* in your code's types” and not “here is exactly where your code is *wrong*”.
@@ -50,9 +54,9 @@ Let's dive into each principle and see how to put them into action.
 
 ## Read the Error
 
-First step: when you see an error, **read the message**.
+First step: when you see an error, **read the error**.
 
-If there are multiple errors, **read all of them**—or at least give them a skim. The first error you get is not necessarily the best starting point.
+If there are multiple errors, **read all of them**. The first error you get is not necessarily the best starting point.
 
 This might sound obvious but, in practice, it isn't. Everyone I've mentored started out with a tendency to jump straight to their code as soon as they saw an error. I've caught myself doing the same thing! Error messages are a bit intimidating; it feels like you've done something wrong. Wanting to fix the error immediately is a natural impulse.
 
@@ -64,14 +68,14 @@ As you get a bit more experience, you'll learn to quickly recognize the most com
 
 ### Cutting Through the Noise
 
-Haskell error messages get verbose *quickly*. Each error produces a lot of noise.
+Haskell error messages get verbose *fast*. Each error produces a lot of noise.
 
 Haskell errors are verbose because they try to present all the information you'd need in a vacuum. Most error messages will have several parts giving distinct information, like:
 
- * the error itself
- * additional context about the error
- * steps to identify which part of the code caused the error
- * suggestions for how to fix the error
+ * The error itself.
+ * Additional context about the error.
+ * Steps to identify which part of the code caused the error.
+ * Suggestions for how to fix the error.
 
 Here's a simple type error message from one of my projects with its three distinct parts highlighted in different colors:
 
@@ -88,20 +92,22 @@ Here's a simple type error message from one of my projects with its three distin
 
 This message has three parts:
 
- 1. The first line tells us the location[^file-locations] as well as the type of error (a deferred type error warning)[^deferred-errors]
+ 1. The first line tells us the location[^file-locations] as well as the type of error (a deferred type error warning).[^deferred-errors]
  2. The second line is the actual error message.
  3. The third, fourth, fifth *and* sixth lines all tell us *where* the error is in our code.
 
-Even the simplest type error leads to six lines of error text. It only takes a handful of errors like this to fill up an entire screen!
+Even the simplest type error leads to six lines of error text. It only takes a handful of errors like this to fill an entire screen!
 
 If you're using an editor that highlights errors in place, none of the location information—4½ out of 6 lines!—matters. The only information we need is:
 
   1. It's a type error.
-  2. We expected a `Theta.Type` but got a `()`
+  2. We expected a `Theta.Type`  value but got `()`.
 
-So: the first trick to reading Haskell type errors is to mentally filter out the bits that don't matter—often *most* of the message^[Hopefully we'll get a flag to filter out the extra noise, but I don't believe that exists as of October 2024.]!
+So: the first trick to reading Haskell type errors is to mentally filter out the bits that don't matter—often *most* of the message!^[Hopefully we'll get a flag to filter out the extra noise, but I don't believe that exists as of October 2024.]
 
-More involved code can produce even more noise. A slightly different type error in the same `Python.hs` file, for example, produced *42 lines of localization information*[^42-lines]—none of which was useful because my editor highlighted the exact part of the code I needed to look at!
+More involved code produces even more noise. A slightly different type error in the same [`Python.hs` file][theta-python-hs], for example, produced *42 lines of localization information*[^42-lines]—none of which was useful because my editor highlighted the exact part of the code I needed to look at!
+
+[theta-python-hs]: https://github.com/TikhonJelvis/theta-idl/blob/stage/theta/src/Theta/Target/Python.hs
 
 [^deferred-errors]: This type error is actually a *warning* because I have the `-Wdeferred-type-errors` flag turned on. This flag is great for development because it lets the compiler surface more type errors and lets you experiment with the working parts of your code even if other parts don't typecheck.
 
@@ -159,13 +165,13 @@ More involved code can produce even more noise. A slightly different type error 
     </code>
   </pre>
 
-Once you cut through the noise, most Haskell type errors are pretty good. For example the message for this (somewhat contrived) error is clear: I need to replace the `()` with a value of the type `Theta.Type`.
+Once you cut through the noise, most Haskell type errors are reasonably clear. For example the message for this (somewhat contrived) error is clear: I need to replace the `()` with a value of the type `Theta.Type`. Even the error with 42 lines of noise had the correct suggestion that I was missing an argument to a function.
 
-Of course, some errors will not be nearly as clear. Perhaps the message itself is confusing or there are several errors and it is not clear which one to start from. Other times, the error *attribution* is wrong: either the error is pointing to the wrong part of the code, or the type of error itself is misleading. (We'll talk more about attribution and localization in later sections.)
+However, some errors will not be nearly as clear. Perhaps the message itself is confusing or there are several errors and it is not clear which one to start from. Other times, the error *attribution* is wrong: either the error is pointing to the wrong part of the code, or the type of error itself is misleading. (We'll talk more about attribution and localization in later sections.)
 
-However, even in those cases, the error messages are still worth reading. A message might not point us to a solution directly but still give us useful information. One of my personal debugging principles is to start debugging by getting all the information I can out of a system before doing anything else; for Haskell type errors, the error messages are the starting information we get.
+Even in those cases, the error messages are still worth reading. A message might not point us to a solution directly but it still give us information. One of my personal debugging principles is to start debugging by getting all the information I can out of a system before doing anything else; for Haskell type errors, the error messages are the information we start with.
 
-Moreover, the error messages we get give us *starting points* for understanding what's going on and starting our [divide and conquer](#divide-and-conquer) process to find the real cause of the error.
+Error messages will be our *starting points* for understanding what's going on and starting our [divide and conquer](#divide-and-conquer) process to find the real cause of the error.
 
 ### Multiple Error Messages
 
@@ -173,11 +179,11 @@ What should you do when you write some new code—or just make a single innocuou
 
 **Don't panic**.
 
-Remember that *Haskell error messages are verbose*; once you cut through the noise, those two screens of errors turn into a handful of distinct errors.
+Remember that *Haskell error messages are verbose*; once you cut through the noise, those two screens of errors reduce to a handful of distinct errors.
 
-Instead of jumping into the first error in the list, take a step back and read *all* of the errors. The first error you see may not be the best starting point. Moreover, patterns in the errors can be a useful indicator for where the problem came from.
+Instead of jumping into the first error in the list, take a step back and read *all* of the errors. The first error you see may not be the best starting point. Moreover, patterns in the errors can be a useful indicator for diagnosing the underlying problem.
 
-Often, several errors group together into a single “logical” error. For example, if we change the type of a function parameter, we'll get an error for every call site. A slightly contrived example:
+Multiple errors often group into a single “logical” error. For example, if we change the type of a function parameter, we'll get an error for every call site. A slightly contrived example:
 
 ``` haskell
 render :: Int -> String
@@ -206,6 +212,8 @@ If we change the type signature of `render` to `render :: Integer -> String` we 
       <span class="error-location">In the expression: render $$ a - b</span>
       <span class="error-location">In an equation for ‘sub’: sub a b = render $$ a - b</span>
 <hr></code></pre>
+
+These two errors group into a single logical error: the type for the argument we need to pass to `render` has changed.
 
 Real-world code is not going to be quite this clean; in one of my projects, changing a function from taking a `Maybe AST` value to an `AST` value resulted in 16 type errors with a couple of variations on the actual error message—all stemming from a single change to a type signature!
 
@@ -257,9 +265,11 @@ Because Haskell functions are curried by default, `toDefinition prefix` would st
     <span class="error-location">...</span>
 <hr></code></pre>
 
-The three error messages—with all their text—were definitely a bit intimidating, but I gave them a quick scan and noticed that they were all pointing to roughly the same part of my code, a hint that they share the same underlying cause.
+The three error messages—with all their text—were a bit intimidating, but I gave them a quick scan and noticed that they were all pointing to roughly the same part of my code, a hint that they share the same underlying cause.
 
-In this case, it turned out that the first error *was* the one to start with. Reading the error message carefully, we can see that `Couldn't match type ‘m’ with ‘(->) (Theta.Definition Theta.Type)` is actually telling us that we are missing an argument—which becomes much clearer if you read the next two lines in the error:
+In this case, it turned out that the first error message *was* the best one to start with. But if the code had been written in a slightly different order (say the call to `mapM` was in a `where` clause—we could have gotten exactly the same errors in a different order and the best starting point could have been the second or third error instead.
+
+Reading the first error message carefully, we can see that `Couldn't match type ‘m’ with ‘(->) (Theta.Definition Theta.Type)` is telling us that we are missing an argument—which becomes much clearer if you read the next two lines in the error:
 
 <pre class="error">
 <code>
@@ -269,7 +279,7 @@ In this case, it turned out that the first error *was* the one to start with. Re
 </code>
 </pre>
 
-(Another quick heuristic: the `Expected:` and `Actual:` lines are often more useful than the “actual” error message.)
+`Expected` and `Actual` types are often more useful than the top-level error message.
 
 </div>
 
@@ -277,33 +287,33 @@ In this case, it turned out that the first error *was* the one to start with. Re
 
 ## Think in Constraints
 
-While Haskell's error *messages* can be confusing, I've found that **error attribution** is actually a larger problem. It doesn't matter how well-written and well-formatted your error messages are if the error is pointing in the wrong place!
+While Haskell's error *messages* can be confusing, I've found that **error attribution** is a larger problem. It doesn't matter how well-written and well-formatted your error messages are if the error is pointing in the wrong place!
 
-At the same time, some level of error misattribution is inevitable. The core problem is that types can't tell us that some code is *right* or *wrong*; **types can only point out inconsistencies**.
+Some level of error misattribution is inevitable. The core problem is that types can't tell us that some code is *right* or *wrong*; **types can only point out inconsistencies**.
 
 You always have multiple parts of your code that you can change to fix a type error: if you pass an invalid argument to a function, you can change the argument, change the argument's type, change the function's definition or use a different function altogether. Or maybe it's a sign you need an even larger refactoring!
 
-Which change is “correct” *depends on your intentions*. The compiler does not know what your code is *supposed* to do; it cannot read your mind and it does not know anything about the world outside your code.
+Which change is “correct” *depends on your intentions*. The compiler cannot read your mind and does not know anything about the world outside your code, so it cannot know what your code is *supposed* to do.
 
 This is fundamentally true for all languages but it's exacerbated in Haskell because Haskell's type system is so flexible and expressive, and because Haskell has *global type inference* à la [Hindley Milner][hm].
 
-To understand what Haskell's type errors are telling us, we need to understand how Haskell's types act like constraints and how Haskell's type inference and type checking act as constraint resolution.
+To understand what Haskell's type errors indicate about our code and how to compensate for confusing error localization, we need to understand how Haskell's types act like constraints and how Haskell's type inference and type checking act as constraint resolution.
 
 ### Haskell Types as Constraints
 
 How does Haskell determine what type an expression should have?
 
-A good mental model is that Haskell *starts* by treating an expression or variable as able to have *any* type (`x :: a`) then looks through the code for anything that would force (*constrain*) `x` to have a more specific type.
+A good mental model is that Haskell starts by treating an expression or variable as able to have *any* type (`x :: a`) then looks through the code for anything that would force (*constrain*) the expression to have a more specific type.
 
 A constraint could be:
 
   - an explicit type signature: if Haskell sees `x :: Int` in the code, it will proceed with the assumption that `x` has type `Int`
-  - an implicit constraint: using `x` in a context that restricts its type; if Haskell sees `x && False` in the code, it will proceed with the requirement that `x` has type `Bool`
+  - using `x` in a context that restricts its type; if Haskell sees `x && False` in the code, it will proceed with the requirement that `x` has type `Bool`
   - an implicit constraint that lets `x` be polymorphic: if Haskell sees `x + 1`, it will assume `x` has the type `Num a => a`
   
-Ideally, all the constraints on `x` will be *consistent*. If `x` has the type `Int` everywhere in your code, everything is good. Alternatively, if `x` is constrained to `Int` at one point and `Num a => a` at another, things are still good because `Int` is an instance of `Num`, so the two signatures are compatible (and we can treat `x` as having type `Int` specifically).
+Ideally, all the constraints are consistent. If `x` has the type `Int` everywhere in your code, everything is good. Alternatively, if `x` is constrained to `Int` at one point and `Num a => a` at another, things are still good. `Int` is an instance of `Num` so the two signatures are compatible and `x` has the more specific of the two types (`Int`).
 
-A type error is what we get when these constraints are not compatible. For example:
+A type error is what we get when these constraints are *not* consistent. For example:
 
  1. We see `x + 1` on line 10, constraining `x` to `Num a => a`
  2. We see `x && y` on line 20, constraining `x` to `Bool`
@@ -311,17 +321,19 @@ A type error is what we get when these constraints are not compatible. For examp
  
 So now we need to generate a type error. Should the error point to line 10 or line 20?
 
-There's no real way to know. Perhaps you meant to write `x' + 1` at line 10. Perhaps you meant to write `even x && y` on line 20, or maybe even `x + y'`. Or maybe you meant to define a `Num` instance for `Bool`![^num-instance-for-bool]
+There's no real way to know. Perhaps you meant to write `x' + 1` at line 10. Perhaps you meant to write `even x && y` on line 20, or maybe `x + y'`. Or maybe you meant to define a `Num` instance for `Bool`![^num-instance-for-bool]
 
-All that the compiler knows is that you have to change *some* part of the code in order to make the types consistent. There are multiple places you could change, but an error message can only point to *one*, so it has to choose somehow. And the way it chooses is more-or-less arbitrary, an implementation detail of the typechecking algorithm; this works surprisingly well in practice but it isn't—fundamentally can't be—perfect.[^type-error-localization]
+All that the compiler knows is that you have to change *some* part of the code in order to make the types consistent. There are multiple places you could change, but an error message can only point to *one*, so the compiler has to choose somehow. The way real-world compilers choose where to point an error is more-or-less arbitrary, an implementation detail of the typechecking algorithm maybe coupled with some rough heuristics. This *ad hoc* approach works surprisingly well in practice but it isn't—fundamentally can't be—perfect.[^type-error-localization]
 
-So if you're looking at a type error for a line of code that seems totally correct, don't panic! There's a good chance that the problem is in some other line of code that introduces an incorrect constraint, and GHC's typechecker just chose the “wrong” line to mark the inconsistency.
+So when you encounter a type error pointing to a line of code that seems totally correct, don't panic! There's a good chance that the problem is in some other line of code and the typechecker chose the “wrong” line.
 
-Understanding Haskell's types as constraints will also help us to [divide and conquer](#divide-and-conquer) by giving us *candidates* for which part of the code might be wrong: we need to look for which parts of our code *introduce the constraints that led to the type error we are fixing*.
+Understanding Haskell's types as constraints will help us to track down the actual source of the error. As we [divide and conquer](#divide-and-conquer) the codebase, the candidates in our code will be *the lines that introduce the constraints that led to the type error we are fixing*.
 
-[^num-instance-for-bool]: This would require an [orphan instance][orphans] and would be an awful idea in practice, but it *would* be valid Haskell, and, hey, it even makes sense conceptually: if we have 8/16/etc-bit integers as `Num` instances, why *not* make `Bool` a 1-bit integer?
+[^num-instance-for-bool]: A `Num` instance for `Bool` would require an [orphan instance][orphans] and would be an awful idea in practice, but it *would* be valid Haskell, and, hey, it even makes sense conceptually: if we have 8/16/etc-bit integers as `Num` instances, why *not* make `Bool` a 1-bit integer?
 
-    That would be bad from a UX point of view—treating a `Bool` value as a number is almost definitely a programming mistake, and if it's intentional you can use the `enum` function to make it explicit—but it would be conceptually coherent. 
+    That would be bad from a UX point of view—treating a `Bool` value as a number is almost definitely a programming mistake, and if it's intentional you can use the [`fromEnum`][fromEnum] function to make it explicit—but it would be conceptually coherent. 
+                                                                                                                                                                      
+[fromEnum]: https://hackage.haskell.org/package/base/docs/Prelude.html#v:fromEnum
 
 [orphans]: https://wiki.haskell.org/Orphan_instance
 
@@ -377,37 +389,43 @@ src/Theta/Misc.hs:2:5: warning: [-Wdeferred-type-errors] …
   |
 ```
 
-Type signatures are Haskell's way of letting us explicitly specify our intentions. By telling the compiler that `x :: Int`, it knows that `y` and `z` are fine, but that the definition `x = False` is inconsistent. The code is still semantically the same, but we get a better error message.
+Type signatures are Haskell's way of letting us explicitly specify our intentions. By telling the compiler that `x :: Int`, it knows that `y` and `z` are fine, but that the definition `x = False` is inconsistent. The code is still semantically the same, but we get a more pointed error message.
 
-Type signatures can also constrain code *more* than it would be otherwise. A definition `x = []` will have the type `x :: [a]`, but if we add an explicit signature like `x :: [Int]`, the code will compile with the more specific type. Just like the previous example this can give you more specific type error messages, as well as avoiding weird edge cases like the [monomorphism restriction][monomorphism-restriction].
+Type signatures can also constrain the type of an expression *more* than it would be otherwise. A definition `x = []` will have the type `x :: [a]`, but if we add an explicit signature like `x :: [Int]`, the code will compile with the more specific type. Just like the previous example this can give you more specific type error messages, as well as avoiding weird edge cases like the [monomorphism restriction][monomorphism-restriction].
 
 [monomorphism-restriction]: https://wiki.haskell.org/Monomorphism_restriction
 
-In principle, Haskell type signatures are—mostly—optional. You can write entire Haskell programs without annotating any types yourself, relying entirely on type inference. But in practice, including top-level type signatures *is a really good idea* because it communicated your intent to both the compiler and to anybody else reading your code. You will consistently get much clearer type error messages if you write explicit type signatures.
+Type signatures in Haskell are—mostly—optional. You can write entire Haskell programs without annotating any types yourself, relying entirely on type inference. In practice, however, including top-level type signatures *is a really good idea* because it communicates your intent to both the compiler and to anybody else reading your code. You will consistently get clearer, better-attributed type errors if you write explicit type signatures.
 
-The more types you specify as type signatures, the more specific your type errors will be—but don't forget that it can be the type signature *itself* that is wrong!
+The more types you specify as type signatures, the more specific your type errors will be—but don't forget that the type signature itself can be wrong! Some of the trickier type errors I've had to solve boiled down to a mistake in a type signature rather than a mistake in an expression.
 
-This gives us a simple technique for improving a confusing type error: add more type signatures. Apart from top-level definitions, you can also add explicit signatures for:
+### More Signatures, More Better
+
+Type signatures let us isolate parts of our code for the typechecker, giving us better error messages and localization. This gives us a technique for debugging confusing type errors: **add more type signatures**.
+
+Apart from top-level definitions, you can also add explicit signatures for:
 
   - `let` and `where` definitions
   - variables bound in do-notation
   - pattern-match variables
   - arbitrary sub-expressions (`x + (y * 10 :: Double)`)
-  - typeclass implementations (with the `InstanceSigs` extension)
+  - typeclass implementations
   
-Adding a type signature is a way to assert something you know—well, *believe*—about your code's types. Maybe you're right about the type, maybe you're wrong, but it will help in either case:
+Adding a type signature is a way to assert something you believe about your code's types. Maybe you're right about the type, maybe you're wrong, but the type signature will help in either case:
 
   - if your type signature is wrong, you'll get a new type error from it and you will have learned something new about your code
   - if your type signature is right, you'll give the typechecker more information to provide clearer, better-localized errors
   
-I've repeatedly had confusing type-errors in real-world code get cleared up by adding a type signature or two to helper functions defined in `where` clauses. And there's nothing wrong about leaving that type signature in the `where` clause even once you've fixed the code! If it helped once, it could well help again; and, regardless, the explicit type signature will help anybody reading the code in the future.
+I've cleared up numerous confusing type errors in real-world code by adding a type signature or two to helper functions defined in `where` clauses. Sometimes I even pull out sub-expressions into a `where` or `let` clause just to add a type signature—while you *can* add type signatures directly inside expressions, code often reads much better with those subexpressions pulled out into their own definitions.
+
+There's nothing wrong with leaving type signatures you added to debug a type error after you're done fixing your code. If the type signature helped once, it will likely help again; and, regardless, the explicit type signature will help anybody reading the code in the future.
 
 <!-- Some old footnotes, may or may not fit into this sections -->
 
-[^type-error-localization]: Type error localization in Haskell (and similar languages) is [an active area of research][localization-research] as is [the quality of compiler error messages more broadly][error-message-research]. 
+[^type-error-localization]: Type error localization is [an active area of research][localization-research] as is [the quality of compiler error messages more broadly][error-message-research]. 
 David Binder pointed this research out to me [on Discourse][david-binder-discourse-post], including additional links and context.
 
-    Some of the research approaches are promising and seem to wor well in practice, but require some heavyweight algorithmic work: for example, [one promising approach][type-error-localization-smt] required solving a MaxSMT problem to find the "best" error location. That works well, but do we really want our compiler to depend on an SMT solver (in a fairly non-trivial way, at that!) just for better error messages?
+    Some of the research approaches are promising and seem to work well in practice, but have heavyweight dependencies: for example, [one promising approach][type-error-localization-smt] requires solving a MaxSMT problem to find the "best" error location. That works well, but do we really want our compiler to depend on an SMT solver with cutting-edge capabilities just for better error messages?
 
 [localization-research]: https://dl.acm.org/doi/10.1145/3138818
 
@@ -423,26 +441,26 @@ David Binder pointed this research out to me [on Discourse][david-binder-discour
 
 ## Divide and Conquer
 
-So: you've read your error messages, you've added some type signatures, but the type errors you're getting still don't make sense. The code at the error looks fine and it's not clear what's actually wrong.
+So: you've read your error messages, you've added some type signatures, but you still can't find what's causing the type error. The code highlighted by the error looks fine and it's not clear what's actually wrong.
 
 What do we do?
 
-We need to find which other part of the code is incorrectly causing the inconsistency in types that's giving us errors. We could try jumping around the code based purely on intuition, but it's easy to go in the completely wrong direction if your initial guesses aren't right. We could try reading our code from start to end—does code even have a start and an end?—but that would take a lot of work!
+We need to find which other part of the code is incorrectly causing our types to be inconsistent. We could try jumping around the code based purely on intuition, but it's easy to go in the completely wrong direction if your initial guesses aren't right. Alternatively, we could try reading our code from start to end—does code even have a start and an end?—but that would take a lot of work!
 
 Instead of jumping around in an *ad hoc* way or doing a linear scan of our code, we can borrow an idea from the world of algorithms and find the problem through **divide and conquer**.
 
-Remember that a type error corresponds to an *inconsistency* between type constraints in your codebase. An inconsistency is not a single point that is wrong; rather, it is composed of multiple components that are incompatible. 
+Remember that a type error corresponds to an *inconsistency* between type constraints in your codebase. An inconsistency is not a single point that is wrong; rather, it is composed of multiple components that are incompatible and we can search through them separately.
 
-### Great Expectations
+### Violated Expectations
 
-Type errors highlight a specific expression then give us the two incompatible sides:
+A type error highlights a specific expression gives us the two incompatible sides:
 
-  - the type that the expression **has**
-  - the type that the context of the expression **expected**
+  - The **actual** type the expression has.
+  - The type that the context of the expression **expected**.
   
 We don't know which one is “wrong”, we just know that they do not match.
 
-Some type errors make these sides very clear, like we saw in an earlier example:
+Some type errors explicitly list the “expected” and “actual” sides, like we saw in an earlier example:
 
 ```
 src/Theta/Target/Python.hs:65:41: warning: [-Wdeferred-type-errors] …
@@ -452,7 +470,7 @@ src/Theta/Target/Python.hs:65:41: warning: [-Wdeferred-type-errors] …
     ...
 ```
 
-With other errors, we have to reason out the two sides, as we saw in a different example:
+Other errors leave us to reason out the two sides from the error message, as we saw in a different example:
 
 ```
 src/Theta/Misc.hs:5:11: warning: [-Wdeferred-type-errors] …
@@ -460,54 +478,65 @@ src/Theta/Misc.hs:5:11: warning: [-Wdeferred-type-errors] …
     ...
 ```
 
-The literal text of this error tells us that `Bool` does not have a `Num` instance—but that's fine, `Bool` should really *not* have a `Num` instance! Booleans aren't numbers. Instead, we should read this message as:
+The literal text of this error tells us that `Bool` does not have a `Num` instance—but that's fine, `Bool` should really *not* have a `Num` instance! Booleans aren't numbers.
+
+Instead, we should read this message as:
 
 ```
 Expected: an instance of Num
   Actual: Bool
 ```
 
+As you see different kinds of type error messages, it's worth learning how to translate all of them into this format. Writing out the two sides explicitly when you first see an error can help.
+
 ### Searching through the Code
 
 The two sides of a type error give us the perfect starting point for dividing our problem into two halves:
 
-  1. why does the compiler believe our expression has the type it does?
-  2. why does the compiler believe the surrounding context expects the type it does?
+  1. Why does the compiler believe our expression has its *actual* type?
+  2. Why does the compiler believe the surrounding context *expected* the type it did?
   
-For lots of type errors we have a good idea of which side to look at but, even if we don't, we've just split our big problem (“why are we getting this type error?”) into two smaller problems.
+Often, we will have a good idea of which side to look at: either the actual or the expected type are “obviously” correct. (That said, always be wary of anything that seems “obvious”—believing the wrong thing to be obvious is the easiest way to go off on a wild goose chase!)
+
+Even if neither side is clearly right, we've still made progress by splitting our big problem (“why are we getting this type error?”) into two smaller problems.
 
 The next step is to take one of these sides and *figure out what constraints led to that particular type*.
 
-One way to do this is by reading the code and reasoning through the types in your head—a pain at first but, with a bit of experience, surprisingly manageable. Note that you only have to reason about the *types*, not about what the code actually does: static types are a *syntactic property* of the program, so they can only depend on the code and not on runtime behavior or state.
+One way to do this is by reading the code and reasoning through the types in your head—a pain at first but manageable with a bit of experience. You only have to reason about types, not about what the code actually does: static types are a *syntactic property* of the program, so they can only depend on the code and not on runtime behavior or state.
 
-We can also rely on our tools to help us figure out what's going on with our types:
+We also have a few tools that can help us figure out what's going on with our types:
 
-  - use your IDE/haskell-language-server/etc to figure out what types are inferred for any given identifier in the code
-  - replace parts of your code with [typed holes][typed-holes] to see what types are inferred for those expressions
-  - reproduce specific expressions in `ghci`, where you can check for types with the [`:t` command][ghci-t]
-  - also useful: the [`:i` command][ghci-i] for seeing all the typeclass instances a type implements and the [`:k` command][ghci-k] for checking kinds
+  - An IDE or haskell-language-server can tell you the type inferred for a specific identifier or expression in your code.
+  - You can replace parts of your code with [typed holes][typed-holes] to see what types are inferred for those parts.
+  - `ghci` has several commands for inspecting types:
+    - the [`:t` command][ghci-t] gives you the type of an expression
+    - the [`:i` command][ghci-i] gives you information about an identifier, including all the typeclass instances for a type or all the implementing types for a typeclass
+    - the [`:k` command][ghci-k] will tell you the [kind] of a type and can simplify type expressions (with `:k!`)
 
 [ghci-t]: https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html#ghci-cmd-:type
 [ghci-i]: https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html#ghci-cmd-:info
 [ghci-k]: https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html#ghci-cmd-:kind
 
-
 [typed-holes]: https://downloads.haskell.org/ghc/latest/docs/users_guide/exts/typed_holes.html
+[kind]: https://wiki.haskell.org/Kindg
+
     
-If we have a good idea of what parts of the code constrain the expression that led to our type error, but that is not enough to *resolve* the type error, we can continue the search in the same way: figure out which parts of the code constraint the parts we're already looking at. We're searching through the type dependencies of our code like a graph.
+If we have a good idea of what parts of the code constrain the expression that led to our type error, but that is not enough to *resolve* the type error, we can continue the search in the same way: figure out which parts of the code constraint the parts we're currently looking at. We're searching through the type dependencies of our code like a graph.
 
-Of course, this graph of dependencies can get *big*. Searching through it effectively will always require some intuition about what could reasonably be cause the errors we're seeing. 
+Of course, this graph of type dependencies can get *big*. Searching through it effectively will always require some intuition about what could reasonably cause the errors we're seeing. 
 
-Writing **additional type signatures** is a powerful tool for managing this large search space. By asserting more types, we can fence off the parts of the code we've looked at from the parts we're still investigating, directing the type checker to help us. (More realistically, I just add type signatures because more signatures is more better rather than based on any sort of sophisticated tactical reasoning!)
+Writing **additional type signatures** is a powerful tool for managing this large search space. By asserting types with type signatures, we can fence off the parts of the code we've looked at from the parts we're still investigating, directing where the type checker looks. (More realistically, I often add type signatures simply because [more signatures is more better](#more-signatures-more-better) rather than based on any sort of sophisticated tactical reasoning!)
 
-My advice here is to try to search more-or-less systematically and to think of types in terms of constraints, but not to overthink too much besides that. At first this will sometimes take a lot of effort, but this gets much easier with experience: experience with Haskell in general, with GHC in particular and even with the libraries and abstractions you're using.
+My advice here is to try to search more-or-less systematically and to think of types in terms of constraints, but not to overthink beyond that. At first this will sometimes take a lot of effort, but this gets much easier with experience: experience with Haskell in general, with GHC in particular and even with the libraries and abstractions you're using.
 
 </div>
 <div class="content">
 
-Haskell type errors can be *hard*. Haskell has the reputation for bad type error messages but, while the messages *do* have issues, a more common problem is *bad error attribution*: type errors do not always give the “right” reason for the problem or point to the “right” part of the code. (“Right” in quotes because it's a matter of context, and sometimes there is no single “right” location because the problem actually requires a whole-program refactor!)
+Haskell type errors can be *hard*. Haskell has the reputation for bad type error messages but, while the messages *do* have issues, a more common problem is *bad error attribution*: type errors do not always give the “right” reason for the problem or point to the “right” part of the code.
 
-To some extent, getting comfortable fixing Haskell type errors comes with experience and practice. However, as we're getting started—and, often, even once we're more experienced—it helps to take a systematic approach to debug the type error. When you see an error, you can follow three principles to deal with it:
+While getting comfortable fixing Haskell type errors will only come with experience and practice, we can start by approaching the problem systematically. This both gives you a foundation for *learning* how to solve type errors as well as helping you deal with trickier errors even once you have more experience.
+
+When you see an error, you can follow three principles to deal with it:
 
   - **read the error**—the error is your best starting point (and sometimes reading the error explains the error!)
   - **think in constraints**—it's not about “right” and “wrong”, it's about two sides being incompatible
