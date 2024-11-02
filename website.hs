@@ -2,6 +2,7 @@
 {-# LANGUAGE NamedFieldPuns            #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE OverloadedStrings         #-}
+{-# LANGUAGE PatternGuards             #-}
 {-# LANGUAGE ViewPatterns              #-}
 
 module Main where
@@ -9,6 +10,7 @@ module Main where
 import           Control.Monad          (forM, mapM, (<=<))
 
 import qualified Data.Char              as Char
+import qualified Data.Foldable          as Foldable
 import           Data.Functor           ((<$>))
 import qualified Data.List              as List
 import           Data.Monoid            (mconcat, (<>))
@@ -118,7 +120,7 @@ defaultPage content = do
     >>= relativizeUrls
 
 runPandoc :: Item String -> Compiler (Item String)
-runPandoc = titleToAlt <=< pandoc
+runPandoc = imageLinks <=< titleToAlt <=< pandoc
   where pandoc item = writePandocWith writerOptions
                   <$> (fmap pandocFilters <$> readPandocWith readerOptions item)
 
@@ -176,6 +178,7 @@ ghciCodeBlocks = Pandoc.topDown renderBlock
           '>' -> "&gt;"
           x   -> [x]
 
+
 -- | Set the @alt@ of each @img@ tag to the text in its @title@ and
 -- remove the @title@ attribute altogether.
 --
@@ -194,6 +197,22 @@ titleToAlt item = pure $ withTags fixImg <$> item
                   Just ("title", titleText) -> titleText
                   _                         -> ""
                 oneOf atts (att, _) = att `elem` atts
+
+
+-- | Make images inside figures into links to the expanded version of the image.
+imageLinks :: Item String -> Compiler (Item String)
+imageLinks item = pure $ withTagList (concatMap wrapImg) <$> item
+  where wrapImg :: Tag String -> [Tag String]
+        wrapImg = \case
+          TagOpen "img" attributes
+            | Just src <- getSrc attributes ->
+              [ TagOpen "a" [("href", src), ("class", "image-enlarge")]
+              , TagOpen "img" attributes
+              , TagClose "a"
+              ]
+          other                    -> [other]
+
+        getSrc = fmap snd . Foldable.find (\ (attr, _) -> attr == "src")
 
 postContext :: Context String
 postContext = mapContext Path.takeDirectory (urlField "url")

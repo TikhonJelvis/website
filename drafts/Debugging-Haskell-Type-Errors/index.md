@@ -1,6 +1,7 @@
 ---
 title: Debugging Haskell Type Errors
 author: Tikhon Jelvis
+published: 2024-11-01 17:58:09
 ---
 
 Fixing Haskell type errors can be *hard*. Learning how to understand and fix type errors was the first real obstacle I faced when I first picked up the language. I've seen the same tendency with every Haskell beginner I've taught.
