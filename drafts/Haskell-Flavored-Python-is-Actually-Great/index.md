@@ -17,6 +17,8 @@ Python now has all the ingredients for algebraic data types à la Haskell or ML:
   
 Here's a Haskell data type for a simple language of arithmetic expressions:
 
+<!-- TODO: Replace example with JS events (navigate/etc)? -->
+
 ``` haskell
 data Expr = Literal Integer
           | Variable String
@@ -71,8 +73,6 @@ def eval(e: Expr, scope: Dict[Variable, int]) -> int:
         case Div(l, r):
             return eval(l) // eval(r)
 ```
-
-This example is just meant to be an illustration.
 
 You can also define union types that include preexisting Python types:
 
