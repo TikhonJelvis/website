@@ -2,6 +2,7 @@
 title: Debugging Haskell Type Errors
 author: Tikhon Jelvis
 published: 2024-11-01 17:58:09
+modified: 2024-11-02 17:26:14
 ---
 
 Fixing Haskell type errors can be *hard*. Learning how to understand and fix type errors was the first real obstacle I faced when I first picked up the language. I've seen the same tendency with every Haskell beginner I've taught.
@@ -104,7 +105,13 @@ If you're using an editor that highlights errors in place, none of the location 
   1. It's a type error.
   2. We expected a `Theta.Type`  value but got `()`.
 
-So: the first trick to reading Haskell type errors is to mentally filter out the bits that don't matter—often *most* of the message!^[Hopefully we'll get a flag to filter out the extra noise, but I don't believe that exists as of October 2024.]
+So: the first trick to reading Haskell type errors is to mentally filter out the bits that don't matter—often *most* of the message![^context-flag]
+
+[^context-flag]: On GHC 9.8 and later, the noisy context information can be disabled with the `-fno-show-error-context` flag. In `ghci` you can enable this flag with `:set`:
+
+    ``` ghci
+    λ> :set -fno-show-error-context
+    ```
 
 More involved code produces even more noise. A slightly different type error in the same [`Python.hs` file][theta-python-hs], for example, produced *42 lines of localization information*[^42-lines]—none of which was useful because my editor highlighted the exact part of the code I needed to look at!
 
@@ -519,7 +526,7 @@ We also have a few tools that can help us figure out what's going on with our ty
 [ghci-k]: https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html#ghci-cmd-:kind
 
 [typed-holes]: https://downloads.haskell.org/ghc/latest/docs/users_guide/exts/typed_holes.html
-[kind]: https://wiki.haskell.org/Kindg
+[kind]: https://wiki.haskell.org/Kind
 
     
 If we have a good idea of what parts of the code constrain the expression that led to our type error, but that is not enough to *resolve* the type error, we can continue the search in the same way: figure out which parts of the code constraint the parts we're currently looking at. We're searching through the type dependencies of our code like a graph.
