@@ -2,6 +2,9 @@
 title: Three Regimes for Resilience
 author: Tikhon Jelvis
 published: 2025-01-24 17:22:51
+modified: 2025-01-24 17:41:02
+modified: 2025-01-24 17:42:17
+modified: 2025-01-24 17:42:43
 ---
 
 A useful mental tool for designing resilient software: **consider how the system will operate in three separate regimes**:
@@ -10,9 +13,15 @@ A useful mental tool for designing resilient software: **consider how the system
  2. Small issues crop up requiring *narrowly scoped*—but not necessarily *routine*—human intervention.
  3. A large, unexpected issue crops up, affecting the entire system and requiring *major*, *novel* human intervention
 
-<!--more-->
-
 I'm intentionally talking about "issues" rather than "incidents" because this framework applies to situations that do not parse as "software incidents": think customer support issues, physical emergencies, regulatory audits or even emerging market *opportunities*. Quickly pivoting or expanding into a new area is not an *incident*, but it sure feels like a major *issue* to the folks working on it!
+
+In hindsight, this would have been a useful tool for designing the inventory control system I worked on at Target, and it's a tool I'm going to use for future systems I design.
+ 
+![A retail distribution center. (Photo credit: [Nick Saltmarsh][flickr])](distribution-center-stock-photo.jpg "A stock photo of a retail distribution center, the interior of a big wharehouse with shelves stocked with pallets and several forklifts on the side.")
+
+[flickr]: https://www.flickr.com/people/nsalt/
+
+<!--more-->
 
 </div>
 <div class="content">
