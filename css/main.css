@@ -139,7 +139,7 @@ a > img {
 }
 
 
-.content p, .content ul, .content ol, .content dl, .footnotes ol, .content h2, .content h3, .content h4 {
+.content p, .content ul, .content ol, .content dl, .footnotes ol, .content h2, .content h3, .content h4, .content blockquote {
   margin-left : 12%;
   margin-right : 12%;
 }
@@ -267,6 +267,24 @@ em {
 
 .content div.figure code, .content figure code {
     background-color : var(--background);
+}
+
+/* Quotes */
+.content blockquote {
+    background-color : var(--lighter);
+
+    padding-top: 1.5ex;
+    padding-bottom: 1.5ex;
+
+    margin-top: -1ex;
+
+    border-left: 3px solid var(--h1);
+}
+
+.content blockquote p {
+    margin: 0;
+    margin-left: 2%;
+    margin-right: 3%;
 }
 
 /* Rules for my interactive animation feature. */
