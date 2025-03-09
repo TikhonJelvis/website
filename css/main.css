@@ -270,20 +270,26 @@ em {
 }
 
 /* Quotes */
-.content blockquote {
+.content blockquote, .footnotes blockquote {
     background-color : var(--lighter);
+    border-left: 10px solid var(--darker);
 
     padding-top: 1.5ex;
     padding-bottom: 1.5ex;
+}
 
+.content blockquote {
     margin-top: -1ex;
     margin-left : 13%;
     margin-right : 15%;
-
-    border-left: 10px solid var(--darker);
 }
 
-.content blockquote p {
+.footnotes blockquote {
+    margin-left : 2%;
+    margin-right : 5%;
+}
+
+.content blockquote p, .footnotes blockquote p {
     margin: 0;
     margin-left: 3%;
     margin-right: 3%;
