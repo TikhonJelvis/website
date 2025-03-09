@@ -79,6 +79,10 @@ Given the recognition-primed decision making model, and given the understanding 
 
 My experience has been that we largely don't. I have seen far more processes and expectations that hinder experts than ones that empower.
 
+::: {.pull-quote .left style="width: 40%"}
+> Experts see doing *as* planning.
+:::
+
 Managers often have *a priori* models for how decisions “should” be made that do not match how experts actually operate. 
 
 For example, it is common to expect people to break tasks down into small, explicit subtasks—which is fundamentally at odds with how experts see the work:
