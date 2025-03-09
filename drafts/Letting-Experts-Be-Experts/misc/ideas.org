@@ -23,6 +23,8 @@
          experts to pretend to fit their reasoning into the wrong kind
          of mold is a counterproductive waste of time and culturally
          unhealthy
+       - either way, you're directly contributing to a culture that is
+         actively antithetical to the effective exercise of expertise
      - too much legibility in how experts work hurts quality and
        motivation, makes the work less adaptable
        - at the same time: communicated about decisions is a skill
