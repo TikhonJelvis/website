@@ -297,6 +297,7 @@ em {
 
 /* Pull Quotes */
 .content aside.pull-quote {
+    position: relative;
     width: 50%;
     background-color: var(--lighter);
     margin-bottom: 10px;
@@ -307,17 +308,25 @@ em {
     border-bottom-left-radius: 20px;
 }
 
-.content aside.pull-quote.right blockquote::before {
+.content aside.pull-quote.left {
+    float: left;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    margin-left: -7px;
+    margin-right: 2ex;
+
+    overflow: hidden;
+}
+
+.content aside.pull-quote blockquote::before {
     content: "“";
 
     position: absolute;
-    top: 128px;
-    left: 48%;
-
-    float: left;
+    top: -15px;
+    left: -25px;
 
     font-size: 20em;
-
     color: var(--background);
 }
 
