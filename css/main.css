@@ -297,15 +297,17 @@ em {
 
 /* Pull Quotes */
 .content aside.pull-quote {
-    float: right;
     width: 50%;
     background-color: var(--lighter);
-
-    border-bottom-left-radius: 20px;
     margin-bottom: 10px;
 }
 
-.content aside.pull-quote blockquote::before {
+.content aside.pull-quote.right {
+    float: right;
+    border-bottom-left-radius: 20px;
+}
+
+.content aside.pull-quote.right blockquote::before {
     content: "“";
 
     position: absolute;

@@ -15,12 +15,9 @@ A solid starting point is the [recognition-primed decision making][rpd] (RPD) mo
 
 <!--more-->
 
-</div>
-<div class="content">
-
 Klein's work and the RPD model stand out from other research on decision making because it is based on experts making decisions in complex real-world situations rather than novices making decisions in laboratory conditions. 
 
-::: {.pull-quote}
+::: {.pull-quote .right}
 > They see experts as “beginners with more knowledge” rather than people whose expertise allows them to operate in a categorically different—and more effective!—manner.
 :::
 
