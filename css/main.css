@@ -301,6 +301,7 @@ em {
     width: 50%;
     background-color: var(--lighter);
     margin-bottom: 10px;
+    overflow: hidden;
 }
 
 .content aside.pull-quote.right {
@@ -315,8 +316,6 @@ em {
 
     margin-left: -7px;
     margin-right: 2ex;
-
-    overflow: hidden;
 }
 
 .content aside.pull-quote blockquote::before {

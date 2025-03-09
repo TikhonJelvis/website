@@ -38,6 +38,10 @@ Perhaps the “obvious” idea is not so obvious after all!
 
 It's tempting to simplify the RPD model into a truism: experts make decisions based on experience. While this is a true observation, it misses the critical nuances that determine how experts actually make decisions, differentiate experts from non-experts and determine how organizational structure and culture impacts expertise in practice.
 
+::: {.pull-quote .left }
+> Experts have sophisticated, intuitive ways to use their experience to make better decisions.
+:::
+
 One critical aspect is that expert decisions are not *legible*.
 
 We like to think that “good” decisions come from comparing alternative possibilities detail-by-detail. If an expert would just write out the possibilities and list out pros and cons, anybody could follow the same reasoning and come to the same decision. Right?
