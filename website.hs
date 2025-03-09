@@ -183,10 +183,13 @@ ghciCodeBlocks = Pandoc.topDown renderBlock
 pullQuotes :: Pandoc -> Pandoc
 pullQuotes = Pandoc.walk $ concatMap renderBlock
   where renderBlock :: Block -> [Block]
-        renderBlock block@(Div (_, classes, _) contents)
+        renderBlock block@(Div (_, classes, attributes) contents)
           | "pull-quote" `elem` classes =
-            let classes' = Text.unwords classes in
-            [ RawBlock "html" $ "<aside class='" <> classes' <> "'>\n" ] <>
+            let classes' = Text.unwords classes
+                attributes' =
+                  Text.unwords [attr <> "='" <> val <> "'" | (attr, val) <- attributes]
+            in
+            [ RawBlock "html" $ "<aside class='" <> classes' <> "'" <> attributes' <> ">\n" ] <>
             contents <>
             [ RawBlock "html" "</aside>" ]
           | otherwise                   = [block]
