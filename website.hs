@@ -15,15 +15,18 @@ import           Data.Functor           ((<$>))
 import qualified Data.List              as List
 import           Data.Monoid            (mconcat, (<>))
 import           Data.String            (fromString)
+import           Data.Text              (Text)
+import qualified Data.Text              as Text
 
 import qualified System.Directory       as Dir
-import           System.FilePath        ((</>))
 import qualified System.FilePath        as Path
+import           System.FilePath        ((</>))
 
 import           Text.HTML.TagSoup      (Tag (..))
 import           Text.Pandoc.Definition (Block (..), Pandoc)
 import qualified Text.Pandoc.Generic    as Pandoc
 import qualified Text.Pandoc.Options    as P
+import qualified Text.Pandoc.Walk       as Pandoc
 import           Text.Printf            (printf)
 
 import           Hakyll
@@ -124,7 +127,7 @@ runPandoc = imageLinks <=< titleToAlt <=< pandoc
   where pandoc item = writePandocWith writerOptions
                   <$> (fmap pandocFilters <$> readPandocWith readerOptions item)
 
-        pandocFilters = ghciCodeBlocks
+        pandocFilters = pullQuotes . ghciCodeBlocks
 
         writerOptions = defaultHakyllWriterOptions
          { P.writerHTMLMathMethod = P.MathJax ""
@@ -137,6 +140,7 @@ runPandoc = imageLinks <=< titleToAlt <=< pandoc
         exts = P.enableExtension P.Ext_tex_math_single_backslash $
                P.enableExtension P.Ext_all_symbols_escapable $
                P.enableExtension P.Ext_inline_notes $
+               P.enableExtension P.Ext_attributes $
                P.pandocExtensions
 
 -- | Have custom processing for @ghci@ code blocks as part of pandoc
@@ -150,34 +154,42 @@ ghciCodeBlocks = Pandoc.topDown renderBlock
           | otherwise             = block
         renderBlock block = block
 
-        ghciHtml :: String -> String
+        ghciHtml :: Text -> Text
         ghciHtml contents = "<pre class='ghci'><code>" <> wrap contents <> "</code></pre>"
 
         prompt = escape "λ>"
 
-        wrap = trimNewlines' . unlines . map (highlight . escape) . lines
+        wrap = Text.strip . Text.unlines . map (highlight . escape) . Text.lines
         highlight line
-          | List.isPrefixOf prompt line = wrapSpan "ghci-input" $ highlightPrompt line
-          | all Char.isSpace line       = line
+          | Text.isPrefixOf prompt line = wrapSpan "ghci-input" $ highlightPrompt line
+          | Text.all Char.isSpace line  = line
           | otherwise                   = wrapSpan "ghci-output" line
         wrapSpan class_ line =
           "<span class='" <> class_ <> "'>" <> line <> "</span>"
         highlightPrompt line =
-          "<span class='ghci-prompt'>" <> prompt <> "</span>" <> drop (length prompt) line
-        trimNewlines' text = trimNewlines text
-        trimNewlines "" = ""
-        trimNewlines text
-          | head text == '\n' && last text == '\n' = tail (init text)
-          | head text == '\n'                      = tail text
-          | last text == '\n'                      = init text
-          | otherwise                              = text
+          let dropped = Text.drop (Text.length prompt) line in
+          "<span class='ghci-prompt'>" <> prompt <> "</span>" <> dropped
 
-        escape :: String -> String
-        escape = concatMap $ \case
+        escape = Text.pack . escape' . Text.unpack
+        escape' = concatMap $ \case
           '<' -> "&lt;"
           '>' -> "&gt;"
           x   -> [x]
 
+
+-- | Turn div.pull-quote blocks elements into aside.pull-quote.
+--
+-- Semantic HTML tags are great!
+pullQuotes :: Pandoc -> Pandoc
+pullQuotes = Pandoc.walk $ concatMap renderBlock
+  where renderBlock :: Block -> [Block]
+        renderBlock block@(Div (_, classes, _) contents)
+          | "pull-quote" `elem` classes =
+            [ RawBlock "html" "<aside class='pull-quote'>\n" ] <>
+            contents <>
+            [ RawBlock "html" "</aside>" ]
+          | otherwise                   = [block]
+        renderBlock block = [block]
 
 -- | Set the @alt@ of each @img@ tag to the text in its @title@ and
 -- remove the @title@ attribute altogether.
