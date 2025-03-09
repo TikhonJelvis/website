@@ -185,7 +185,8 @@ pullQuotes = Pandoc.walk $ concatMap renderBlock
   where renderBlock :: Block -> [Block]
         renderBlock block@(Div (_, classes, _) contents)
           | "pull-quote" `elem` classes =
-            [ RawBlock "html" "<aside class='pull-quote'>\n" ] <>
+            let classes' = Text.unwords classes in
+            [ RawBlock "html" $ "<aside class='" <> classes' <> "'>\n" ] <>
             contents <>
             [ RawBlock "html" "</aside>" ]
           | otherwise                   = [block]
