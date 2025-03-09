@@ -49,7 +49,7 @@ main = hakyll $ do
     compile $ getResourceString
       >>= saveSnapshot "blurb"
       >>= loadAndApplyTemplate "templates/blog-post.md" context
-      >>= defaultPage
+      >>= blogPost
 
   match "blog/index.html" $ do
     route   $ setExtension "html"
@@ -117,9 +117,25 @@ blogBlurbs = do
 defaultPage :: Item String -> Compiler (Item String)
 defaultPage content = do
   includes <- setIncludes =<< getUnderlying
+  metas <- getMetadataField (itemIdentifier content) "metas"
   applyAsTemplate includes content
     >>= runPandoc
     >>= loadAndApplyTemplate "templates/default.html" context
+    >>= relativizeUrls
+
+blogPost :: Item String -> Compiler (Item String)
+blogPost content = do
+  includes <- setIncludes =<< getUnderlying
+
+  title <- fmap Text.pack <$> getMetadataField (itemIdentifier content) "title"
+  description <- fmap Text.pack <$> getMetadataField (itemIdentifier content) "description"
+  image <- fmap Text.pack <$> getMetadataField (itemIdentifier content) "image"
+  let metaTags = Text.unlines [meta' Title title, meta' Description description, meta' Image image]
+      postContext = constField "metas" (Text.unpack metaTags) <> context
+
+  applyAsTemplate includes content
+    >>= runPandoc
+    >>= loadAndApplyTemplate "templates/default.html" postContext
     >>= relativizeUrls
 
 runPandoc :: Item String -> Compiler (Item String)
@@ -165,7 +181,7 @@ ghciCodeBlocks = Pandoc.topDown renderBlock
           | Text.all Char.isSpace line  = line
           | otherwise                   = wrapSpan "ghci-output" line
         wrapSpan class_ line =
-          "<span class='" <> class_ <> "'>" <> line <> "</span>"
+          tag "span" [class_] [] <> line <> "</span>"
         highlightPrompt line =
           let dropped = Text.drop (Text.length prompt) line in
           "<span class='ghci-prompt'>" <> prompt <> "</span>" <> dropped
@@ -185,11 +201,7 @@ pullQuotes = Pandoc.walk $ concatMap renderBlock
   where renderBlock :: Block -> [Block]
         renderBlock block@(Div (_, classes, attributes) contents)
           | "pull-quote" `elem` classes =
-            let classes' = Text.unwords classes
-                attributes' =
-                  Text.unwords [attr <> "='" <> val <> "'" | (attr, val) <- attributes]
-            in
-            [ RawBlock "html" $ "<aside class='" <> classes' <> "'" <> attributes' <> ">\n" ] <>
+            [ RawBlock "html" $ tag "aside" classes attributes ] <>
             contents <>
             [ RawBlock "html" "</aside>" ]
           | otherwise                   = [block]
@@ -241,7 +253,7 @@ postContext = mapContext Path.takeDirectory (urlField "url")
             Just body -> return body
 
 context :: Context String
-context = defaultContext <> include "imports.html"
+context = defaultContext <> include "imports.html" <> constField "metas" ""
 
 setIncludes :: Identifier -> Compiler (Context a)
 setIncludes (Path.takeDirectory . toFilePath -> dir) = mconcat . map include <$> files
@@ -272,3 +284,64 @@ deep name = pat "%s/**" .||. pat "**/%s/**"
 
 alternates :: [Pattern] -> Pattern
 alternates = foldr1 (.||.)
+
+-- * HTML Functions
+
+-- | Generate an opening tag with the given CSS classes and
+-- attributes.
+--
+-- >>> tag "div" ["foo", "bar"] [("id", "baz"), ("data-foo", "foo")]
+-- "<div class='foo bar' id='baz' data-foo='foo'>"
+tag :: Text
+    -- ^ tag name
+    -> [Text]
+    -- ^ classes
+    -> [(Text, Text)]
+    -- ^ attributes
+    -> Text
+tag tagName [] [] = "<" <> tagName <> ">"
+tag tagName [] attrs =
+  let attributes = Text.unwords [attr <> "='" <> escapeChars val <> "'" | (attr, val) <- attrs]
+  in "<" <> tagName <> " " <> attributes <> ">"
+tag tagName classes attrs =
+  tag tagName [] (("class", Text.unwords classes) : attrs)
+
+-- | All the specific types of meta tags I currently support
+-- generating.
+data Meta = Title | Description | Image
+  deriving (Show, Eq, Ord, Enum, Bounded)
+
+-- | Each type of meta tag I support can generate multiple actual meta
+-- tags in different style (twitter, open-graph (og), standardized, etc).
+metaTags :: Meta -> [Text -> Text]
+metaTags = \case
+  Title ->
+    [wrap ("property", "og:title"), wrap ("name", "twitter:title")]
+  Description ->
+    [wrap ("name", "description"), wrap ("property", "og:description"), wrap ("name", "twitter:description")]
+  Image ->
+    [wrap ("property", "og:image"), wrap ("name", "twitter:image")]
+  where wrap attribute content = tag "meta" [] [("content", content), attribute]
+
+-- | Generate the given type of meta tag.
+--
+-- This hardcodes some logic to handle standard, og and twitter meta
+-- tags as appropriate. I will probably add other site-specific tags
+-- down the line.
+meta :: Meta
+     -- ^ type of meta tag to generate
+     -> Text
+     -- ^ content
+     -> Text
+meta type_ content = Text.unlines [metaTag content | metaTag <- metaTags type_]
+
+-- | Generate an optional meta tag. If the value is 'Nothing', this
+-- generates no tags at all.
+meta' :: Meta -> Maybe Text -> Text
+meta' _ Nothing              = ""
+meta' metaTag (Just content) = meta metaTag content
+
+-- | Somewhat ad hoc logic to escape troublesome HTML characters.
+escapeChars :: Text -> Text
+escapeChars = Text.replace "\"" "&quot;" . Text.replace "'" "&apos;" . Text.replace "&" "&amp;"
+  -- "&" has to be last, otherwise it escapes the & from &quot;/etc!
