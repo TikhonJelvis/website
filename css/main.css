@@ -270,7 +270,7 @@ em {
 }
 
 /* Quotes */
-.content blockquote, .footnotes blockquote {
+.content > blockquote, .footnotes blockquote {
     background-color : var(--lighter);
     border-left: 10px solid var(--darker);
 
@@ -278,7 +278,7 @@ em {
     padding-bottom: 1.5ex;
 }
 
-.content blockquote {
+.content > blockquote {
     margin-top: -1ex;
     margin-left : 13%;
     margin-right : 15%;
@@ -289,10 +289,47 @@ em {
     margin-right : 5%;
 }
 
-.content blockquote p, .footnotes blockquote p {
+.content > blockquote p, .footnotes blockquote p {
     margin: 0;
     margin-left: 3%;
     margin-right: 3%;
+}
+
+/* Pull Quotes */
+.content aside.pull-quote {
+    float: right;
+    width: 50%;
+    background-color: var(--lighter);
+
+    border-bottom-left-radius: 20px;
+}
+
+.content aside.pull-quote blockquote::before {
+    content: "“";
+
+    position: absolute;
+    top: 128px;
+    left: 48%;
+
+    float: left;
+
+    font-size: 20em;
+
+    color: var(--background);
+}
+
+.content aside.pull-quote p {
+    position: relative;
+    z-index: 1;
+    
+    margin: 1ex;
+    font-size: 1.6em;
+    font-family : Aller, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.content aside.pull-quote p:first-child:first-letter {
+    font-size: 1.3em;
+    color : var(--h2);
 }
 
 /* Rules for my interactive animation feature. */

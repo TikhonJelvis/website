@@ -20,6 +20,10 @@ A solid starting point is the [recognition-primed decision making][rpd] (RPD) mo
 
 Klein's work and the RPD model stand out from other research on decision making because it is based on experts making decisions in complex real-world situations rather than novices making decisions in laboratory conditions. 
 
+::: {.pull-quote}
+> They see experts as “beginners with more knowledge” rather than people whose expertise allows them to operate in a categorically different—and more effective!—manner.
+:::
+
 Broadly, the RPD model is that **experts make decisions by finding parallels—consciously or subconsciously—between the current situation and their past experience**. For most decisions, an expert will not carefully list out and consider how to optimize a situation based on “pros and cons”; instead, they will draw analogies to prototype situations from their experience, mentally simulate solutions in the immediate context and **satisfice** rather than optimize (that is, they will find a solution that is *good enough* rather than searching for the *best possible* approach).
 
 Both intuition *and* analysis are key to the model, as explained in the 20th Anniversary Edition forward to *Sources of Power*:
