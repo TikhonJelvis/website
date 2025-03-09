@@ -11,9 +11,9 @@ To figure out how to work well *with* experts, we need a good model of what expe
 
 ![*Sources of Power* by Gary Klein](img/sources-of-power.jpg "The 20th anniversary edition cover of Gary Klein's Sources of Power, with the subtitle How People Make Decisions")
 
-A solid starting point is the [recognition-primed decision making][rpd] (RPD) model developed by Gary Klein based on a career of qualitative research into expert decision making. I highly recommend Klein's [*Sources of Power*][sources-of-power] which covers the RPD model and the research that led to it.
-
 <!--more-->
+
+A solid starting point is the [recognition-primed decision making][rpd] (RPD) model developed by Gary Klein based on a career of qualitative research into expert decision making. I highly recommend Klein's [*Sources of Power*][sources-of-power] which covers the RPD model and the research that led to it.
 
 Klein's work and the RPD model stand out from other research on decision making because it is based on experts making decisions in complex real-world situations rather than novices making decisions in laboratory conditions. 
 
