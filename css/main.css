@@ -302,6 +302,7 @@ em {
     background-color: var(--lighter);
 
     border-bottom-left-radius: 20px;
+    margin-bottom: 10px;
 }
 
 .content aside.pull-quote blockquote::before {
