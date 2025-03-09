@@ -139,7 +139,7 @@ a > img {
 }
 
 
-.content p, .content ul, .content ol, .content dl, .footnotes ol, .content h2, .content h3, .content h4, .content blockquote {
+.content p, .content ul, .content ol, .content dl, .footnotes ol, .content h2, .content h3, .content h4 {
   margin-left : 12%;
   margin-right : 12%;
 }
@@ -277,13 +277,15 @@ em {
     padding-bottom: 1.5ex;
 
     margin-top: -1ex;
+    margin-left : 13%;
+    margin-right : 15%;
 
-    border-left: 3px solid var(--h1);
+    border-left: 10px solid var(--darker);
 }
 
 .content blockquote p {
     margin: 0;
-    margin-left: 2%;
+    margin-left: 3%;
     margin-right: 3%;
 }
 
