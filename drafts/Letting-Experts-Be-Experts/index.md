@@ -92,15 +92,15 @@ An interesting aspect about these fundamentally poor models of decision making i
 
 If you enforce a process based on one of these flawed models, you can only have one of two outcomes:
 
-  1. You force experts into a beginner decision-making regime. Acting like beginners rather than experts takes more time and energy, while also resulting in worse decisions as experts second-guess their own experience or have their decisions countermanded by non-expert observers.
-  2. You push experts to make decisions in natural ways, then try to force those decisions into expected, legible frameworks. This wastes effort and drains morale, while giving observers a fundamentally incorrect picture of how decisions were made.
+  1. You force experts into a beginner decision-making regime. Acting like beginners rather than experts takes more time and energy and results in worse decisions. Experts second-guess their own experience or have their decisions countermanded by non-expert observers.
+  2. You push experts to hide how they *actually* make decisions. They might still make decisions in natural, effective ways, but then they have to force those decisions into an incompatible framework. This wastes effort, drains morale and gives observers a fundamentally misleading picture of how decisions were made.
   
 In both cases, you're contributing to a culture that is actively antithetical to the effective exercise of expertise.
 
 </div>
 <div class="content">
 
-## Letting Experts be Experts
+## Letting Experts *be Experts*
 
 So what can we do to actually help rather than hinder experts?
 
