@@ -33,7 +33,7 @@ Perhaps the “obvious” idea is not so obvious after all!
 </div>
 <div class="content">
 
-## Understanding Expert Decision Making
+## Understanding Experts
 
 It's tempting to simplify the RPD model into a truism: experts make decisions based on experience. While this is a true observation, it misses the critical nuances that determine how experts actually make decisions, differentiate experts from non-experts and determine how organizational structure and culture impacts expertise in practice.
 
@@ -88,7 +88,23 @@ Similarly, managers try to force a clear separation between “planning” and �
 
 And, as we've seen earlier, formal decision making models based on comparing alternative options do not reflect the actual recognition-driven process experts use for the vast majority of the decision points in their work.
 
-An interesting aspect about all of these poor models of decision making is that—apart from being more legible—they all reflect how *beginners* make decisions when they do not have skills, knowledge and expertise in an area. My theory is that managers naturally tend towards these models not only because they want more direct control over the work but also because they are extrapolating their expectations from how beginners learn. They see experts as “beginners with more knowledge” rather than people whose expertise allows them to operate in a categorically different—and more effective!—manner.
+An interesting aspect about these fundamentally poor models of decision making is that—apart from being more legible—they all reflect how *beginners* make decisions when they do not have skills, knowledge and expertise in an area. My theory is that managers naturally tend towards these models not only because they want more direct control over the work but also because they are extrapolating their expectations from how beginners learn. They see experts as “beginners with more knowledge” rather than people whose expertise allows them to operate in a categorically different—and more effective!—manner.
+
+If you enforce a process based on one of these flawed models, you can only have one of two outcomes:
+
+  1. You force experts into a beginner decision-making regime. Acting like beginners rather than experts takes more time and energy, while also resulting in worse decisions as experts second-guess their own experience or have their decisions countermanded by non-expert observers.
+  2. You push experts to make decisions in natural ways, then try to force those decisions into expected, legible frameworks. This wastes effort and drains morale, while giving observers a fundamentally incorrect picture of how decisions were made.
+  
+In both cases, you're contributing to a culture that is actively antithetical to the effective exercise of expertise.
+
+</div>
+<div class="content">
+
+## Letting Experts be Experts
+
+So what can we do to actually help rather than hinder experts?
+
+
 
 <!-- TODO: talk about when comparative approaches make sense; see pgs 97–100ish -->
 
