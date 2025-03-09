@@ -36,6 +36,7 @@ executable website
                      , pandoc
                      , pandoc-types
                      , tagsoup
+                     , text
 
   default-language:    Haskell2010
 
