@@ -113,7 +113,7 @@ For example, managers often ask people to break tasks down into small, explicit 
 
 Managers also try to structure work into a uniform planning process, with a clear separation between “planning” and “execution”. Klein's research into planning across a number of military and rescue teams found that “planning is not a simple unified activity”; the approach, complexity and detail of plans varied based on context, and plans were often abandoned when circumstances changed. Some problems have circumstances that require separate planning and execution, but in areas that don't, experts naturally combine planning, iteration and execution into a single activity. I've seen this repeatedly working in software. Expert programmers see programming *as* planning[^programming-as-design].
 
-[^programming-as-design]: Programming languages are, perhaps counterintuitively, amazing tools for planning and design. Programming-as-planning is what lets programmers manager an amazing amount of complexity, and the amount of complexity programmers are expected to manager *necessitate* seeing programming a planning.
+[^programming-as-design]: Programming languages are, perhaps counterintuitively, amazing tools for planning and design. Programming-as-planning is what lets programmers manager an amazing amount of complexity, and the amount of complexity programmers are expected to manager *necessitate* seeing programming as planning.
 
     [Laurence Tratt][laurence-tratt], a professor of software engineering at KCL, describes this as the “circular specification problem” in [“What Factors Explain the Nature of Software?"][factors]:
     
