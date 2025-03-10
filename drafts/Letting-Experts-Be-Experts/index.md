@@ -15,7 +15,7 @@ Experts are not “beginners with more knowledge”; their expertise allows them
 
 <!--more-->
 
-Gary Klein's [*Sources of Power*][sources-of-power] is my go-to book for understanding how experts make decisions in difficult, high-context situations. In contrast, much of the research around decision making has focused on novices making intentionally artificial decisions in laboratory connections. To understand expertise, we have to look beyond laboratory research and into qualitative research around **naturalistic decision making**.
+Gary Klein's [*Sources of Power*][sources-of-power] is my go-to book for understanding how experts make decisions in difficult, high-context situations. In contrast, most of the other research around decision focuses on novices making intentionally artificial decisions in laboratory connections. To understand expertise, we have to look beyond laboratory research and into qualitative research around **naturalistic decision making**.
 
 *Sources of Power* covers a number of different strategies that experts use in nonroutine situations, based on qualitative studies across firefighters, nurses, military commanders, engineers and other kinds of specialists. Across all the fields studied, experts rarely used formal decision-making techniques based on listing or comparing possible alternatives; instead, experts made decisions following a model Klein calls [recognition-primed decision making][rpd] (RPD), which gives us a foundation for understanding how experts actually behave.
 
@@ -74,7 +74,7 @@ Even in technical jobs with longer time-horizons, experts like engineers, progra
 
 Experts across a wide range of fields and time horizons make decisions based on experience rather than using formal comparison-based decision-making processes. Even when experts do reach for comparisons between alternatives, they generally still mix this with intuition, experience and mental simulation. Rather than being an expert technique, formal comparative decision making is used by *beginners* who do not have the experience, confidence and context to make strong decisions up front.
 
-While these observations give us a strong foundation for understanding how experts make decisions, it's always worth remembering that decisions in the field are far more nuanced and context-specific. *Sources of Power* goes into substantially more detail, exploring not only how experts use *intuition* but also how they:
+While these observations give us a strong foundation for understanding experts, decisions in the field are far more nuanced and context-specific. *Sources of Power* goes into substantially more detail, exploring not only how experts use *intuition* but also how they:
 
  1. Use mental simulation
  2. Spot leverage points
@@ -88,7 +88,7 @@ While these observations give us a strong foundation for understanding how exper
 
 [^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk and think about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments. There is a big gap between seeing a physical object directly and the kind of “seeing” that experts think about in complex situations!
 
-There is a lot of nuance here! *Sources of Power* is a whole book, and, even so, is just a summary of an entire research program into decision making.
+Expert decision making is complicated. *Sources of Power* is an entire book, and still only summarizes a single research program into decision making.
 
 Experts have sophisticated, intuitive ways to use their experience to make better decisions. The way experts reach conclusions will often not be *legible* to outside observers (including managers!) and may not even be entirely clear to the experts themselves. Explaining a decision is a different skill from making the decision!
 
