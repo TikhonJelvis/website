@@ -86,7 +86,7 @@ While these observations give us a strong foundation for understanding how exper
  
 (These are the titular “sources of power” experts draw on to make decisions and adapt to complex shifting circumstances.)
 
-[^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk and think about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments. There is a big gap between seeing a physical object directly and the ind of “seeing” that experts think about in complex situations!
+[^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk and think about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments. There is a big gap between seeing a physical object directly and the kind of “seeing” that experts think about in complex situations!
 
 There is a lot of nuance here! *Sources of Power* is a whole book, and, even so, is just a summary of an entire research program into decision making.
 
