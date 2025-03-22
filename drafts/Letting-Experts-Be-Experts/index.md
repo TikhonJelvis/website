@@ -139,7 +139,7 @@ In both cases, you're contributing to a culture that is actively antithetical to
 </div>
 <div class="content">
 
-## Letting Experts *be Experts*
+## Letting Experts *Be Experts*
 
 So what can we do to actually help rather than hinder experts?
 
