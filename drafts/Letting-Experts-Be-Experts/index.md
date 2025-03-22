@@ -83,7 +83,7 @@ While these observations give us a strong foundation for understanding experts, 
  5. Rely on stories, metaphors and analogies
  6. Share information with other experts on the team
  7. Coordinate and communicate *intent*
- 
+
 (These are the titular “sources of power” experts draw on to make decisions and adapt to complex shifting circumstances.)
 
 [^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk and think about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments. There is a big gap between seeing a physical object directly and the kind of “seeing” that experts think about in complex situations!
@@ -116,9 +116,9 @@ Managers also try to structure work into a uniform planning process, with a clea
 [^programming-as-design]: Programming languages are, perhaps counterintuitively, amazing tools for planning and design. Programming-as-planning is what lets programmers manage an amazing amount of complexity, and the amount of complexity programmers are expected to manage *necessitates* seeing programming as planning.
 
     [Laurence Tratt][laurence-tratt], a professor of software engineering at KCL, describes this as the “circular specification problem” in [“What Factors Explain the Nature of Software?"][factors]:
-    
+
     > Our ability to specify what a given piece of software should be is limited by the circular specification problem. We nearly always have to fully build the software in order to know precisely what we want it to be.
-    
+
     I really need to write a post about how this is both a blessing and a curse of programming as a field, and the role programming languages as tools play in this dynamic.
 
 [laurence-tratt]: https://tratt.net/laurie/
@@ -133,7 +133,7 @@ If you enforce a process based on one of these flawed models, you can only have 
 
   1. You force experts into a beginner decision-making regime. Acting like beginners rather than experts takes more time and energy and results in worse decisions. Experts second-guess their own experience or have their decisions countermanded by non-expert observers.
   2. You push experts to hide how they *actually* make decisions. They make decisions in natural, effective ways, but then they have to force those decisions into an incompatible framework. This wastes effort, drains morale and gives observers a fundamentally misleading picture of how decisions were made.
-  
+
 In both cases, you're contributing to a culture that is actively antithetical to the effective exercise of expertise.
 
 </div>
@@ -143,10 +143,54 @@ In both cases, you're contributing to a culture that is actively antithetical to
 
 So what can we do to actually help rather than hinder experts?
 
+I've seen first hand that organizations—and even subsections *of the same organization*—differ massively in how well they support expert decision-making. Organizational structure and culture affects how experts do their work directly; how hard it is for non-experts to develop and refine expertise; and, perhaps most importantly, how much *leverage* experts get beyond what they could do alone.
 
+### Intent-Oriented Leadership
 
-<!-- TODO: talk about when comparative approaches make sense; see pgs 97–100ish -->
+Experts make decisions about what to do and how to do it based on factors that they can't always even explain themselves. Trying to force experts to make their work legible, or trying to make decisions *for* experts, keeps them from operating *as experts*. But if you don't track and direct expert work directly, how do you *lead* experts? And how can you lead experts in areas where you have not developed real expertise yourself?
+
+This is certainly possible—if *rare*. I've worked with a handful of leaders in the corporate world who did this well, and I recognized the same overall trends in how they led as I've seen in other expert work. Leading experts effectively requires expertise itself! Just like other experts, the ways these leaders behaved and made decisions were often unclear to me as an expert observer, or even not clear *to the leaders themselves*. Leading effectively hinges on tacit knowledge in the same way as performing surgery or landing on an aircraft carrier.
+
+One accessible pattern for leading effectively is to lead *by intent*. For example, Klein talks about “Commander's Intent statements” in the U.S. Army:
+
+> A technique the U.S. Army has tried is to issue Commander's Intent statements along with its mission orders, or operations orders, which give the detail of the plan for the next day. The Commander's Intent statement helps th soldiers read the commander's mind if they run into uncertainty about how to carry out the orders under field conditions.
+
+Unfortunately the actual impact of these statements has been limited in practice. It is difficult to convince higher echelon commanders to give up control, and, even when they are willing to do that, even just communicating intent is difficult. From his research on Commander's Intent statements, Klein extracted a set of seven categories of information that are useful for communicating intent:
+
+> 1. The purpose of the task (the higher-level goals).
+> 2. The objective of the task (an image of the desired outcome).
+> 3. The sequence of steps in the plan.
+> 4. The rationale for the plan.
+> 5. The key decisions that may have to be made.
+> 6. Antigoals (unwanted outcomes).
+> 7. Constraints and other considerations.
+
+In my own work, I've found it useful to develop similar frameworks for what information to track and communicate, adjusted based on the context and nature of the work as well as the experience and personalities of the people I am working with.
+
+I've also found David Marquet's work on intent-based leadership useful; his book ** provides an accessible introduction to the idea illustrated with stories from his time as the captain of the nuclear-powered submarine *USS Santa Fe*[^video].
+
+[^video]: [This video on his work][intent-based-leadership-video] provides a *very* high-level introduction to his ideas.
+
+### Don't Do That
+
+Ultimately, I simply do not have crisp answers on how to build organizations that enable expertise. I do not pretend to be an expert leader *myself*, but I've had the good fortune to work with some expert leaders directly—and even they did not have a clear idea on exactly how they managed to foster effective environments and teams. It's just hard.
+
+My current philosophy is also the title of this post: figure out how to **let experts be experts**. There is no single process that will empower expertise, just like there is no single process that will shut it down completely. But we can inventory the concrete processes and management decisions in an organization and try to understand how they impact expert work. Do the processes provide the space and context experts need to work effectively? Do they push experts into less effective working regimes? If they do, how can we stop that?
+
+In the past, I've made the mistake of conflating *the amount* of process with how much space it leaves for experts. But, in hindsight, this view missed three core aspects:
+
+ - process is not fungible: some process choices will create obstacles for expertise, but other choices can directly support it
+ - the causality is reversed: it's not that having low process makes space for expertise, but rather making space for expertise *lets* us function effectively with less process
+ - process is, at most, one of several contributing factors: you can have the absolutely best process but still fail to empower experts for illegible reasons
+
+With the benefit of hindsight, I'm trying to make my analysis more specific: what *aspects* of the process support expert-level work? What aspects hinder it, and *how*? What aspects could we change or even *add* to better-support experts?
+
+I do not really have compelling answers to these questions, even just to myself. What would it take to have an effective culture for experts? I know it's possible, I'd know it when I see it, but I have no idea of how to get there.
+
+But simply thinking in these terms is a start.
 
 [rpd]: https://en.wikipedia.org/wiki/Recognition-primed_decision
 
 [sources-of-power]: https://www.goodreads.com/book/show/65229.Sources_of_Power
+
+[intent-based-leadership-video]: https://www.youtube.com/watch?v=pYKH2uSax8U
