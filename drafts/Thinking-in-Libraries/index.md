@@ -1,0 +1,24 @@
+---
+title: Thinking in Libraries
+author: Tikhon Jelvis
+---
+
+I write and organize most of my code as if I am writing a reusable library—even when the code will only get used once as part of an application. This approach naturally leads to code that is naturally self-contained, better reflects the conceptual design of whatever I am doing and is much easier to test.
+
+I picked this approach up from Haskell, where I organize my code into concept-oriented modules and types, with as much of the core logic written in pure functions as possible. The final application becomes a relatively small amount of Haskell code written *in terms of the library*, primarily responsible for user interaction and external I/O.
+
+There's a close relationship between writing library-style code and **bottom-up design**. Libraries are like domain-specific building blocks that you can pull together to build your system. Since the library components make sense on their own—they represent something useful and meaningful in general, without any context from your broader application—you can design useful, testable components before you have a clear top-down design for your system. In practice, I've found I naturally mix top-down and bottom-up design as I go along; bottom-up design gets reflected in each of the library modules I write, while top-down design determines which modules I write in the first place.
+
+<!--more-->
+
+Since then, I've found this design mindset useful in other languages and even in applications where complex I/O is integral to the core functionality. At CXScore, I developed a system in Python for running automated accessibility tests against live websites; most of the internal logic depended directly on a live Chromium session, so it would not have been possible to write it as pure functions. The initial version of this system mixed together our own backend concerns, DOM interaction and accessibility-specific logic, but this quickly became hard to navigate, understand and test. To address this, I wrote an internal Python library for interacting with Chrome; this library combined [Playwright] with [CDP][^cdp] to both control live Chrome browsers and run analysis against static [DOM snapshots][dom-snapshots][^dom-snapshots]
+
+[Playwright]: https://playwright.dev
+
+[CDP]: https://chromedevtools.github.io/devtools-protocol/
+
+[^cdp]: The [Chrome DevTools Protocol][CDP], which is the interface Chrome provides for interacting with a live browser session from outside the Chrome process. CDP was initially developed to implement Chrome's built-in devtools (hence the name) but has since expanded to a wide range of browser automation capabilities.
+
+[dom-snapshots]: https://chromedevtools.github.io/devtools-protocol/tot/DOMSnapshot/
+
+[^dom-snapshots]: DOM snapshots are a CDP feature for quickly getting a flattened, serialized version of a page's DOM state. This is very useful, but the flattened representation is hard to work with; my library expanded the raw snapshot into a tree structure as well as adding in additional information like accessibility tree nodes.
