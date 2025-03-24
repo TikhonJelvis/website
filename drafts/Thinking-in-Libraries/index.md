@@ -37,7 +37,25 @@ There's a close relationship between writing library-style code and **bottom-up 
 
 ### CXScore
 
-Since then, I've found this design mindset useful in other languages and even in applications where complex I/O is integral to the core functionality. At CXScore, I developed a system in Python for running automated accessibility tests against live websites; most of the internal logic depended directly on a live Chromium session, so it would not have been possible to write it as pure functions. The initial version of this system mixed together our own backend concerns, DOM interaction and accessibility-specific logic, but this quickly became hard to navigate, understand and test. To address this, I wrote an internal Python library for interacting with Chrome; this library combined [Playwright] with [CDP][^cdp] to both control live Chrome browsers and run analysis against static [DOM snapshots][dom-snapshots][^dom-snapshots]
+In my Haskell code, the library parts of my logic were often “pure”, not depending on external state an I/O. While some of the benefits I got came from segregating external effects from logic—something that's great on its own—thinking in libraries can work well even in situations where state and I/O are inescapably linked to core logic.
+
+I recently spent two years working at CXScore, and early stage startup that was building an automated accessibility testing system for webapps. Unfortunately this did work out as a business, but it was a system I enjoyed building and an area I care about.
+
+The core logic for accessibility testing is fundamentally tied to the browser. Modern browsers—and modern websites—are so complicated that we simply cannot do most of the analysis that we needed without hooking directly into a running browser session with the website loaded. While we managed to write *some* of our accessibility tests against static DOM snapshots and screenshots, the majority of our code needed to open, navigate and interact with pages *live*. The DOM and the JavaScript runtime are so complicated that we can't usefully simulate them in pure functions or even mock them for testing. When you're writing code to crawl and inspect live pages, either it works against live pages or it doesn't.
+
+When I first arrived at CXScore, we had an initial application built that could crawl web pages and run some accessibility checks, like making sure all interactive controls were reachable with the keyboard. The code for the application was organized entirely in terms *of the application*: code to load web pages, code to navigate in a live browser, code to take and analyze DOM snapshots, code to manage user accounts and provide APIs to our own frontend... all organized into a big Node.js codebase.
+
+My first focus was extending this system to work with some machine learning models people were writing in Python. Our initial algorithms depended just on static, serializable DOM snapshots, but I realized that we would quickly need to give our Python code direct access to a running Chrome session. Since this was a new part of the codebase in a separate language from the main Node.js application, I could design the Python system in a different way from the TypeScript code.
+
+So I did what I always find natural: I started by writing a Python library for interacting with the browser. The first version of this was a thin wrapper over [Playwright], just with a different interface in Python. I initially decided to start with a thin wrapper because I wanted to sand off some of the awkward edges of Playwright and to have more control over APIs in our own code, but it quickly proved to be a critical decision because we needed to combine a lot of Chrome-specific [CDP][^cdp] functionality not exposed through Playwright.
+
+The “library” code I wrote was not really organized as a Python library; it was really just a set of normal Python modules within a single namespace in our existing Python service code. Thinking of this code as a library was a shift in perspective, not a matter of tooling or a hard abstraction boundary at the language level.
+
+This internal library was logically self-contained: you could easily use it to do browser automation that did not need to know anything about accessibility or our automated crawling and testing application. The exact set of features would be a bit odd—I was only implementing functionality we needed immediately, or, occasionally, things that simply seemed useful to me—but you could always expand it while keeping the same overall design and interface.
+
+In hindsight, writing this library—which initially seemed redundant or unnecessary—proved to be one of my best engineering decisions during those two years. The “automation layer”, for lack of a better word, was a major *leverage point* for the system as a whole, so making it explicit and well-designed had an outsize effect on all of our code. 
+
+(Finally, tooting my own horn a bit more, I know it was a good decision because I've run into multiple cases over the past several months where I really wish we had open sourced the library before I left, just so that I could use it now!)
 
 [Playwright]: https://playwright.dev
 
