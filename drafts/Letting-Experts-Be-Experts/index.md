@@ -86,7 +86,17 @@ While these observations give us a strong foundation for understanding experts, 
 
 (These are the titular “sources of power” experts draw on to make decisions and adapt to complex shifting circumstances.)
 
-[^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk and think about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments. There is a big gap between seeing a physical object directly and the kind of “seeing” that experts think about in complex situations!
+[^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk and think about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments.
+
+    > We do not see electrons, but rather their tracks or else bubbles of vapor in a cloud chamber. We do not see electric currents at all, but rather the needle of an ammeter or galvanometer. Yet... I have repeatedly acted as though we did perceive theoretical entities like currents, electrons, and fields, as though we learned to do so from examination of exemplars, and as though in these cases too it would be wrong to replace talk of seeing with talk of criteria and interpretation.
+
+    Experts I've worked with talked—and presumably thought!—in the same terms. People repeatedly talk about "seeing" aspects of a code design or mathematical problem that they perceive *somehow*, even if it isn't something you can see directly with your eyes.
+
+    There is a big gap between seeing a physical object and the kind of “seeing” that experts think about in complex situations!
+
+    In my earlier post [“By Looking”][by-looking] I wrote a quick observation on how organizations often *aren't* willing to trust expert perception. I should have added a similar note about “seeing” as a metaphor there: sometimes the answer to “how will we know?” absolutely should be “by looking!”... as long as we treat “looking” to mean *expert perception in general*.
+
+[by-looking]: /blog/By-Looking
 
 Expert decision making is complicated. *Sources of Power* is an entire book, and still only summarizes a single research program into decision making.
 
