@@ -1,0 +1,67 @@
+* Letting Experts Be Experts
+** RPD
+  - good model for experts and expertise
+*** Nuances
+**** Time-critical decisions?
+     - expert decision making looks similar in time-critical situations
+       /and/ on longer-term work like engineering
+**** Doing /as/ planning
+     - experts do /not/ follow a strict separation of planning than doing
+     - experts revisit /what/ they're doing /as/ they do it
+       - going back and "redoing" work /is/ work, trying to eliminate
+         this as "rework" is counterproductive!
+**** "Pros and cons"
+     - comparing alternatives ("pros and cons") is a way to make
+     decisions /without/ expertise—but not what experts usually do
+*** What do we do about it?
+**** Legibility and Adaptability
+     - pushing experts to make decisions in non-expert ways is
+       counter-productive
+       - if decisions get made in non-expert mode, they'll be worse or
+         the work will lack a coherent vision
+       - if decisions get made in illegible expert ways, pushing
+         experts to pretend to fit their reasoning into the wrong kind
+         of mold is a counterproductive waste of time and culturally
+         unhealthy
+       - either way, you're directly contributing to a culture that is
+         actively antithetical to the effective exercise of expertise
+     - too much legibility in how experts work hurts quality and
+       motivation, makes the work less adaptable
+       - at the same time: communicated about decisions is a skill
+         that's worth learning and nurturing—it just needs to be
+         emphasized and supported in the right ways! 
+**** Tickets: bad
+      - ticket-driven development stifles expertise
+        - expert work does not fit into a "fungible stream of tasks"
+          model!
+        - lowers timespan of discretion, which limits scope where
+          experts can apply their expertise
+          - why is our codebase not getting any better if our process
+            forces everyone to focus on hyper-short-term
+            considerations?
+**** Intent-driven leadership
+      - focus on intent (see /Turn the Ship Around!/)
+      - for programmers it is important to understand one level of
+        abstraction above and one level of abstraction below where
+        they're working
+        - this applies to non-technical work too!
+        - people in an organization need to understand the work a
+          level above and below them
+          - this means people have to /communicate/ to teams at least
+            a level above where any individual is working!
+          - focus on how information flows down and decisions flow up
+**** Nurturing expertise
+      - hard problem!
+      - making space for people to make decisions (and /fail/) helps
+        with /building/ expertise just like it helps with /using/
+        expertise
+      - focus on improving feedback
+        - 1:1 mentorship
+          - this is what code review/pairing can do in an ideal
+            form—how does that compare with what code review does on
+            /your/ team?
+        - fast deploys
+        - quick indicators for how (and /how well/) a system is working
+          - example: success metrics for ML, what-if simulations,
+            real-world data
+
