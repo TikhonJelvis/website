@@ -60,9 +60,9 @@ One critical aspect organizationally is that expert decisions are not *legible*.
 
     Expert decision-making is not legible because experts do not follow clear processes or explain how they work in a way that can be directly understood or controlled by non-experts. Expert decision-making also does not conform to the *aesthetics* of regularized, structured decisions—recognition-primed decisions look less disciplined than explicitly structured approaches.
     
-    *Seeing like a State* is a long read, but I would highly recommend it—I unironically describe it as the “single best management book”, even though it is not really about management. A [free online copy][anarchist-library] is available on the Anarchist library. For a shorter introduction to pique your interest, [“A Big Little Idea Called Legibility”][ribbonfarm-legibility] on Ribbonfarm seems like a good starting point.
+    *Seeing like a State* is a long read, but I would highly recommend it—I unironically describe it as the single best “management book”, even though it is not really a management book at all. A [free online copy][anarchist-library] is available on the Anarchist library. For a shorter introduction to pique your interest, [“A Big Little Idea Called Legibility”][ribbonfarm-legibility] on Ribbonfarm seems like a solid starting point.
     
-    The final section of the book [“A Case for Mētis-Friendly Institutions”][metis-friendly] covers the same general thesis as this article.
+    The final section of the book, [“A Case for Mētis-Friendly Institutions”][metis-friendly], provides a different perspective on the same question as this article.
     
 [ribbonfarm-legibility]: https://www.ribbonfarm.com/2010/07/26/a-big-little-idea-called-legibility/
 
@@ -108,15 +108,15 @@ RPD gives us a strong foundation for understanding experts, but it is still a si
 
 (These are the titular “sources of power” experts draw on to make decisions and adapt to complex shifting circumstances.)
 
-[^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments.
+[^seeing]: The concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments.
 
     > We do not see electrons, but rather their tracks or else bubbles of vapor in a cloud chamber. We do not see electric currents at all, but rather the needle of an ammeter or galvanometer. Yet... I have repeatedly acted as though we did perceive theoretical entities like currents, electrons, and fields, as though we learned to do so from examination of exemplars, and as though in these cases too it would be wrong to replace talk of seeing with talk of criteria and interpretation.
 
-    Experts I've worked with consistently talked about “seeing” in the same metaphorical sense: “seeing” the “shape” of a mathematical problem or the “seeing” the structure of a codebase. These are all real aspects of the work that experts *perceive* based on their experience and the skills they've built up over time, but they not aspects that can literally be seen with your eyes.
+    Experts I've worked with consistently talked about “seeing” in the same metaphorical sense: “seeing” the “shape” of a mathematical problem or the “seeing” the structure of a codebase. These are all real aspects of the work that experts *perceive* based on their experience and the skills they've built up over time, but not aspects that can literally be seen with your eyes.
 
     There is a big gap between seeing a physical object and the kind of “seeing” that experts think about in complex situations!
 
-    In my earlier post [“By Looking”][by-looking] I wrote a quick observation on how organizations often *aren't* willing to trust expert perception. I should have added a similar note about “seeing” as a metaphor there: sometimes the answer to “how will we know?” absolutely should be “by looking!”... as long as we treat “looking” to mean *expert perception in general*.
+    My earlier post [“By Looking”][by-looking] is a quick observation on how organizations often *aren't* willing to trust expert perception. I should add a similar note about “seeing” as a metaphor there: sometimes the answer to “how will we know?” absolutely should be “by looking!”—as long as we understand “looking” to cover perception in general.
 
 [by-looking]: /blog/By-Looking
 
@@ -215,7 +215,7 @@ I've found David Marquet's work on intent-based leadership both practical and in
 
 [^video]: [This video on his work][intent-based-leadership-video] provides a *very* high-level introduction to his ideas.
 
-### Don't Do That
+### Stop Hindering
 
 Ultimately, I simply do not have a crisp answer on how to build organizations that enable expertise.
 
@@ -225,7 +225,7 @@ My current philosophy is also the title of this post: how can we **let experts b
 
 There is no single process that will empower expertise, just like there is no single process that will shut it down completely. But we can inventory the concrete processes and management decisions in an organization and try to understand how they impact expert work. Do the processes provide the space and context experts need to work effectively? Do they push experts into less effective working regimes? If they do, how can we stop that?
 
-One step for supporting experts—easier said than done—is to simply stop doing things that hinder them. Figure out what concrete aspects of our work and processes hinder experts, than change them.
+One step for supporting experts—easier said than done—is to **stop doing the things that hinder them**. Figure out what concrete aspects of our work and processes hinder experts, than change them.
 
 But this is nowhere near a full solution on its own. In the past, I've made the mistake of conflating *the amount* of process with how much space it leaves for experts. But, in hindsight, this perspective missed three core aspects:
 
@@ -240,6 +240,14 @@ Going forwards, I'm trying to make my analysis more specific: what *aspects* of 
 I do not really have compelling answers to these questions, even just to myself. What would it take to have an effective culture for experts? I know it's possible, I'd know it when I see it, but I have no idea of how to get there.
 
 But simply thinking in these terms is a start.
+
+</div>
+<div class="content">
+
+This post was heavily influenced by conversations I had with [Ashwin Rao][ashwin] and [Paritosh Desai][paritosh], as well as seeing them in action leading teams at Target. Paritosh was also the person who first recommended *Sources of Power* to me.
+
+[ashwin]: https://stanford.edu/~ashlearn/
+[paritosh]: https://www.linkedin.com/in/paritosh/
 
 [rpd]: https://en.wikipedia.org/wiki/Recognition-primed_decision
 
