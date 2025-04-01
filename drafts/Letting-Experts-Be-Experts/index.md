@@ -5,50 +5,70 @@ description: Experts aren't just "beginners with more knowledge", they operate i
 image: img/sources-of-power.jpg
 ---
 
-In my career, I've had the fortune to work with and observe a number of people who were real experts in their fields. Expert programmers, statisticians, designers and leaders. Each expert and each field were different, but there were broad similarities in how all of the experts made decisions. The most effective teams I worked on not only *included* experts but also made room for them to work *as experts*.
+In my career, I've had the fortune to work with and observe a number of real experts in their fields. Expert programmers, statisticians, designers and leaders. Each person and each field were different, but there were broad similarities in how all the experts made decisions. The most effective teams I worked on not only *included* experts but also made room for them to work *as experts*.
 
 But what does this actually entail?
 
-Experts are not “beginners with more knowledge”; their expertise allows them to operate in a categorically different—and more effective!—manner. To work with experts effectively, we need a model of how they actually work. What makes an expert an expert? How do experts make decisions?
+Experts are not “beginners with more knowledge”; their expertise allows them to operate in a categorically different—and more effective!—manner. To work with experts effectively, we need a model of how they actually work.
+
+What makes an expert an expert?
+
+How do experts make decisions?
 
 ![*Sources of Power* by Gary Klein](img/sources-of-power.jpg "The 20th anniversary edition cover of Gary Klein's Sources of Power, with the subtitle How People Make Decisions")
 
 <!--more-->
 
-Gary Klein's [*Sources of Power*][sources-of-power] is my go-to book for understanding how experts make decisions in difficult, high-context situations. In contrast, most of the other research around decision focuses on novices making intentionally artificial decisions in laboratory connections. To understand expertise, we have to look beyond laboratory research and into qualitative research around **naturalistic decision making**.
+Gary Klein's [*Sources of Power*][sources-of-power] is my go-to book for understanding how experts make decisions in difficult, high-context situations. Most research around decision focuses on novices making intentionally artificial decisions in laboratory connections. By contrast, Klein's work is interesting because he used qualitative methods to study **naturalistic decision making** in complex real-world scenarios.
 
-*Sources of Power* covers a number of different strategies that experts use in nonroutine situations, based on qualitative studies across firefighters, nurses, military commanders, engineers and other kinds of specialists. Across all the fields studied, experts rarely used formal decision-making techniques based on listing or comparing possible alternatives; instead, experts made decisions following a model Klein calls [recognition-primed decision making][rpd] (RPD), which gives us a foundation for understanding how experts actually behave.
+*Sources of Power* covers a number of different strategies that experts use in nonroutine situations, based on field studies across firefighters, nurses, military commanders, engineers and other specialists. Across all the fields studied, experts rarely used formal decision-making techniques based on listing or comparing possible alternatives; instead, experts made decisions following a model Klein calls **[recognition-primed decision making][rpd]** (RPD), which gives us a foundation for understanding how experts really work.[^work-as-done]
+
+[^work-as-done]: Borrowing an idea from safety and resilience research, Klein's fieldwork helps us understand **work-as-done** rather than **work-as-imagined** or **work-as-prescribed**.
 
 ::: {.pull-quote .right}
 > Experts are not “beginners with more knowledge”; their expertise allows them to operate in a categorically different—and more effective!—manner.
 :::
 
-Broadly, the RPD model is that **experts make decisions by finding parallels—consciously or subconsciously—between the current situation and their past experience**. For most decisions, an expert will not carefully list out and consider how to optimize a situation based on “pros and cons”; instead, they will draw analogies to prototype situations from their experience, mentally simulate solutions in the immediate context and **satisfice** rather than optimize (that is, they will find a solution that is *good enough* rather than searching for the *best possible* approach).
+The core idea in RPD is that **experts make decisions by finding parallels—consciously or subconsciously—between the current situation and their past experience**. For most decisions, an expert will not carefully list out and consider how to optimize a situation based on “pros and cons”; instead, they will draw analogies to prototype situations from their experience, mentally simulate solutions in the immediate context and **satisfice** rather than optimize (that is, they will find a solution that is *good enough* rather than searching for the *best possible* approach).
 
 Both intuition *and* analysis are key to the model, as explained in the 20th Anniversary Edition forward to *Sources of Power*:
 
 > Inevitably, the success of *Sources of Power* also encouraged caricatures and oversimplifications. One of the most common, and most annoying, is that the RPD model is just about using intuition and gut instinct, as opposed to more systematic decision strategies. Actually, the RPD model posits a two-stage process, starting with intuition, as decision makers recognize how they need to respond, followed by deliberate evaluation as they simulate a possible response to see to see if it will work. A blend of intuition and analysis, not just gut feelings.
 
-One criticism I've seen is that the RPD model is “obvious”. And it *is* obvious, at least in hindsight. If you've seen experts in action or you've developed expertise in some field yourself, the way RPD describes decisions immediately clicks. Klein found this in his own work:
+One criticism I've seen is that the RPD model is “obvious”. And it *is* obvious, at least in hindsight. If you've seen experts in action or you've developed expertise in some field yourself, the RPD model immediately clicks. Klein found this in his own work:
 
 > As we began to present our findings at conferences, we got the reactions, “Of course that's how people make decisions.” Our findings seemed obviously right to everyone, even though they were so different from earlier decision theories. We began to realize that the force of our findings was in their obviousness. Of course the RPD strategy was the strategy used most frequently.
 
-We shouldn't dismiss an idea just because it sounds obvious. The obviousness is misleading. The RPD view of expertise has non-obvious consequences that I've seen both in qualitative research (like the case studies described in *Sources of Power*) as well as my own experience; more importantly, I've seen too many managers and informal leaders act in ways inconsistent with this “obvious” understanding of expertise, building environments actively hostile to expert decision making.
+The obviousness is misleading. The RPD view of expertise has non-obvious consequences that I've seen both in qualitative research (like the case studies described in *Sources of Power*) as well as my own experience; more importantly, I've seen too many managers and informal leaders act in ways inconsistent with this “obvious” understanding of expertise, inadvertently building environments hostile to expert decision making.
 
-Perhaps the “obvious” idea is not so obvious after all!
+Perhaps the “obvious” idea is not *always* obvious!
 
 </div>
 <div class="content">
 
 ## Understanding Experts
 
-It's tempting to simplify the RPD model into a truism: experts make decisions based on experience. While this is a true observation, it misses the structured strategies experts employ to use their expertise, and it does not capture the nonlinear way experts differ from beginners. To figure out how organizational structure and culture impact expertise in practice, we need a more nuanced understanding.
+It's tempting to simplify the RPD model into a truism: experts make decisions based on experience. While this is a true observation, it misses the structured strategies experts employ using their experience, and it does not capture the nonlinear way experts differ from beginners. To figure out how organizational structure and culture impact expertise, we need more nuance.
 
 ::: {.pull-quote .left }
 > Experts have sophisticated, intuitive ways to use their experience to make better decisions.
 :::
 
-One critical aspect organizationally is that expert decisions are not *legible*.
+One critical aspect organizationally is that expert decisions are not *legible*.[^seeing-like-a-state]
+
+[^seeing-like-a-state]: I'm borrowing the concept of *legibility* from James C. Scott's *Seeing like a State*.
+
+    Expert decision-making is not legible because experts do not follow clear processes or explain how they work in a way that can be directly understood or controlled by non-experts. Expert decision-making also does not conform to the *aesthetics* of regularized, structured decisions—recognition-primed decisions look less disciplined than explicitly structured approaches.
+    
+    *Seeing like a State* is a long read, but I would highly recommend it—I unironically describe it as the “single best management book”, even though it is not really about management. A [free online copy][anarchist-library] is available on the Anarchist library. For a shorter introduction to pique your interest, [“A Big Little Idea Called Legibility”][ribbonfarm-legibility] on Ribbonfarm seems like a good starting point.
+    
+    The final section of the book [“A Case for Mētis-Friendly Institutions”][metis-friendly] covers the same general thesis as this article.
+    
+[ribbonfarm-legibility]: https://www.ribbonfarm.com/2010/07/26/a-big-little-idea-called-legibility/
+
+[anarchist-library]: https://theanarchistlibrary.org/library/james-c-scott-seeing-like-a-state
+
+[metis-friendly]: https://theanarchistlibrary.org/library/james-c-scott-seeing-like-a-state#toc113
 
 We like to think that “good” decisions come from comparing alternative possibilities detail-by-detail. If an expert would just write out the possibilities and list out pros and cons, anybody could follow the same reasoning and come to the same decision. Right?
 
@@ -86,11 +106,11 @@ While these observations give us a strong foundation for understanding experts, 
 
 (These are the titular “sources of power” experts draw on to make decisions and adapt to complex shifting circumstances.)
 
-[^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk and think about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments.
+[^seeing]: Even the concept of “seeing” is nuanced. I ran into a great observation in Kuhn's *Structure of Scientific Revolutions* about how scientists talk about “seeing” things like particles, when they can really only detect them after statistically processing measurements from sophisticated instruments.
 
     > We do not see electrons, but rather their tracks or else bubbles of vapor in a cloud chamber. We do not see electric currents at all, but rather the needle of an ammeter or galvanometer. Yet... I have repeatedly acted as though we did perceive theoretical entities like currents, electrons, and fields, as though we learned to do so from examination of exemplars, and as though in these cases too it would be wrong to replace talk of seeing with talk of criteria and interpretation.
 
-    Experts I've worked with talked—and presumably thought!—in the same terms. People repeatedly talk about "seeing" aspects of a code design or mathematical problem that they perceive *somehow*, even if it isn't something you can see directly with your eyes.
+    Experts I've worked with consistently talked about “seeing” in the same metaphorical sense: “seeing” the “shape” of a mathematical problem or the “seeing” the structure of a codebase. These are all real aspects of the work that experts *perceive* based on their experience and the skills they've built up over time, but they not aspects that can literally be seen with your eyes.
 
     There is a big gap between seeing a physical object and the kind of “seeing” that experts think about in complex situations!
 
@@ -121,7 +141,7 @@ For example, managers often ask people to break tasks down into small, explicit 
 
 > [Experts] have mental models of how tasks are supposed to be performed, teams are supposed to coordinate, equipment is supposed to function. ...they know how the subtasks fit together and can adapt the way they perform individual subtasks to blend in with the others. This makes their performance so smooth. They do not even feel that they are performing subtasks because the integration is so strong. If they have to explain what they are doing to novices, they may have to stop and artificially break it down into subtasks. Often they feel uncomfortable teaching the separate steps because they know they are teaching some bad habits. They are teaching the novices to do the task in a choppy way.
 
-Managers also try to structure work into a uniform planning process, with a clear separation between “planning” and “execution”. Klein's research into planning across a number of military and rescue teams found that “planning is not a simple unified activity”; the approach, complexity and detail of plans varied based on context, and plans were often abandoned when circumstances changed. Some problems have circumstances that require separate planning and execution, but in areas that don't, experts naturally combine planning, iteration and execution into a single activity. I've seen this repeatedly working in software. Expert programmers see programming *as* planning[^programming-as-design].
+Managers also try to structure work into a uniform planning process, with a clear separation between “planning” and “execution”. Klein's research into planning across a number of military and rescue teams found that “planning is not a simple unified activity”; the approach, complexity and detail of plans varied based on context, and plans were often abandoned when circumstances changed. Some problems have circumstances that require separate planning and execution, but in areas that don't, experts naturally combine planning, iteration and execution into a single activity. I've seen this repeatedly working in software. Expert programmers see programming *as* planning.[^programming-as-design]
 
 [^programming-as-design]: Programming languages are, perhaps counterintuitively, amazing tools for planning and design. Programming-as-planning is what lets programmers manage an amazing amount of complexity, and the amount of complexity programmers are expected to manage *necessitates* seeing programming as planning.
 
@@ -136,6 +156,10 @@ Managers also try to structure work into a uniform planning process, with a clea
 [factors]: https://tratt.net/laurie/blog/2024/what_factors_explain_the_nature_of_software.html
 
 And, as we've seen earlier, formal decision making models based on comparing alternative options do not reflect the actual recognition-driven process experts use for the vast majority of the decision points in their work.
+
+::: {.pull-quote .right style="width: 45%"}
+> They do not even feel that they are performing subtasks because the integration is so strong.
+:::
 
 All three of these *a priori* models follow the same pattern: they expect expert decision making to be legible to non-experts, and they reflect how *beginners* approach unfamiliar situations. My theory is that managers naturally tend towards these models not only because they want more direct control over the work but also because they are extrapolating their expectations from how beginners learn. But experts are not just beginners with more knowledge and discipline! Experts have the confidence and expertise to operate in fundamentally different *and more effective* ways than beginners. Expert decision making is an evidence of skill, not a lack of discipline.
 
@@ -177,7 +201,9 @@ Unfortunately the actual impact of these statements has been limited in practice
 
 In my own work, I've found it useful to develop similar frameworks for what information to track and communicate, adjusted based on the context and nature of the work as well as the experience and personalities of the people I am working with.
 
-I've also found David Marquet's work on intent-based leadership useful; his book ** provides an accessible introduction to the idea illustrated with stories from his time as the captain of the nuclear-powered submarine *USS Santa Fe*[^video].
+I've also found David Marquet's work on intent-based leadership useful; his book [*Turn the Ship Around!*][turn-the-ship-around] provides an accessible introduction to the idea illustrated with stories from his time as the captain of the nuclear-powered submarine *USS Santa Fe*.[^video]
+
+[turn-the-ship-around]: https://www.goodreads.com/book/show/16158601-turn-the-ship-around
 
 [^video]: [This video on his work][intent-based-leadership-video] provides a *very* high-level introduction to his ideas.
 
