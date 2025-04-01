@@ -1,9 +1,10 @@
 ---
 title: Letting Experts Be Experts
 author: Tikhon Jelvis
-description: Experts aren't just "beginners with more knowledge", they operate in a fundamentally different way. How can we empower rather than hinder them?
+description: Experts aren't just beginners with more knowledge, they operate in a fundamentally different way. How can we empower rather than hinder them?
 image: img/sources-of-power.jpg
 published: 2025-04-01 15:56:46
+modified: 2025-04-01 16:06:26
 ---
 
 In my career, I've had the fortune to work with and observe a number of real experts in their fields. Expert programmers, statisticians, designers and leaders. Each person and each field were different, but there were broad similarities in how all the experts made decisions. The most effective teams I worked on not only *included* experts but also made room for them to work *as experts*.
