@@ -1,0 +1,17 @@
+* Doing /as/ Planning
+I shared this article with a few friends, and multiple people cited
+the point about /not/ having a clear separation between planning and
+execution as the most important point in the piece.
+
+Planning is not a simple unified activity, and it's valuable to take a
+step back and see it that way.
+
+* Examples
+Kaveh had a great point about examples: the article would have been
+more effective if I backed up the parts where I said "in my
+experience..." with examples and illustrations. I really appreciate
+this feedback; I'm definitely going to keep it in mind for future
+things I write (like that "thinking in libraries" post I'm already
+working on!), but I'm also thinking of going back and adding examples
+to /this/ post, even though almost nobody is going to read the updated
+version...
