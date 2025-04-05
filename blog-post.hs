@@ -32,8 +32,9 @@ import           Text.Printf               (printf)
 main :: IO ()
 main = execParser cmdParser >>= run
 
-data Settings = Settings { name    :: String
-                         , publish :: Bool
+data Settings = Settings { name      :: String
+                         , directory :: FilePath
+                         , publish   :: Bool
                          }
 
 cmdParser :: ParserInfo Settings
@@ -48,6 +49,9 @@ options :: Parser Settings
 options = Settings <$> argument Opt.str
                      ( help "The name of the blog post."
                     <> metavar "NAME" )
+                   <*> argument Opt.str
+                     ( help "The sanitized directory name for the post."
+                    <> metavar "DIR" )
                    <*> switch
                      ( help "Publish an existing blog post rather than starting a draft."
                     <> long "publish"
@@ -87,13 +91,12 @@ run Settings {..} = do
   home <- Dir.getHomeDirectory
   Dir.setCurrentDirectory $ home <> "/Programming/website/drafts"
 
-  let dirName = intercalate "-" $ words name
-  putStrLn $ "Dir name: " ++ dirName
-  exists <- Dir.doesDirectoryExist dirName
+  putStrLn $ "Dir name: " ++ directory
+  exists <- Dir.doesDirectoryExist directory
   if | not publish && not exists -> do
-      Dir.createDirectory dirName
+      Dir.createDirectory directory
       printf "Creating post %s\n" name
-      Dir.setCurrentDirectory dirName
+      Dir.setCurrentDirectory directory
       writeFile "index.md" $ index name
       Dir.createDirectory "misc"
 
@@ -101,10 +104,10 @@ run Settings {..} = do
       putStrLn "Draft already exists! Not doing anything."
      
      | publish && exists -> do
-      published <- Dir.doesDirectoryExist $ ".." </> "blog" </> dirName
+      published <- Dir.doesDirectoryExist $ ".." </> "blog" </> directory
       let var = if published then "modified" else "published"
       putStrLn $ "Publishing " ++ name
-      Dir.setCurrentDirectory dirName
+      Dir.setCurrentDirectory directory
 
       zone <- Time.getCurrentTimeZone
       time <- Time.getCurrentTime
@@ -113,7 +116,7 @@ run Settings {..} = do
       Strict.readFile "index.md"
         >>= writeFile "index.md" . addTimeVar var local
       
-      () <$ runCommand [str|cp -r '../$escape dirName$' ../../blog/|]
+      () <$ runCommand [str|cp -r '../$escape directory$' ../../blog/|]
 
      | publish && not exists -> 
       error "Cannot publish draft that doesn't exist!"
