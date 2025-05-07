@@ -1,5 +1,5 @@
 ---
-title: Different Perpectives: Light, Dark and Shadow
+title: Light, Dark and Shadow
 author: Tikhon Jelvis
 ---
 One of the most useful skills I've picked up from math and computer science is **smoothly moving between different perspectives on a concept or situation**. In our complex world, we almost never have a single “best” way to understand something.
