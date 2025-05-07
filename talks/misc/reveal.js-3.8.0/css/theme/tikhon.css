@@ -23,8 +23,11 @@ body {
 }
 
 .reveal {
+  /* TODO: figure out how to manage this differently in different
+   presentations! */
+  font-size: 40px;
+
   font-family: Junction, Helvetica, Arial, sans-serif;
-  font-size: 65px;
   font-weight: normal;
   color: var(--text); }
 
@@ -49,7 +52,7 @@ body {
 }
 
 .reveal h1.title {
-    font-size : 160px;
+    /* font-size : 160px; */
     margin-bottom : -2%;
 }
 

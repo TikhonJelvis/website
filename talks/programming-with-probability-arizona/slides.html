@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Programming <i>with</i> Probability</title>
+<meta name="author" content="Tikhon Jelvis"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="../reveal.js-3.8.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="../reveal.js-3.8.0/css/theme/tikhon.css" id="theme"/>
+
+<link rel="stylesheet" href="../reveal.js-3.8.0/plugin/highlight/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '../reveal.js-3.8.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="Probability distributions form a monad. I'll talk about how we can use this monad in different ways to work with probability distributions in our code.">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide" data-background="#052d69" data-background-transition="none"><h1 class='title'>Programming <i>with</i> Probability</h1> <h2 class='subtitle'></h2> <h3 class='author'>Tikhon Jelvis</h3>
+</section>
+<section>
+<section id="slide-orgaa99a45">
+<h2 id="orgaa99a45">Math as design language</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-org0157c49">
+<h2 id="org0157c49"></h2>
+<p>
+Uncertainty is hard
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgda665d5">
+<h2 id="orgda665d5"></h2>
+<p>
+Uncertainty + business logic:
+</p>
+
+<p>
+even harder
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgadadc90">
+<h2 id="orgadadc90"></h2>
+<ol>
+<li>Supply chain optimization</li>
+<li>Software design</li>
+<li>The probability monad</li>
+<li>Markov processes</li>
+
+</ol>
+</section>
+</section>
+<section>
+<section id="slide-org3dc7e89" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org3dc7e89">Supply Chain Optimization</h2>
+</section>
+</section>
+<section>
+<section id="slide-orgec3a55d">
+<h3 id="orgec3a55d">Target</h3>
+<ul>
+<li>1978 stores</li>
+<li>62 distribution centers</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org3588b1b">
+<h3 id="org3588b1b">Target</h3>
+
+<div id="org4fed177" class="figure">
+<p><img src="./img/dc-map.png" alt="dc-map.png" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org7a1ad4c">
+<h3 id="org7a1ad4c">Demand Uncertainty</h3>
+
+<div id="org260db7c" class="figure">
+<p><img src="img/item-demand.png" alt="item-demand.png" width="700px" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org79ad831">
+<h3 id="org79ad831">How do we&#x2026;</h3>
+<ul>
+<li><b>model</b> supply chain behavior?</li>
+<li>make <b>decisions</b>?</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgb9e4db0" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orgb9e4db0">Software Design</h2>
+</section>
+</section>
+<section>
+<section id="slide-orgebf288e">
+<h3 id="orgebf288e">How do we manage complexity in our code?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgb9c113a">
+<h3 id="orgb9c113a"></h3>
+
+<div id="org45fbfb2" class="figure">
+<p><img src="img/code-design.svg" alt="code-design.svg" class="no-background" width="800px" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org42ee9a6">
+<h3 id="org42ee9a6"></h3>
+
+<div id="org6aa5691" class="figure">
+<p><img src="./img/code-design-concepts.svg" alt="code-design-concepts.svg" class="no-background" width="800px" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org3389143">
+<h3 id="org3389143">Math + Functional Programming</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgca81876">
+<h3 id="orgca81876"></h3>
+<div>
+\begin{equation}
+f: \mathbb{R} \to \mathbb{R} \\
+f(x) = 1 + 2x + 2x^2
+\end{equation}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >f :: Double → Double
+f x = 1 + (2 * x) + (2 * x ^ 2)
+</code></pre>
+</div>
+
+<p>
+Sets become <b>types</b>
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgca52710">
+<h3 id="orgca52710"></h3>
+<div>
+\begin{equation}
+f: \mathbb{R^2} \to \mathbb{R} \\
+f(x, y) = 1 + 2xy + 2x^2y
+\end{equation}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >f :: Double → Double → Double
+f x y = 1 + (2 * x * y) + (2 * x ^ 2 * y)
+</code></pre>
+</div>
+
+<div>
+\begin{equation}
+g(x) = f(x, x + 1) + f (x + 1, x)
+\end{equation}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >g :: Double → Double
+g x = f x (x + 1) + f (x + 1) x
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgc82c662">
+<h3 id="orgc82c662"></h3>
+<div>
+\begin{equation}
+F: \textbf{Set} → \textbf{Set} \\
+\end{equation}
+
+</div>
+
+<div>
+\begin{equation}
+\eta: 1_{\textbf{Set}} \to F \\
+\eta_X: X \to F(X)
+\end{equation}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >pure :: ∀a. a → F a
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >pure :: a → F a
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org99b8341">
+<h3 id="org99b8341"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >class Functor f ⇒ Pointed f where
+  pure :: a → f a
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >pure :: Pointed f ⇒ a → f a
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgf7cdf0a" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orgf7cdf0a">Probability Distributions</h2>
+</section>
+</section>
+<section>
+<section id="slide-orgeb45dfa">
+<h3 id="orgeb45dfa"></h3>
+
+<div id="org56dd924" class="figure">
+<p><img src="./img/poisson.svg" alt="poisson.svg" class="org-svg" width="600px" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgfb853a3">
+<h3 id="orgfb853a3"></h3>
+<div>
+\begin{equation}
+X \in \mathbb{Z} \\
+P(X = x) \\
+\end{equation}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data Dist a = ...
+
+example :: Dist Int
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org97dd5dd">
+<h3 id="org97dd5dd"></h3>
+<div>
+\begin{equation}
+X \in \mathbb{Z} \\
+Y \in \{0, 1\} \\
+P(X = x|Y = 1)
+\end{equation}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >example :: Bool → Dist Int
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >example True :: Dist Int
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgdc6ccd3">
+<h3 id="orgdc6ccd3">Functor</h3>
+
+<div id="org768a7cf" class="figure">
+<p><img src="img/functor-diagram.jpg" alt="functor-diagram.jpg" />
+</p>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >fmap :: ∀f a b. Functor f ⇒ (a → b) → (f a → f b)
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >fmap :: ∀f a b. Functor f ⇒ (a → b) → f a → f b
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org015236f">
+<h3 id="org015236f">Functor</h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >die :: Dist Int
+die = uniform [1..6]
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >coin :: Dist Bool
+coin = fmap isEven die 
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgbe317bc">
+<h3 id="orgbe317bc">Monad</h3>
+<div>
+\begin{align}
+& D: \textbf{Set} → \textbf{Set} \\
+& \eta: 1 → D \\
+& \mu: D \circ D \to D
+\end{align}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data Dist a
+
+pure :: a → Dist a
+
+join :: Dist (Dist a) → Dist a 
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgae104e2">
+<h3 id="orgae104e2">Monad</h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >bind :: Dist a → (a → Dist b) → Dist b
+bind dist f = join (fmap f dist)
+</code></pre>
+</div>
+
+<div>
+\begin{align}
+& P(X = x|Y = y) \\
+& P(Y = y) \\
+& P(X = x)
+\end{align}
+
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgd680004">
+<h3 id="orgd680004"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data Coin = H | T
+
+-- Bernoulli distribution 
+coin ∷ Double → Dist Coin
+coin p = weighted [(T, p), (H, 1 - p)]
+
+fair   = coin 0.5
+unfair = coin 0.9
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org3176f07">
+<h3 id="org3176f07"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >randomCoin ∷ Dist (Dist Coin)
+randomCoin = 
+  weighted [ (fair,   0.5)
+           , (unfair, 0.5)
+           ]
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in"  ><code class="haskell" >coinGame :: Dist Coin
+coinGame = join randomCoin
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org1f40250">
+<h3 id="org1f40250"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >coinGame :: Dist Coin
+coinGame = do
+  coin ← fair
+  flip ← if coin == H then fair else unfair
+  pure flip
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org6e257c6">
+<h3 id="org6e257c6">Different Interpretations</h3>
+<ol>
+<li>Each ← <i>samples</i> the distributions</li>
+<li>Each ← calculates <i>all combinations</i></li>
+<li>More sophisticated algorithms</li>
+
+</ol>
+</section>
+</section>
+<section>
+<section id="slide-org09246d3">
+<h3 id="org09246d3">Sampling</h3>
+<p>
+Run a simulation:
+</p>
+
+<ol>
+<li>Sample <code>randomCoin</code></li>
+<li>If heads, sample <code>fair</code></li>
+<li>If tails, sample <code>unfair</code></li>
+
+</ol>
+</section>
+</section>
+<section>
+<section id="slide-org92eb8dd">
+<h3 id="org92eb8dd">All Combinations</h3>
+
+<div id="org5e6f127" class="figure">
+<p><img src="img/nested.svg" alt="nested.svg" class="org-svg" />
+</p>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >toTable :: Dist Coin → [(Coin, Double)]
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org607a17c" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="org607a17c">Uncertainty over Time</h2>
+</section>
+</section>
+<section>
+<section id="slide-org668fbed">
+<h3 id="org668fbed">Markov Processes</h3>
+<ul>
+<li>\(S\) states</li>
+<li>\(P(X_{n+1} = x | X_n = y)\) transition probability</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orga4a9685">
+<h3 id="orga4a9685">Markov Processes</h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data MarovProcess s = MarkovProcess
+  { transition :: s → Dist s }
+
+process.transition :: s → Dist s
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgbd3c64e">
+<h3 id="orgbd3c64e">Markov Processes</h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >step :: MarkovProcess s → Dist s → Dist s
+step process current = do
+  state ← current
+  process.transition current
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >step :: MarkovProcess s → Dist s → Dist s
+step current = bind current process.transition
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org1a87873">
+<h3 id="org1a87873">Simulations</h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >iterate :: Monad m ⇒ (a → m a) → a → Stream (Of a) m ()
+iterate f a = do
+  yield a
+  x ← f a
+  iterate f x
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >simulate :: MarkovProcess s → s → Stream (Of s) Dist ()
+simulate process start =
+  iterate process.transition start
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org5d154d2">
+<h3 id="org5d154d2">Rewards</h3>
+<div>
+\begin{equation}
+P((X_{n + 1} = x, r) | X_n = y)
+\end{equation}
+
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >type Reward = Double
+
+data MarkovRewardProcess s = MarkovRewardProcess
+  { transition :: s → Dist (s, Reward) }
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgb562ba2">
+<h3 id="orgb562ba2">Rewards</h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >simulateReward :: MarkovRewardProcess s
+                → s
+                → Stream (Of (s, Reward)) Dist ()
+simulateReward = ...
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org97cc78a">
+<h3 id="org97cc78a"></h3>
+<div>
+\begin{equation}
+R: \textbf{Set} → \textbf{Set} \\
+R(S) = S \times \mathbb{R}
+\end{equation}
+
+</div>
+
+<div>
+\begin{align}
+& \eta: x \mapsto (x, 0) \\
+& \mu: ((x, r_1), r_2) \mapsto (x, r_1 + r_2)
+\end{align}
+
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org289c258">
+<h3 id="org289c258"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data WithReward s = WithReward
+  { state :: s
+  , reward :: Reward
+  }
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >pure :: s → WithReward s
+pure s = WithReward { state = s, reward = 0 }
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >join :: WithReward (WithReward s) → WithReward s
+join wr = WithReward
+  { state = wr.state.state
+  , reward = wr.state.reward + wr.reward
+  }
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgd84e361">
+<h3 id="orgd84e361">Composition</h3>
+<p>
+\(D \circ R\) forms a monad
+</p>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >Dist (s, Reward) = Dist ∘ WithReward
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org4a544ef">
+<h3 id="org4a544ef">Composition</h3>
+<p>
+We can compose <i>any</i> monad with \(R\)
+</p>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data WithRewardT m s = WithRewardT
+  { state :: m s
+  , reward :: Reward
+  }
+</code></pre>
+</div>
+
+<p>
+\(\text{ignore}: M \circ R \to M\)
+</p>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >ignore :: WithRewardT m s → m s
+ignore wr = wr.state
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org8012344">
+<h3 id="org8012344"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data MarkovProcess m s = MarkovProcess
+  { transition :: s → m s }
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >simulate :: Monad m ⇒ MarkovProcess s → s → Stream (Of s) m ()
+simulate process start =
+  iterate process.transition start
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >simulateReward :: Monad m
+                ⇒ MarkovProcess (WithRewardT m s)
+                → s
+                → Stream (Of s) (WithRewardT m s)
+simulateReward = simulate
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org2a29f88">
+<h3 id="org2a29f88"></h3>
+<div class="horizontal-gallery">
+
+
+<div id="org1a5e1a2" class="figure">
+<p><img src="./img/mp-definition.jpg" alt="mp-definition.jpg" />
+</p>
+</div>
+
+
+<div id="org0996fa6" class="figure">
+<p><img src="./img/mrp-definition.jpg" alt="mrp-definition.jpg" />
+</p>
+</div>
+
+</div>
+
+<p>
+(slides: David Silver)
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgf544880">
+<h3 id="orgf544880"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data MarkovProcess m s = MarkovProcess
+  { transition :: s → m s }
+
+type MarkovRewardProcess m s = 
+  MarkovProcess (WithRewardT m) s
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org16e4b67">
+<h3 id="org16e4b67">Inventory Control</h3>
+<ul>
+<li>gain per sale</li>
+<li>lose per order</li>
+<li>lose per inventory/day</li>
+<li>lose per <i>missed demand</i></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgb403a6e">
+<h3 id="orgb403a6e"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >transition = \ inventory → do
+  reward (-1 * inventory)
+
+  let ordered = 3
+  reward (-4 * ordered)
+
+  demanded ← forecast
+  let sold   = min demanded inventory
+      missed = demanded - sold
+  reward (sold * 8 - missed * 14)
+
+  pure (inventory - sold + ordered)
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org03b19a0">
+<h3 id="org03b19a0"></h3>
+
+<div id="orgc51113e" class="figure">
+<p><img src="./img/inventory rewards.svg" alt="inventory rewards.svg" class="org-svg" />
+</p>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org91342b6">
+<h3 id="org91342b6"></h3>
+
+<div id="orgd643f0b" class="figure">
+<p><img src="./img/mdp-definition.jpg" alt="mdp-definition.jpg" width="800" />
+</p>
+</div>
+
+<p>
+(slide: David Silver)
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org0544f90">
+<h3 id="org0544f90"></h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >data MarkovDecisionProcess m s a = MDP {
+  step ∷ s → a → m (s, Reward)
+}
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre  class="fragment roll-in"  ><code class="haskell" >data MarkovDecisionProcess m s a = MDP {
+  step ∷ s → a → WithReward m s
+}
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgca76d68">
+<h3 id="orgca76d68">Optimization</h3>
+<p>
+Find a <i>policy</i> \(S → A\) that maximizes expected reward
+</p>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >type Policy s a = s → a
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orge24fb62">
+<h3 id="orge24fb62">MDP + Policy = MRP</h3>
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >apply :: Monad m
+       ⇒ MarkovDecisionProcess m s a 
+       → Policy s a 
+       → MarkovProcess m s
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org4d16625">
+<h3 id="org4d16625">Different Interpretations</h3>
+<ul>
+<li>some algorithms need full distributions</li>
+<li>some algorithms need sampling</li>
+<li>same <code>MDP</code> type works for both!</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgcf19d29">
+<h3 id="orgcf19d29">Reusable Pieces</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org42f26da">
+<h3 id="org42f26da">Point Processes</h3>
+<p>
+\(D \circ B\)
+</p>
+
+<div class="org-src-container">
+
+<pre   ><code class="haskell" >type PointProcess x = Dist (Bag x)
+</code></pre>
+</div>
+
+
+<div id="org8c19966" class="figure">
+<p><img src="img/point-process-example.png" alt="point-process-example.png" width="600" />
+</p>
+</div>
+
+<p>
+<a href="https://arxiv.org/abs/2101.10479">A Monad for Probabilistic Point Processes</a>
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org18df9ea">
+<h3 id="org18df9ea"></h3>
+
+<div id="org476e503" class="figure">
+<p><img src="img/unsure-calculator.png" alt="unsure-calculator.png" width="500" />
+</p>
+</div>
+
+<p>
+<a href="https://alt-romes.github.io/posts/2025-04-25-unsure-calculator-in-100-lines-of-haskell.html">Unsure Calculator in 100 Lines of Haskell</a>
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgca185e3" data-background="#052d69" data-background-transition="none" class="section-slide">
+<h2 id="orgca185e3">Questions?</h2>
+</section>
+</section>
+</div>
+</div>
+<p> Created by Tikhon Jelvis. </p>
+<script src="../reveal.js-3.8.0/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+controls:true, center:true, progress:false, transition:"none", autoAnimate: false,
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: '../reveal.js-3.8.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+ { src: '../reveal.js-3.8.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js-3.8.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: '../reveal.js-3.8.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+
+</script>
+</body>
+</html>
