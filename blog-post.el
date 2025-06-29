@@ -10,7 +10,7 @@ generated index.md with a title and author field. All the actual
 file munging is done by a simple Haskell script."
   (interactive "sName: ")
   (let ((flag (if publish "-p" "")))
-    (message (format "Running `blog-post '%s' '%s' %s" name (sanitize-title name) flag))
+    (message "Running blog-post '%s' '%s' %s" name (sanitize-title name) flag)
     (shell-command (format "~/Programming/website/blog-post '%s' '%s' %s" name (sanitize-title name) flag)))
   (find-file (format "~/Programming/website/drafts/%s/index.md" (sanitize-title name)))
   (end-of-buffer))
