@@ -5,19 +5,19 @@ description: Code is read more than it is written, but it is skimmed more than i
 image: img/digital-rain.gif
 published: 2025-06-23 12:48:18
 modified: 2025-06-23 13:02:00
+modified: 2025-06-29 12:54:49
 ---
 
 In software engineering circles, there is a common adage: "code is read more than it is written". But this is not the whole picture! **Code is skimmed more than it is read.**
 
-We read code more than we write it because we spend more time maintaining than we do writing from scratch. A line of code, once written, still has a long and storied life ahead of it. You write code once and then return to it multiple times, fixing bugs, adding features, refactoring. To do this, of course, you have to change the existing code—and to change it you have to read and understand it. And not just you; future programmers will also work on the code, pursuing their own goals, operating under different constraints.
+We read code more than we write it because we spend more time maintaining than we do writing from scratch. A line of code, once written, still has a long and storied life ahead of it. You write code once and then return to it multiple times, fixing bugs, adding features, refactoring. To do this you have to change the existing code—and to change it you have to read and understand it. Not just you; future programmers will also work on the code, pursuing their own goals, operating under different constraints.
 
 !["I don't see the code any more." (Image credit: [Jahobr])](img/digital-rain.gif "An animation in the style of Matrix's “digital rain” effect.")
 
 [Jahobr]: https://en.wikipedia.org/wiki/Digital_rain#/media/File:Digital_rain_animation_medium_letters_shine.gif
 
 
-But for every part of the code you need to revisit to in depth, there will be dozens of related parts you're not touching directly. You need to navigate through the codebase to find the relevant code for your work, and you need to track the code *surrounding* your work for context. You don't have to understand the related parts of code *fully*; you're content understanding *what they are supposed to do*. You do this not by reading the code in detail—nobody has the time or the working memory to keep the whole codebase in detail in their head!—but by scanning through the code quickly and getting just the *gist* of the code.
-
+For every part of the code you need to revisit to in depth, there will be dozens of related parts you're not touching directly. You need to navigate through the codebase to find relevant code and you need to track surrounding code for context. You don't have to understand the related parts of code exactly; just what they are supposed to do. You do this not by reading the code in detail—nobody has the time or working memory to keep a whole codebase in their head!—but by scanning through code quickly and getting just the gist.
 
 ::: {.pull-quote .right style="width: 32%"}
 > Code is skimmed more than it is read.
