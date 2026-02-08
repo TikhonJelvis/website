@@ -39,6 +39,10 @@ main :: IO ()
 main = hakyll $ do
   match "templates/*" $ do
     compile templateCompiler
+  
+  match "asteroid-tycoon/**" $ do
+    route idRoute
+    compile copyFileCompiler
 
   match (deep "misc") $ do
     route $ removeDir "misc"
