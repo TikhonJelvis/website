@@ -3,9 +3,15 @@ title: Thinking in Libraries
 author: Tikhon Jelvis
 ---
 
-One of the simplest  programming tricks I've learned: organizing my logic as if I were writing a library—even when the logic will only get used once as part of an application. This is a shift in perspective rather than a prescriptive technique, so I've taken to calling it **thinking in libraries**.
+One of the simplest programming tricks I've learned: organizing my logic as if I were writing a library—even when the logic will only get used once as part of a single application or workflow. This is more a shift in perspective than a prescriptive technique, so I've taken to calling it **thinking in libraries**.
 
-For years, I just assumed that thinking in libraries was the “obvious” way to write code. I'd get personally affronted by code that was not organized along conceptual lines. But, having worked with a wide range of people and teams, I've realized that this approach is not always obvious. I've worked with multiple large codebase that have not been organized along these lines and, even when I've worked in codebases that were, I cannot recall anybody ever explicitly talking about it.
+Organizing most of our code as if it were a library lets us build our system out of self-contained, conceptually coherent pieces. These pieces can make sense—and be developed and tested—on their own, without depending on the specific context where they get used. The application-specific layers of the code can then be relatively thin, made up of composing self-contained pieces of code and managing the interfaces specific to the application or workflow we're putting together.
+
+For example, when I worked on supply chain simulation at Target, the majority of the code was organized as a general simulation framework and a library for modeling the kind of supply chain logic we cared about at Target (stores, distribution centers, inventory policies... etc).
+
+Only the final layers of the system were specific to the immediate problem I was solving at Target: one layer that combined pieces into the particular simulation models we exposed to the business, and another, separate, layer that managed data conversions and running the system on our data science cluster.
+
+This meant that I could think about most of my code without needing to factor in the complexity of Target's messy internal data schemas and infrastructure or even the details of the specific supply chain process we were modeling. 
 
 Like any other idea about programming and design, it is not universal. Some experienced engineers are aware of this approach, but see it as adding unnecessary abstraction boundaries and complexity[^disagree].
 

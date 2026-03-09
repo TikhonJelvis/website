@@ -1,0 +1,20 @@
+* Conceptual Models
+Thinking about code in libraries is a useful and flexible way to
+organize code around a coherent mental model (think DDD, denotational
+designs, concepts... etc). By thinking in terms of libraries, you get
+two benefits:
+
+  1. You can reason about your domain-specific code on its
+     own. Library-style code naturally represents domain-specific
+     concepts that make sense in a vacuum, without needing to bring in
+     a bunch of additional context. This makes life much easier for
+     initially writing and testing the code, and makes things easier
+     for people working on the codebase in the future.
+  2. You naturally separate logically self-contained parts of your
+     code from the application- and system-specific bits. You can work
+     on most of the logic on its own terms, and only need to have a
+     deep understanding of the specific application and broader
+     context (the product itself, other enterprise-specific systems,
+     etc) where it's absolutely necessary. This makes life easier
+     up-front (less complexity to juggle) and /much/ easier in the
+     future (especially for new folks).
