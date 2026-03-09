@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Asteroid Tycoon: Sending Robots to their Deaths</title>
+<meta property="og:title" content="Asteroid Tycoon" />
+<meta property="og:description" content="ASTEROID TYCOON is a game about fast-paced autonomous asteroid mining. Witness first-hand the thrill of controlling a fleet of mining robots to extract resources for Asteroid Tycoon corporation!" />
+<meta name="Description" content="ASTEROID TYCOON is a game about fast-paced autonomous asteroid mining. Witness first-hand the thrill of controlling a fleet of mining robots to extract resources for Asteroid Tycoon corporation!">
+<meta property="og:image" content="http://asteroidtycoon.com/pics/asteroid.gif" />
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<meta name="msapplication-TileColor" content="#da532c">
+</head>
+<body>
+
+<script id="robot-buy-button-template" type="text/html">
+    <div class='robot-container <%= name %>'>
+      <div class='robot' data-robot='<%= name %>'>
+        <%= uiName %> $<%= cost %>
+      </div>
+        <div class='images'>
+        	<img src="pics/2x_gifs/<%= gifName %>0.gif" data-robot='<%= name %>' class="lvl1">
+        	<img src="pics/other/closedlock.png" data-robot='<%= name %>' class="lvl2 unused">
+        	<div class="upgradeCost lvl2"></div>
+        	<img src="pics/other/closedlock.png" data-robot='<%= name %>' class="lvl3 unused">
+        	<div class="upgradeCost lvl3"></div>
+        </div>
+        <div class='unlockMessage' data-robot='<%= name %>'>unavailable</div>
+    </div>
+</script>
+
+<script id="mineral-stat-template" type="text/html">
+    <span class='stat <%= name %>' title='<%= name %>'>
+        <%= abbrev %> <span class='amount'><%= amount %></span>
+    </span>
+</script>
+
+<script id="info-popup-template" type="text/html">
+  <div class="info-popup">
+    <h1> <%= name %> </h1>
+    <p> <%= text %> </p>
+    <div class="info-popup-icon">
+      <img src="<%= image %>" alt=" <%= name %> texture " />
+    </div>
+    <ul>
+      <li> hardness: <%= hardness %> </li>
+      <li> value: <%= value %> </li>
+    </ul>
+  </div>
+</script>
+
+<script id="robot-popup-template" type="text/html">
+  <div class="info-popup <%= displayName %>">
+    <h1> <%= displayName %> <%= level + 1 %>.0 </h1>
+    <p> <%= displayText %> </p>
+    <div class="info-popup-icon">
+      <img src="pics/2x_gifs/<%= gifName %><%= level %>.gif" alt=" <%= name %> bot icon " />
+    </div>
+    <ul>
+      <li> price: <%= cost %> </li>
+      <li> drill: <%= hardness %> </li>
+      <li> energy: <%= baseEnergy %> </li>
+    </ul>
+  </div>
+</script>
+
+<img id="muteButton" src="pics/other/mute-off.png">
+<img id="musicMuteButton" src="pics/other/music-mute-off.png">
+<div id='game'>
+    <div id='menu'>
+        <div class='title-container'>
+        	<a id="asteroidButton"><img src="pics/asteroids/asteroidbutton.png" /></a>
+            <div id='messages'>
+            </div>
+            <div class='title'>
+<pre class='title-text'>
+            .........             ___   _____________________  ____  ________     ________  ____________  ____  _   __
+       _...MMMMM88&&&&..._       /   | / ___/_  __/ ____/ __ \/ __ \/  _/ __ \   /_  __/\ \/ / ____/ __ \/ __ \/ | / /
+   '::....MMMMM88&&&&&&....::'  / /| | \__ \ / / / __/ / /_/ / / / // // / / /    / /    \  / /   / / / / / / /  |/ /
+      `''''MMMMM88&&&&''''`    / ___ |___/ // / / /___/ _, _/ /_/ // // /_/ /    / /  ___/ / /___/ /_/ / /_/ / /|  /
+            'MMM8&&&'         /_/  |_/____//_/ /_____/_/ |_|\____/___/_____/    /_/  /____/\____/\____/\____/_/ |_/
+</pre>
+            </div>
+            <div class='printer'></div>
+        	<div id='modalyesno' style="display: none;">
+        		<a id='yes'>yes</a>
+        		<a id='no'>no</a>
+        	</div>
+        </div>
+        <pre class='printout'></pre>
+        <marquee behavior='alternate'>
+            <span class='notification alert'>PRODUCTION DECLINING, CORPORATE OVERSIGHT IMMINENT</span>
+        </marquee>
+        <div class='controls'>
+            <div class='information'>
+                <div class='general-stats stats display'></div>
+                <div class='money-stats stats display'>
+                    <span class='tiny-description'>NORMALIZED SPACE DOLLARS</span>
+                    <span class='amount'></span>
+                </div>
+            </div>
+            <div class='robot-shop display'>
+            </div>
+            <img id="circle" src="pics/other/spaceship-circ.png" />
+        </div>
+    </div>
+    <canvas id='mainCanvas' width=1000 height=1380></canvas>
+</div>
+
+<div class='credits'>
+    By <a href="http://alex.nisnevich.com">Alex</a>, <a href='https://twitter.com/thelobsterclub'>Dmitry</a>, Greg, <a href='https://github.com/extrajordanary'>Jordan</a>, Jimmy, Natasha, and <a href="http://jelv.is">Tikhon</a>
+</div>
+
+<div class='sound'>
+    <audio id="audio" src="slow-loop.ogg" loop autoplay></audio>
+    <audio id="sfx_beam" src="sounds/beam.wav"></audio>
+    <audio id="sfx_break" src="sounds/break.wav"></audio>
+    <audio id="sfx_dingdong" src="sounds/dingdong.wav"></audio>
+    <audio id="sfx_suck" src="sounds/suck.wav"></audio>
+    <audio id="sfx_blip" src="sounds/blip.wav"></audio>
+    <audio id="sfx_coin" src="sounds/coin.wav"></audio>
+    <audio id="sfx_travel" src="sounds/travel.wav"></audio>
+</div>
+
+
+<link href='http://fonts.googleapis.com/css?family=VT323|Roboto:400,100,300' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="info-popup.css">
+
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<script src='lib/jquery.js'></script>
+<script src='lib/underscore.js'></script>
+<script src='lib/easeljs-0.7.1.min.js'></script>
+<script src='lib/astar.js'></script>
+
+<script src='robot_classes.js'></script>
+<script src='asteroid.js'></script>
+<script src='definitions.js'></script>
+
+<script src='game.js'></script>
+<script src='info-popup.js'></script>
+<script src='tile.js'></script>
+<script src='state.js'></script>
+<script src='robot.js'></script>
+<script src='robot_util.js'></script>
+<script src='marquees.js'></script>
+<script src='launcher.js'></script>
+<script src='printout.js'></script>
+
+<script id='first-email' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Whoa, whoa, whoa! Look who relaxedly sat down with a cup of coffee
+    to read email!
+
+    Are we at Asteroid Tycoon known for relaxedly reading email? No, that is
+    not what we are known for. We are known for our efficiency, and more
+    importantly, we are known in our productivity.
+
+    Sometimes I tear up, thinking about our growth over the last eight quarters.
+    We have grown by 50% or more each year. And this year we will deplete our
+    10,000th asteroid.
+
+    But you are not part of that equation. But of course you know that
+    - if you had met standards in the first place you wouldn't be stuck where you
+    are now. Your branch had the weakest performance of the last year; you let your
+    colony staff nearly starve to death, and you blew company money on frivolous
+    expenses. Hence your "lateral promotion."
+
+    Our accountant said that firing you is inconvenient for tax purposes.
+
+    But we can't trust you with large amounts of money or human lives
+    any more. Heck, we don't even trust you with any decent robots for fear you'd
+    mess them up too. So welcome to your new post, equipped with the finest robot
+    that engineering could put together from scraps in the waste pile. They named
+    it SquirrelBot.
+
+    It can't mine and it can't dig through anything harder than dirt.
+
+    Have fun with that.
+
+    - Corporate
+</script>
+<script id='unlock-bearBot' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Reading the reports you've been sending back about all the work you've
+    accomplished with your SquirrelBots created such a sense of disgust for me
+    that I decided I'd rather die than have to read such a pathetic report
+    ever again.
+
+    Out of sheer pity, I gave R&D fifteen minutes to Frankenstein together
+    a new bot for you out more junk. BearBot: a mining robot that can quickly
+    clear away dirt and can even pick up some minerals along the way.
+
+    Might as well make your stay on this
+    godforsaken rock useful.
+
+    - Corporate
+</script>
+<script id='unlock-vultureBot' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Oh boy, judging by the trail of dead robots you've left in your wake, you're
+    really gonna need this one. The VultureBot sucks up the rubble strewn
+    about this asteroid and lets you recoup some of your costly, costly losses.
+
+    Break 'em, scoop 'em back up, use the pieces to build more mediocre robots.
+    Just the robot circle of life. Accounting loves it.
+
+    - Corporate
+</script>
+<script id='unlock-antBot' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Your performance so far, while far from being commendable, has at least
+    demonstrated to us a basic competence in maneuvering heavy machinery.
+
+    We have tentatively decided to increase your robotic workforce.
+
+    While still made from refuse, the AntBot has significantly higher
+    drill power than the BearBot, with capacity to match.
+
+    Don't expect a bonus this year.
+
+    - Corporate
+</script>
+<script id='unlock-goatBot' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    While watching you struggle with the tougher was entertaining at first,
+    it's gotten boring. Hurry up.
+
+    Here's a GoatBot. It's as careful with resources as company files say you
+    are. And by that I mean it blunders around smashing things, destroying
+    valuable goods in the process.
+
+    The GoatBot will smash through most obstacles you've encountered so far,
+    but is unable to harvest any minerals, destroying them instead.
+    Use the GoatBot with care.
+
+    Repeat -- use the GoatBot with care. Company policy forbids the GoatBot
+    from being used to waste minerals. If we catch you doing so, there will
+    be consequences.
+
+    - Corporate
+</script>
+<script id='upgrade1' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    It looks like your old bots just aren't up to the task anymore, are they?
+    We have heard your whining and are sending over two sets of blueprints: one for
+    an upgraded SquirrelBot with more energy and longer vision and one for an
+    upgraded BearBot with a stronger drill and higher efficiency.
+
+    Yes, the upgrades aren't cheap, but we trust that you have been careful with
+    Asteroid Tycoon's money.
+
+    - Corporate
+</script>
+<script id='upgrade2' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    You have now stumbled your way across three asteroids. While your performance
+    has been far from what we would expect at a company as prestigious as Asteroid
+    Tycoon, good deeds must still be rewarded one way or another.
+
+    We are sending over blueprints for an upgraded AntBot, GoatBot, and VultureBot.
+    Don't make us regret this.
+
+    - Corporate
+</script>
+<script id='upgrade3' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+    Well don't just stand here! Quickly, to Cashmonoid!
+
+    You almost have all the pieces you need to put together the ultimate drilling
+    machine. For perhaps the first time in your sorry life, there is a chance you
+    may amount to something.
+
+    - Corporate
+</script>
+<script id='motherlodium-one' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Good job! You found some harder rock under all that not-as-hard rock, with
+    some other mineral beneath it.
+
+    So when you're done messing around there get over to the next asteroid,
+    Cheddaroid. You do realize that this isn't the only asteroid you're supposed
+    to deal with, right? There are four more waiting for your attention. We do hope
+    that we don't have to remind you about the Asteroid Field Map access button
+    on the top-right corner of your control panel.
+
+    You're already on thin ice with the company, I'm sure you don't want me
+    including in my report that you wasted company time staring at minerals
+    buried beneath rock we have no way of penetrating.
+
+    Back to work!
+
+    - Corporate
+</script>
+<script id='motherlodium-two' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    I'm getting really sick of your memos whining at me for more information
+    about the unreachable mineral.
+
+    Let the professionals - you know, the ones not on probation - handle the
+    business end. You can just go back to playing with your toys in the sand pit,
+    or whatever you're calling that rock you're on.
+
+    - Corporate
+</script>
+<script id='unlock-badgerBot' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    The government shipment has arrived!
+
+    This is what you - we - have been working towards this whole time! Surely you
+    didn't really think we didn't care about all of that sweet sweet motherlodium
+    at the core of the asteroids you've been mining.
+
+    We couldn't crack the core to get to it earlier, but our government contact
+    has made good on his word. The BadgerBot has arrived!
+
+    Seriously, be careful. That thing was designed from the ground up to be the
+    most terrifying sight any rock or mineral has ever seen. Do you see that
+    saw blade? That's what you can achieve with a multi-billion space dollar
+    defense budget.
+
+    Now get out and there and get my - our - motherlodium!
+
+    - Corporate
+</script>
+<script id='theEnd' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Motherlodium! All of the motherlodium in the entire system! And how beautiful
+    it is.
+
+    When you return, we will discuss the terms of your promotion!
+
+
+    - Corporate
+
+
+
+    PS: And by that I mean promotion to "Captain of the Abandoned Asteroid Field."
+
+    Accounting says that now that we have the motherlodium and a ten-year weapons
+    development contract with the government we can afford a simple funeral for a
+    brave company employee who lost his life in a tragic space mining accident.
+
+    Hint: that brave employee is you! Enjoy the last of your air supply.
+
+     - Corporate
+</script>
+
+<script id='nobotleftbehind' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Bear in mind that jumping out into the Asteroid Field now will mean the
+    destruction of all of our robots on this asteroid.
+
+    This is exactly the kind of careless behavior and resource abuse that
+    landed you out here in the first place. Do you still wish to jump out?
+
+
+
+</script>
+<script id='alienArtifacts' type='text'>
+    EMAIL PRINTOUT
+    --------------------------------------------------
+
+    Do not look directly into the alien artifacts. We repeat - do not look directly
+    into the alien artifacts. Just beam them all back to headquarters as quickly
+    as possible along with all the other junk you find.
+
+    Try not to touch them if you can help it, either.
+
+    And don't ask questions!
+
+    - Corporate
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-345959-14', 'asteroidtycoon.com');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

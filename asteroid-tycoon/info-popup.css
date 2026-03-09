@@ -1,0 +1,85 @@
+/* CSS Document */
+.info-popup {
+    position : absolute;
+    z-index : 10;
+    width : 250px;
+
+    border : 4px inset #FFF;
+    border-radius : 9px;
+    background-color : #40536B;
+}
+
+.info-popup h1 {
+    color : white;
+    font-family :  'VT323', '';
+    margin : 0 4px;
+}
+
+.info-popup p {
+    font-family: monospace;
+    font-size : 120%;
+    margin-top : 4px;
+    margin-left : 20px;
+    margin-right : 10px;
+    margin-bottom : 35px;
+}
+
+.info-popup-icon {
+    position : absolute;
+    right : 8px;
+    bottom : 8px;
+
+    background-color : #60738B;
+    border-radius : 5px;
+}
+
+.info-popup-icon img {
+    margin : 8px 10px;
+}
+
+.info-popup ul {
+    position : relative;
+    margin-top : -14px;
+    margin-left : -20px;
+
+    font-family: monospace;
+    font-size : 120%;
+
+    list-style : none;
+}
+
+.robot-button {
+    position : relative;
+    margin-right : 11px;
+    margin-left : auto;
+    top : -88px;
+
+    cursor : pointer;
+
+    border-radius : 4px;
+    background-color : #666;
+    color : #CCC;
+    width : 20px;
+    height : 20px;
+}
+
+.robot-button:hover {
+    background-color: #ccc;
+    color: #666;
+}
+
+.BearBot div.info-popup-icon {
+    background-color : #738B60;
+}
+
+.GoatBot div.info-popup-icon {
+    background-color : #BB9340;
+}
+
+.AntBot div.info-popup-icon {
+    background-color : #EDF590;
+}
+
+.VultureBot div.info-popup-icon {
+    background-color : #996161;
+}

@@ -1,7 +1,9 @@
 ---
 title: Complexity is Bad—as a Concept
 author: Tikhon Jelvis
+description: I don't like talking about “compelxity” in software any more. People have radically different ideas of what “complexity” means, and “complexity” conflates several inherently distinct concepts.
 published: 2025-05-25 14:57:59
+modified: 2025-06-10 14:00:42
 ---
 
 I don't like talking about "complexity" any more because while almost everyone agrees complexity is "bad", people have radically different ideas of what "complexity" means.
@@ -15,11 +17,11 @@ I don't like talking about "complexity" any more because while almost everyone a
   - abstract or novel concepts that are hard to learn up-front, but easy long-term
   - probably more I haven't considered off-hand
 
-::: {.pull-quote .left style="width: 30%"}
+::: {.pull-quote .left style="width: 32%"}
 > People tend towards mental models that are simple, legible and wrong.
 :::
 
-Some of these notions are basically opposites! At the Pareto frontier of system design, there is a fundamental trade-off between having more abstract concepts that are harder to learn up-front and exposing more details that make systems hard to work with on an ongoing basis. But people just dismiss both of these as "complexity"! These are two ideas that absolutely should not be conflated.
+Some of these notions are basically opposites! At the Pareto frontier of system design, there is a fundamental trade-off between having more abstract concepts that are harder to learn up-front and exposing more details that make systems hard to work with on an ongoing basis. But people dismiss both of these as "complexity"! These are two ideas that absolutely should not be conflated.
 
 <!--more-->
 
